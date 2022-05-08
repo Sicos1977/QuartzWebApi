@@ -15,8 +15,9 @@ namespace QuartzWebApi.Controllers
         /// </summary>
         /// <param name="groupName"></param>
         /// <returns></returns>
+        [HttpGet]
         [Route("scheduler/isjobgrouppaused/{groupName}")]
-        public Task<bool> GetIsJobGroupPaused(string groupName)
+        public Task<bool> IsJobGroupPaused(string groupName)
         {
             return CreateScheduler.Scheduler.IsJobGroupPaused(groupName);
         }
@@ -26,8 +27,9 @@ namespace QuartzWebApi.Controllers
         /// </summary>
         /// <param name="groupName"></param>
         /// <returns></returns>
+        [HttpGet]
         [Route("scheduler/istriggergrouppaused/{groupName}")]
-        public Task<bool> GetIsTriggerGroupPaused(string groupName)
+        public Task<bool> IsTriggerGroupPaused(string groupName)
         {
             return CreateScheduler.Scheduler.IsTriggerGroupPaused(groupName);
         }
@@ -35,19 +37,21 @@ namespace QuartzWebApi.Controllers
         /// <summary>
         ///     Returns the name of the scheduler
         /// </summary>
+        [HttpGet]
         [Route("scheduler/getschedulername")]
-        public string GetSchedulerName()
+        public string SchedulerName()
         {
             return CreateScheduler.Scheduler.SchedulerName;
         }
-        
+
         /// <summary>
         ///     Returns the instance Id of the scheduler
         /// </summary>
+        [HttpGet]
         [Route("scheduler/getschedulerinstanceid")]
-        public string GetSchedulerInstanceId()
+        public string SchedulerInstanceId()
         {
-            return CreateScheduler.Scheduler.SchedulerName;
+            return CreateScheduler.Scheduler.SchedulerInstanceId;
         }
 
         ///// <summary>
@@ -58,10 +62,11 @@ namespace QuartzWebApi.Controllers
         /// <summary>
         ///     Reports whether the <see cref="IScheduler" /> is in stand-by mode.
         /// </summary>
-        /// <seealso cref="PutStandby" />
-        /// <seealso cref="PutStart" />
+        /// <seealso cref="Standby" />
+        /// <seealso cref="Start" />
+        [HttpGet]
         [Route("scheduler/instandbymode")]
-        public bool GetInStandbyMode()
+        public bool InStandbyMode()
         {
             return CreateScheduler.Scheduler.InStandbyMode;
         }
@@ -69,8 +74,9 @@ namespace QuartzWebApi.Controllers
         /// <summary>
         ///     Reports whether the <see cref="IScheduler" /> has been Shutdown.
         /// </summary>
+        [HttpGet]
         [Route("scheduler/isshutdown")]
-        public bool GetIsShutdown()
+        public bool IsShutdown()
         {
             return CreateScheduler.Scheduler.IsShutdown;
         }
@@ -132,6 +138,7 @@ namespace QuartzWebApi.Controllers
         /// <summary>
         ///     Get the names of all known <see cref="IJobDetail" /> groups.
         /// </summary>
+        [HttpGet]
         [Route("scheduler/getjobgroupnames")]
         public Task<IReadOnlyCollection<string>> GetJobGroupNames()
         {
@@ -142,6 +149,7 @@ namespace QuartzWebApi.Controllers
         /// <summary>
         ///     Get the names of all known <see cref="ITrigger" /> groups.
         /// </summary>
+        [HttpGet]
         [Route("scheduler/gettriggergroupnames")]
         public Task<IReadOnlyCollection<string>> GetTriggerGroupNames()
         {
@@ -151,6 +159,7 @@ namespace QuartzWebApi.Controllers
         /// <summary>
         ///     Get the names of all <see cref="ITrigger" /> groups that are paused.
         /// </summary>
+        [HttpGet]
         [Route("scheduler/getpausedtriggergroups")]
         public Task<IReadOnlyCollection<string>> GetPausedTriggerGroups()
         {
@@ -161,32 +170,34 @@ namespace QuartzWebApi.Controllers
         ///     Starts the <see cref="IScheduler" />'s threads that fire <see cref="ITrigger" />s.
         ///     When a scheduler is first created it is in "stand-by" mode, and will not
         ///     fire triggers.  The scheduler can also be put into stand-by mode by
-        ///     calling the <see cref="PutStandby" /> method.
+        ///     calling the <see cref="Standby" /> method.
         /// </summary>
         /// <remarks>
         ///     The misfire/recovery process will be started, if it is the initial call
         ///     to this method on this scheduler instance.
         /// </remarks>
-        /// <seealso cref="PutStartDelayed(TimeSpan)" />
-        /// <seealso cref="PutStandby" />
-        /// <seealso cref="PutShutdown(bool)" />
+        /// <seealso cref="StartDelayed" />
+        /// <seealso cref="Standby" />
+        /// <seealso cref="Shutdown(bool)" />
+        [HttpPost]
         [Route("scheduler/start")]
-        public Task PutStart()
+        public Task Start()
         {
             return CreateScheduler.Scheduler.Start();
         }
 
         /// <summary>
-        ///     Calls <see cref="PutStart" /> after the indicated delay.
+        ///     Calls <see cref="Start" /> after the indicated delay.
         ///     (This call does not block). This can be useful within applications that
         ///     have initializers that create the scheduler immediately, before the
         ///     resources needed by the executing jobs have been fully initialized.
         /// </summary>
-        /// <seealso cref="PutStart" />
-        /// <seealso cref="PutStandby" />
-        /// <seealso cref="PutShutdown(bool)" />
+        /// <seealso cref="Start" />
+        /// <seealso cref="Standby" />
+        /// <seealso cref="Shutdown(bool)" />
+        [HttpPost]
         [Route("scheduler/startdelayed")]
-        public Task PutStartDelayed(TimeSpan delay)
+        public Task StartDelayed(TimeSpan delay)
         {
             return CreateScheduler.Scheduler.StartDelayed(delay);
         }
@@ -195,16 +206,17 @@ namespace QuartzWebApi.Controllers
         ///     Whether the scheduler has been started.
         /// </summary>
         /// <remarks>
-        ///     Note: This only reflects whether <see cref="PutStart" /> has ever
+        ///     Note: This only reflects whether <see cref="Start" /> has ever
         ///     been called on this Scheduler, so it will return <see langword="true" /> even
         ///     if the <see cref="IScheduler" /> is currently in standby mode or has been
         ///     since shutdown.
         /// </remarks>
-        /// <seealso cref="PutStart" />
-        /// <seealso cref="GetIsShutdown" />
-        /// <seealso cref="GetInStandbyMode" />
+        /// <seealso cref="Start" />
+        /// <seealso cref="IsShutdown" />
+        /// <seealso cref="InStandbyMode" />
+        [HttpGet]
         [Route("scheduler/isstarted")]
-        public bool GetIsStarted()
+        public bool IsStarted()
         {
             return CreateScheduler.Scheduler.IsStarted;
         }
@@ -214,9 +226,9 @@ namespace QuartzWebApi.Controllers
         /// </summary>
         /// <remarks>
         ///     <para>
-        ///         When <see cref="PutStart" /> is called (to bring the scheduler out of
+        ///         When <see cref="Start" /> is called (to bring the scheduler out of
         ///         stand-by mode), trigger misfire instructions will NOT be applied
-        ///         during the execution of the <see cref="PutStart" /> method - any misfires
+        ///         during the execution of the <see cref="Start" /> method - any misfires
         ///         will be detected immediately afterward (by the <see cref="IJobStore" />'s
         ///         normal process).
         ///     </para>
@@ -224,10 +236,11 @@ namespace QuartzWebApi.Controllers
         ///         The scheduler is not destroyed, and can be re-started at any time.
         ///     </para>
         /// </remarks>
-        /// <seealso cref="PutStart" />
-        /// <seealso cref="PutPauseAll" />
+        /// <seealso cref="Start" />
+        /// <seealso cref="PauseAll" />
+        [HttpPost]
         [Route("scheduler/standby")]
-        public Task PutStandby()
+        public Task Standby()
         {
             return CreateScheduler.Scheduler.Standby();
         }
@@ -239,9 +252,10 @@ namespace QuartzWebApi.Controllers
         /// <remarks>
         ///     The scheduler cannot be re-started.
         /// </remarks>
-        /// <seealso cref="PutShutdown(bool)" />
+        /// <seealso cref="Shutdown(bool)" />
+        [HttpPost]
         [Route("scheduler/shutdown")]
-        public Task PutShutdown()
+        public Task Shutdown()
         {
             return CreateScheduler.Scheduler.Standby();
         }
@@ -257,9 +271,10 @@ namespace QuartzWebApi.Controllers
         ///     if <see langword="true" /> the scheduler will not allow this method
         ///     to return until all currently executing jobs have completed.
         /// </param>
-        /// <seealso cref="PutShutdown()" />
+        /// <seealso cref="Shutdown()" />
+        [HttpPost]
         [Route("scheduler/shutdown/{waitForJobsToComplete}")]
-        public Task PutShutdown(bool waitForJobsToComplete)
+        public Task Shutdown(bool waitForJobsToComplete)
         {
             return CreateScheduler.Scheduler.Shutdown(waitForJobsToComplete);
         }
@@ -312,8 +327,9 @@ namespace QuartzWebApi.Controllers
         ///         not durable, then the job will also be deleted.
         ///     </para>
         /// </summary>
+        [HttpGet]
         [Route("scheduler/unschedulejob/{triggerKey}")]
-        public Task<bool> GetUnscheduleJob(TriggerKey triggerKey)
+        public Task<bool> UnscheduleJob(TriggerKey triggerKey)
         {
             return CreateScheduler.Scheduler.UnscheduleJob(triggerKey);
         }
@@ -327,13 +343,14 @@ namespace QuartzWebApi.Controllers
         ///         not durable, then the job will also be deleted.
         ///     </para>
         ///     Note that while this bulk operation is likely more efficient than
-        ///     invoking <see cref="GetUnscheduleJob" /> several
+        ///     invoking <see cref="UnscheduleJob" /> several
         ///     times, it may have the adverse affect of holding data locks for a
         ///     single long duration of time (rather than lots of small durations
         ///     of time).
         /// </remarks>
+        [HttpGet]
         [Route("scheduler/unschedulejobs/{triggerKeys}")]
-        public Task<bool> GetUnscheduleJobs(IReadOnlyCollection<TriggerKey> triggerKeys)
+        public Task<bool> UnscheduleJobs(IReadOnlyCollection<TriggerKey> triggerKeys)
         {
             return CreateScheduler.Scheduler.UnscheduleJobs(triggerKeys);
         }
@@ -391,10 +408,11 @@ namespace QuartzWebApi.Controllers
         ///     associated <see cref="ITrigger" />s.
         /// </summary>
         /// <returns> true if the Job was found and deleted.</returns>
-        [Route("scheduler/deletejob/{jobKey}")]
-        public bool GetDeleteJob(JobKey jobKey)
+        [HttpGet]
+        [Route("scheduler/deletejob")]
+        public Task<bool> GetDeleteJob([FromBody] JobKey jobKey)
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.DeleteJob(jobKey);
         }
 
         /// <summary>
@@ -404,7 +422,7 @@ namespace QuartzWebApi.Controllers
         /// <remarks>
         ///     <para>
         ///         Note that while this bulk operation is likely more efficient than
-        ///         invoking <see cref="GetDeleteJob" /> several
+        ///         invoking <see cref="DeleteJob" /> several
         ///         times, it may have the adverse affect of holding data locks for a
         ///         single long duration of time (rather than lots of small durations
         ///         of time).
@@ -414,8 +432,9 @@ namespace QuartzWebApi.Controllers
         ///     true if all of the Jobs were found and deleted, false if
         ///     one or more were not deleted.
         /// </returns>
-        [Route("scheduler/deletejobs/{jobKeys}")]
-        public bool GetDeleteJobs(IReadOnlyCollection<JobKey> jobKeys)
+        [HttpGet]
+        [Route("scheduler/deletejobs")]
+        public bool DeleteJobs(IReadOnlyCollection<JobKey> jobKeys)
         {
             throw new NotImplementedException();
         }
@@ -424,8 +443,9 @@ namespace QuartzWebApi.Controllers
         ///     Trigger the identified <see cref="IJobDetail" />
         ///     (Execute it now).
         /// </summary>
+        [HttpPost]
         [Route("scheduler/triggerjob/{jobKey}")]
-        public void PutTriggerJob(JobKey jobKey)
+        public void TriggerJob([FromBody] string jobKey)
         {
             throw new NotImplementedException();
         }
@@ -517,8 +537,9 @@ namespace QuartzWebApi.Controllers
         ///     or more fire-times, then the <see cref="ITrigger" />'s misfire
         ///     instruction will be applied.
         /// </remarks>
+        [HttpPost]
         [Route("scheduler/resumejob/{jobKey}")]
-        public void PutResumeJob(JobKey jobKey)
+        public void ResumeJob(JobKey jobKey)
         {
             throw new NotImplementedException();
         }
@@ -533,8 +554,9 @@ namespace QuartzWebApi.Controllers
         ///     misfire instruction will be applied.
         /// </remarks>
         /// <seealso cref="PutPauseJobs" />
+        [HttpPost]
         [Route("scheduler/resumejobs/{matcher}")]
-        public void PutResumeJobs(GroupMatcher<JobKey> matcher)
+        public void ResumeJobs(GroupMatcher<JobKey> matcher)
         {
             throw new NotImplementedException();
         }
@@ -547,8 +569,9 @@ namespace QuartzWebApi.Controllers
         ///     If the <see cref="ITrigger" /> missed one or more fire-times, then the
         ///     <see cref="ITrigger" />'s misfire instruction will be applied.
         /// </remarks>
+        [HttpPost]
         [Route("scheduler/resumetrigger/{triggerKey}")]
-        public void PutResumeTrigger(TriggerKey triggerKey)
+        public void ResumeTrigger(TriggerKey triggerKey)
         {
             throw new NotImplementedException();
         }
@@ -561,42 +584,45 @@ namespace QuartzWebApi.Controllers
         ///     <see cref="ITrigger" />'s misfire instruction will be applied.
         /// </remarks>
         /// <seealso cref="PauseTriggers" />
+        [HttpPost]
         [Route("scheduler/resumetriggers/{matcher}")]
-        public void PutResumeTriggers(GroupMatcher<TriggerKey> matcher)
+        public void ResumeTriggers(GroupMatcher<TriggerKey> matcher)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
         ///     Pause all triggers - similar to calling <see cref="PauseTriggers" />
-        ///     on every group, however, after using this method <see cref="PutResumeAll" />
+        ///     on every group, however, after using this method <see cref="ResumeAll" />
         ///     must be called to clear the scheduler's state of 'remembering' that all
         ///     new triggers will be paused as they are added.
         /// </summary>
         /// <remarks>
-        ///     When <see cref="PutResumeAll" /> is called (to un-pause), trigger misfire
+        ///     When <see cref="ResumeAll" /> is called (to un-pause), trigger misfire
         ///     instructions WILL be applied.
         /// </remarks>
-        /// <seealso cref="PutResumeAll" />
+        /// <seealso cref="ResumeAll" />
         /// <seealso cref="PauseTriggers" />
-        /// <seealso cref="PutStandby" />
+        /// <seealso cref="Standby" />
+        [HttpPost]
         [Route("scheduler/pauseall")]
-        public void PutPauseAll()
+        public void PauseAll()
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
         ///     Resume (un-pause) all triggers - similar to calling
-        ///     <see cref="PutResumeTriggers" /> on every group.
+        ///     <see cref="ResumeTriggers" /> on every group.
         /// </summary>
         /// <remarks>
         ///     If any <see cref="ITrigger" /> missed one or more fire-times, then the
         ///     <see cref="ITrigger" />'s misfire instruction will be applied.
         /// </remarks>
-        /// <seealso cref="PutPauseAll" />
+        /// <seealso cref="PauseAll" />
+        [HttpPost]
         [Route("scheduler/resumeall")]
-        public void PutResumeAll()
+        public void ResumeAll()
         {
             throw new NotImplementedException();
         }
@@ -693,8 +719,9 @@ namespace QuartzWebApi.Controllers
         /// </remarks>
         /// <param name="calName">Name of the calendar.</param>
         /// <returns>true if the Calendar was found and deleted.</returns>
+        [HttpGet]
         [Route("scheduler/deletecalender/{calName}")]
-        public bool GetDeleteCalendar(string calName)
+        public bool DeleteCalendar(string calName)
         {
             throw new NotImplementedException();
         }
@@ -707,6 +734,7 @@ namespace QuartzWebApi.Controllers
         /// <summary>
         ///     Get the names of all registered <see cref="ICalendar" />.
         /// </summary>
+        [HttpGet]
         [Route("scheduler/getcalendarnames")]
         public IReadOnlyCollection<string> GetCalendarNames()
         {
@@ -721,15 +749,15 @@ namespace QuartzWebApi.Controllers
         ///     <para>
         ///         If more than one instance of the identified job is currently executing,
         ///         the cancellation token will be set on each instance.  However, there is a limitation that in the case that
-        ///         <see cref="GetInterrupt(JobKey)" /> on one instances throws an exception, all
+        ///         <see cref="Interrupt(JobKey)" /> on one instances throws an exception, all
         ///         remaining  instances (that have not yet been interrupted) will not have
-        ///         their <see cref="GetInterrupt(JobKey)" /> method called.
+        ///         their <see cref="Interrupt(JobKey)" /> method called.
         ///     </para>
         ///     <para>
         ///         If you wish to interrupt a specific instance of a job (when more than
         ///         one is executing) you can do so by calling
-        ///         <see cref="GetCurrentlyExecutingJobs" /> to obtain a handle
-        ///         to the job instance, and then invoke <see cref="GetInterrupt(JobKey)" /> on it
+        ///         <see cref="CurrentlyExecutingJobs" /> to obtain a handle
+        ///         to the job instance, and then invoke <see cref="Interrupt(JobKey)" /> on it
         ///         yourself.
         ///     </para>
         ///     <para>
@@ -741,9 +769,10 @@ namespace QuartzWebApi.Controllers
         /// <returns>
         ///     true is at least one instance of the identified job was found and interrupted.
         /// </returns>
-        /// <seealso cref="GetCurrentlyExecutingJobs" />
+        /// <seealso cref="CurrentlyExecutingJobs" />
+        [HttpGet]
         [Route("scheduler/interrupt/jobkey/{jobKey}")]
-        public bool GetInterrupt(JobKey jobKey)
+        public bool Interrupt(JobKey jobKey)
         {
             throw new NotImplementedException();
         }
@@ -757,16 +786,17 @@ namespace QuartzWebApi.Controllers
         ///     instances of the identified InterruptableJob currently executing in this
         ///     Scheduler instance, not across the entire cluster.
         /// </remarks>
-        /// <seealso cref="GetCurrentlyExecutingJobs" />
+        /// <seealso cref="CurrentlyExecutingJobs" />
         /// <seealso cref="IJobExecutionContext.FireInstanceId" />
-        /// <seealso cref="GetInterrupt(JobKey)" />
+        /// <seealso cref="Interrupt(JobKey)" />
         /// <param name="fireInstanceId">
         ///     the unique identifier of the job instance to  be interrupted (see
         ///     <see cref="IJobExecutionContext.FireInstanceId" />)
         /// </param>
         /// <returns>true if the identified job instance was found and interrupted.</returns>
+        [HttpGet]
         [Route("scheduler/interrupt/fireinstanceid/{fireInstanceId}")]
-        public bool GetInterrupt(string fireInstanceId)
+        public bool Interrupt(string fireInstanceId)
         {
             throw new NotImplementedException();
         }
@@ -777,8 +807,9 @@ namespace QuartzWebApi.Controllers
         /// </summary>
         /// <param name="jobKey">the identifier to check for</param>
         /// <returns>true if a Job exists with the given identifier</returns>
+        [HttpGet]
         [Route("scheduler/checkexists/jobkey/{jobKey}")]
-        public bool GetCheckExistsJobKey(JobKey jobKey)
+        public bool CheckExistsJobKey(JobKey jobKey)
         {
             throw new NotImplementedException();
         }
@@ -789,6 +820,7 @@ namespace QuartzWebApi.Controllers
         /// </summary>
         /// <param name="triggerKey">the identifier to check for</param>
         /// <returns>true if a Trigger exists with the given identifier</returns>
+        [HttpGet]
         [Route("scheduler/checkexists/triggerkey/{triggerKey}")]
         public bool CheckExists(TriggerKey triggerKey)
         {
@@ -799,6 +831,7 @@ namespace QuartzWebApi.Controllers
         ///     Clears (deletes!) all scheduling data - all <see cref="IJob" />s, <see cref="ITrigger" />s
         ///     <see cref="ICalendar" />s.
         /// </summary>
+        [HttpPost]
         [Route("scheduler/clear")]
         public void Clear()
         {
