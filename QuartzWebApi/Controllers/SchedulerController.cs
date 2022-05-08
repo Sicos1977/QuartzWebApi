@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using Quartz;
 using Quartz.Impl.Matchers;
@@ -14,45 +11,43 @@ namespace QuartzWebApi.Controllers
     public class SchedulerController : ApiController
     {
         /// <summary>
-        /// Returns <c>true</c> if the given JobGroup is paused
+        ///     Returns <c>true</c> if the given JobGroup is paused
         /// </summary>
         /// <param name="groupName"></param>
         /// <returns></returns>
         [Route("scheduler/isjobgrouppaused/{groupName}")]
-        public bool GetIsJobGroupPaused(string groupName)
+        public Task<bool> GetIsJobGroupPaused(string groupName)
         {
-            return true;
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.IsJobGroupPaused(groupName);
         }
 
         /// <summary>
-        /// Returns <c>true</c> if the given TriggerGroup is paused
+        ///     Returns <c>true</c> if the given TriggerGroup is paused
         /// </summary>
         /// <param name="groupName"></param>
         /// <returns></returns>
-        [Route("scheduler/istriggerpaused/{groupName}")]
-        public bool IsTriggerGroupPaused(string groupName)
+        [Route("scheduler/istriggergrouppaused/{groupName}")]
+        public Task<bool> GetIsTriggerGroupPaused(string groupName)
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.IsTriggerGroupPaused(groupName);
         }
 
-        /// <summary> 
-        /// Returns the name of the scheduler
+        /// <summary>
+        ///     Returns the name of the scheduler
         /// </summary>
         [Route("scheduler/getschedulername")]
         public string GetSchedulerName()
         {
-            return "test";
+            return CreateScheduler.Scheduler.SchedulerName;
         }
-
-
+        
         /// <summary>
         ///     Returns the instance Id of the scheduler
         /// </summary>
         [Route("scheduler/getschedulerinstanceid")]
         public string GetSchedulerInstanceId()
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.SchedulerName;
         }
 
         ///// <summary>
@@ -61,22 +56,23 @@ namespace QuartzWebApi.Controllers
         //SchedulerContext Context { get; }
 
         /// <summary>
-        /// Reports whether the <see cref="IScheduler" /> is in stand-by mode.
+        ///     Reports whether the <see cref="IScheduler" /> is in stand-by mode.
         /// </summary>
-        /// <seealso cref="Standby" />
-        /// <seealso cref="Start" />
+        /// <seealso cref="PutStandby" />
+        /// <seealso cref="PutStart" />
         [Route("scheduler/instandbymode")]
         public bool GetInStandbyMode()
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.InStandbyMode;
         }
 
         /// <summary>
-        /// Reports whether the <see cref="IScheduler" /> has been Shutdown.
+        ///     Reports whether the <see cref="IScheduler" /> has been Shutdown.
         /// </summary>
-        public bool IsShutdown()
+        [Route("scheduler/isshutdown")]
+        public bool GetIsShutdown()
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.IsShutdown;
         }
 
         ///// <summary>
@@ -134,127 +130,138 @@ namespace QuartzWebApi.Controllers
         //IListenerManager ListenerManager { get; }
 
         /// <summary>
-        /// Get the names of all known <see cref="IJobDetail" /> groups.
+        ///     Get the names of all known <see cref="IJobDetail" /> groups.
         /// </summary>
-        IReadOnlyCollection<string> GetJobGroupNames()
+        [Route("scheduler/getjobgroupnames")]
+        public Task<IReadOnlyCollection<string>> GetJobGroupNames()
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.GetJobGroupNames();
         }
 
 
         /// <summary>
-        /// Get the names of all known <see cref="ITrigger" /> groups.
+        ///     Get the names of all known <see cref="ITrigger" /> groups.
         /// </summary>
-        IReadOnlyCollection<string> GetTriggerGroupNames()
+        [Route("scheduler/gettriggergroupnames")]
+        public Task<IReadOnlyCollection<string>> GetTriggerGroupNames()
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary> 
-        /// Get the names of all <see cref="ITrigger" /> groups that are paused.
-        /// </summary>
-        IReadOnlyCollection<string> GetPausedTriggerGroups()
-        {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.GetTriggerGroupNames();
         }
 
         /// <summary>
-        /// Starts the <see cref="IScheduler" />'s threads that fire <see cref="ITrigger" />s.
-        /// When a scheduler is first created it is in "stand-by" mode, and will not
-        /// fire triggers.  The scheduler can also be put into stand-by mode by
-        /// calling the <see cref="Standby" /> method.
+        ///     Get the names of all <see cref="ITrigger" /> groups that are paused.
+        /// </summary>
+        [Route("scheduler/getpausedtriggergroups")]
+        public Task<IReadOnlyCollection<string>> GetPausedTriggerGroups()
+        {
+            return CreateScheduler.Scheduler.GetPausedTriggerGroups();
+        }
+
+        /// <summary>
+        ///     Starts the <see cref="IScheduler" />'s threads that fire <see cref="ITrigger" />s.
+        ///     When a scheduler is first created it is in "stand-by" mode, and will not
+        ///     fire triggers.  The scheduler can also be put into stand-by mode by
+        ///     calling the <see cref="PutStandby" /> method.
         /// </summary>
         /// <remarks>
-        /// The misfire/recovery process will be started, if it is the initial call
-        /// to this method on this scheduler instance.
+        ///     The misfire/recovery process will be started, if it is the initial call
+        ///     to this method on this scheduler instance.
         /// </remarks>
-        /// <seealso cref="StartDelayed(TimeSpan, CancellationToken)"/>
-        /// <seealso cref="Standby"/>
-        /// <seealso cref="Shutdown(bool, CancellationToken)"/>
-        public void Start()
+        /// <seealso cref="PutStartDelayed(TimeSpan)" />
+        /// <seealso cref="PutStandby" />
+        /// <seealso cref="PutShutdown(bool)" />
+        [Route("scheduler/start")]
+        public Task PutStart()
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.Start();
         }
 
         /// <summary>
-        /// Calls <see cref="Start" /> after the indicated delay.
-        /// (This call does not block). This can be useful within applications that
-        /// have initializers that create the scheduler immediately, before the
-        /// resources needed by the executing jobs have been fully initialized.
+        ///     Calls <see cref="PutStart" /> after the indicated delay.
+        ///     (This call does not block). This can be useful within applications that
+        ///     have initializers that create the scheduler immediately, before the
+        ///     resources needed by the executing jobs have been fully initialized.
         /// </summary>
-        /// <seealso cref="Start"/>
-        /// <seealso cref="Standby"/>
-        /// <seealso cref="Shutdown(bool, CancellationToken)"/>
-        public void StartDelayed(TimeSpan delay)
+        /// <seealso cref="PutStart" />
+        /// <seealso cref="PutStandby" />
+        /// <seealso cref="PutShutdown(bool)" />
+        [Route("scheduler/startdelayed")]
+        public Task PutStartDelayed(TimeSpan delay)
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.StartDelayed(delay);
         }
 
         /// <summary>
-        /// Whether the scheduler has been started.  
+        ///     Whether the scheduler has been started.
         /// </summary>
         /// <remarks>
-        /// Note: This only reflects whether <see cref="Start" /> has ever
-        /// been called on this Scheduler, so it will return <see langword="true" /> even 
-        /// if the <see cref="IScheduler" /> is currently in standby mode or has been 
-        /// since shutdown.
+        ///     Note: This only reflects whether <see cref="PutStart" /> has ever
+        ///     been called on this Scheduler, so it will return <see langword="true" /> even
+        ///     if the <see cref="IScheduler" /> is currently in standby mode or has been
+        ///     since shutdown.
         /// </remarks>
-        /// <seealso cref="Start" />
-        /// <seealso cref="IsShutdown" />
-        /// <seealso cref="InStandbyMode" />
-        bool IsStarted { get; }
-
-        /// <summary>
-        /// Temporarily halts the <see cref="IScheduler" />'s firing of <see cref="ITrigger" />s.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// When <see cref="Start" /> is called (to bring the scheduler out of 
-        /// stand-by mode), trigger misfire instructions will NOT be applied
-        /// during the execution of the <see cref="Start" /> method - any misfires 
-        /// will be detected immediately afterward (by the <see cref="IJobStore" />'s 
-        /// normal process).
-        /// </para>
-        /// <para>
-        /// The scheduler is not destroyed, and can be re-started at any time.
-        /// </para>
-        /// </remarks>
-        /// <seealso cref="Start"/>
-        /// <seealso cref="PauseAll"/>
-        public void Standby()
+        /// <seealso cref="PutStart" />
+        /// <seealso cref="GetIsShutdown" />
+        /// <seealso cref="GetInStandbyMode" />
+        [Route("scheduler/isstarted")]
+        public bool GetIsStarted()
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary> 
-        /// Halts the <see cref="IScheduler" />'s firing of <see cref="ITrigger" />s,
-        /// and cleans up all resources associated with the Scheduler. Equivalent to Shutdown(false).
-        /// </summary>
-        /// <remarks>
-        /// The scheduler cannot be re-started.
-        /// </remarks>
-        /// <seealso cref="Shutdown(bool, CancellationToken)" />
-        public void Shutdown()
-        {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.IsStarted;
         }
 
         /// <summary>
-        /// Halts the <see cref="IScheduler" />'s firing of <see cref="ITrigger" />s,
-        /// and cleans up all resources associated with the Scheduler. 
+        ///     Temporarily halts the <see cref="IScheduler" />'s firing of <see cref="ITrigger" />s.
         /// </summary>
         /// <remarks>
-        /// The scheduler cannot be re-started.
+        ///     <para>
+        ///         When <see cref="PutStart" /> is called (to bring the scheduler out of
+        ///         stand-by mode), trigger misfire instructions will NOT be applied
+        ///         during the execution of the <see cref="PutStart" /> method - any misfires
+        ///         will be detected immediately afterward (by the <see cref="IJobStore" />'s
+        ///         normal process).
+        ///     </para>
+        ///     <para>
+        ///         The scheduler is not destroyed, and can be re-started at any time.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="PutStart" />
+        /// <seealso cref="PutPauseAll" />
+        [Route("scheduler/standby")]
+        public Task PutStandby()
+        {
+            return CreateScheduler.Scheduler.Standby();
+        }
+
+        /// <summary>
+        ///     Halts the <see cref="IScheduler" />'s firing of <see cref="ITrigger" />s,
+        ///     and cleans up all resources associated with the Scheduler. Equivalent to Shutdown(false).
+        /// </summary>
+        /// <remarks>
+        ///     The scheduler cannot be re-started.
+        /// </remarks>
+        /// <seealso cref="PutShutdown(bool)" />
+        [Route("scheduler/shutdown")]
+        public Task PutShutdown()
+        {
+            return CreateScheduler.Scheduler.Standby();
+        }
+
+        /// <summary>
+        ///     Halts the <see cref="IScheduler" />'s firing of <see cref="ITrigger" />s,
+        ///     and cleans up all resources associated with the Scheduler.
+        /// </summary>
+        /// <remarks>
+        ///     The scheduler cannot be re-started.
         /// </remarks>
         /// <param name="waitForJobsToComplete">
-        /// if <see langword="true" /> the scheduler will not allow this method
-        /// to return until all currently executing jobs have completed.
+        ///     if <see langword="true" /> the scheduler will not allow this method
+        ///     to return until all currently executing jobs have completed.
         /// </param>
-        /// <param name="cancellationToken">The cancellation instruction.</param>
-        /// <seealso cref="Shutdown(CancellationToken)" /> 
-        public void Shutdown(bool waitForJobsToComplete)
+        /// <seealso cref="PutShutdown()" />
+        [Route("scheduler/shutdown/{waitForJobsToComplete}")]
+        public Task PutShutdown(bool waitForJobsToComplete)
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.Shutdown(waitForJobsToComplete);
         }
 
         ///// <summary>
@@ -299,30 +306,36 @@ namespace QuartzWebApi.Controllers
         //    );
 
         /// <summary>
-        /// Remove the indicated <see cref="ITrigger" /> from the scheduler.
-        /// <para>If the related job does not have any other triggers, and the job is
-        /// not durable, then the job will also be deleted.</para>
+        ///     Remove the indicated <see cref="ITrigger" /> from the scheduler.
+        ///     <para>
+        ///         If the related job does not have any other triggers, and the job is
+        ///         not durable, then the job will also be deleted.
+        ///     </para>
         /// </summary>
-        public bool UnscheduleJob(TriggerKey triggerKey)
+        [Route("scheduler/unschedulejob/{triggerKey}")]
+        public Task<bool> GetUnscheduleJob(TriggerKey triggerKey)
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.UnscheduleJob(triggerKey);
         }
 
         /// <summary>
-        /// Remove all of the indicated <see cref="ITrigger" />s from the scheduler.
+        ///     Remove all of the indicated <see cref="ITrigger" />s from the scheduler.
         /// </summary>
         /// <remarks>
-        /// <para>If the related job does not have any other triggers, and the job is
-        /// not durable, then the job will also be deleted.</para>
-        /// Note that while this bulk operation is likely more efficient than
-        /// invoking <see cref="UnscheduleJob" /> several
-        /// times, it may have the adverse affect of holding data locks for a
-        /// single long duration of time (rather than lots of small durations
-        /// of time).
+        ///     <para>
+        ///         If the related job does not have any other triggers, and the job is
+        ///         not durable, then the job will also be deleted.
+        ///     </para>
+        ///     Note that while this bulk operation is likely more efficient than
+        ///     invoking <see cref="GetUnscheduleJob" /> several
+        ///     times, it may have the adverse affect of holding data locks for a
+        ///     single long duration of time (rather than lots of small durations
+        ///     of time).
         /// </remarks>
-        public bool UnscheduleJobs(IReadOnlyCollection<TriggerKey> triggerKeys)
+        [Route("scheduler/unschedulejobs/{triggerKeys}")]
+        public Task<bool> GetUnscheduleJobs(IReadOnlyCollection<TriggerKey> triggerKeys)
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.UnscheduleJobs(triggerKeys);
         }
 
         ///// <summary>
@@ -335,7 +348,7 @@ namespace QuartzWebApi.Controllers
         ///// <param name="newTrigger">
         /////     The new <see cref="ITrigger" /> to be stored.
         ///// </param>
-        ///// <param name="cancellationToken">The cancellation instruction.</param>
+        //
         ///// <returns> 
         ///// <see langword="null" /> if a <see cref="ITrigger" /> with the given
         ///// name and group was not found and removed from the store (and the 
@@ -359,7 +372,7 @@ namespace QuartzWebApi.Controllers
         //    bool replace,
         //    );
 
-        /// <summary>
+        ///// <summary>
         ///// Add the given <see cref="IJob" /> to the Scheduler - with no associated
         ///// <see cref="ITrigger" />. The <see cref="IJob" /> will be 'dormant' until
         ///// it is scheduled with a <see cref="ITrigger" />, or <see cref="TriggerJob(Quartz.JobKey, CancellationToken)" />
@@ -374,40 +387,45 @@ namespace QuartzWebApi.Controllers
         //Task AddJob(IJobDetail jobDetail, bool replace, bool storeNonDurableWhileAwaitingScheduling);
 
         /// <summary>
-        /// Delete the identified <see cref="IJob" /> from the Scheduler - and any
-        /// associated <see cref="ITrigger" />s.
+        ///     Delete the identified <see cref="IJob" /> from the Scheduler - and any
+        ///     associated <see cref="ITrigger" />s.
         /// </summary>
         /// <returns> true if the Job was found and deleted.</returns>
-        public bool DeleteJob(JobKey jobKey)
+        [Route("scheduler/deletejob/{jobKey}")]
+        public bool GetDeleteJob(JobKey jobKey)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Delete the identified jobs from the Scheduler - and any
-        /// associated <see cref="ITrigger" />s.
+        ///     Delete the identified jobs from the Scheduler - and any
+        ///     associated <see cref="ITrigger" />s.
         /// </summary>
         /// <remarks>
-        /// <para>Note that while this bulk operation is likely more efficient than
-        /// invoking <see cref="DeleteJob" /> several
-        /// times, it may have the adverse affect of holding data locks for a
-        /// single long duration of time (rather than lots of small durations
-        /// of time).</para>
+        ///     <para>
+        ///         Note that while this bulk operation is likely more efficient than
+        ///         invoking <see cref="GetDeleteJob" /> several
+        ///         times, it may have the adverse affect of holding data locks for a
+        ///         single long duration of time (rather than lots of small durations
+        ///         of time).
+        ///     </para>
         /// </remarks>
         /// <returns>
-        /// true if all of the Jobs were found and deleted, false if
-        /// one or more were not deleted.
+        ///     true if all of the Jobs were found and deleted, false if
+        ///     one or more were not deleted.
         /// </returns>
-        Task<bool> DeleteJobs(IReadOnlyCollection<JobKey> jobKeys)
+        [Route("scheduler/deletejobs/{jobKeys}")]
+        public bool GetDeleteJobs(IReadOnlyCollection<JobKey> jobKeys)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Trigger the identified <see cref="IJobDetail" />
-        /// (Execute it now).
+        ///     Trigger the identified <see cref="IJobDetail" />
+        ///     (Execute it now).
         /// </summary>
-        public void TriggerJob(JobKey jobKey)
+        [Route("scheduler/triggerjob/{jobKey}")]
+        public void PutTriggerJob(JobKey jobKey)
         {
             throw new NotImplementedException();
         }
@@ -422,7 +440,7 @@ namespace QuartzWebApi.Controllers
         ///// <param name="jobKey">
         ///// The <see cref="JobKey"/> of the <see cref="IJob" /> to be executed.
         ///// </param>
-        ///// <param name="cancellationToken">The cancellation instruction.</param>
+        //
         //Task TriggerJob(
         //    JobKey jobKey,
         //    JobDataMap data,
@@ -491,85 +509,94 @@ namespace QuartzWebApi.Controllers
         //Task PauseTriggers(GroupMatcher<TriggerKey> matcher);
 
         /// <summary>
-        /// Resume (un-pause) the <see cref="IJobDetail" /> with
-        /// the given key.
+        ///     Resume (un-pause) the <see cref="IJobDetail" /> with
+        ///     the given key.
         /// </summary>
         /// <remarks>
-        /// If any of the <see cref="IJob" />'s<see cref="ITrigger" /> s missed one
-        /// or more fire-times, then the <see cref="ITrigger" />'s misfire
-        /// instruction will be applied.
+        ///     If any of the <see cref="IJob" />'s<see cref="ITrigger" /> s missed one
+        ///     or more fire-times, then the <see cref="ITrigger" />'s misfire
+        ///     instruction will be applied.
         /// </remarks>
-        public void ResumeJob(JobKey jobKey)
+        [Route("scheduler/resumejob/{jobKey}")]
+        public void PutResumeJob(JobKey jobKey)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Resume (un-pause) all of the <see cref="IJobDetail" />s
-        /// in matching groups.
+        ///     Resume (un-pause) all of the <see cref="IJobDetail" />s
+        ///     in matching groups.
         /// </summary>
         /// <remarks>
-        /// If any of the <see cref="IJob" /> s had <see cref="ITrigger" /> s that
-        /// missed one or more fire-times, then the <see cref="ITrigger" />'s
-        /// misfire instruction will be applied.
+        ///     If any of the <see cref="IJob" /> s had <see cref="ITrigger" /> s that
+        ///     missed one or more fire-times, then the <see cref="ITrigger" />'s
+        ///     misfire instruction will be applied.
         /// </remarks>
-        /// <seealso cref="PauseJobs" />
-        public void ResumeJobs(GroupMatcher<JobKey> matcher)
+        /// <seealso cref="PutPauseJobs" />
+        [Route("scheduler/resumejobs/{matcher}")]
+        public void PutResumeJobs(GroupMatcher<JobKey> matcher)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Resume (un-pause) the <see cref="ITrigger" /> with the given
-        /// key.
+        ///     Resume (un-pause) the <see cref="ITrigger" /> with the given
+        ///     key.
         /// </summary>
         /// <remarks>
-        /// If the <see cref="ITrigger" /> missed one or more fire-times, then the
-        /// <see cref="ITrigger" />'s misfire instruction will be applied.
+        ///     If the <see cref="ITrigger" /> missed one or more fire-times, then the
+        ///     <see cref="ITrigger" />'s misfire instruction will be applied.
         /// </remarks>
-        public void ResumeTrigger(TriggerKey triggerKey)
+        [Route("scheduler/resumetrigger/{triggerKey}")]
+        public void PutResumeTrigger(TriggerKey triggerKey)
         {
             throw new NotImplementedException();
         }
 
-        ///// <summary>
-        ///// Resume (un-pause) all of the <see cref="ITrigger" />s in matching groups.
-        ///// </summary>
-        ///// <remarks>
-        ///// If any <see cref="ITrigger" /> missed one or more fire-times, then the
-        ///// <see cref="ITrigger" />'s misfire instruction will be applied.
-        ///// </remarks>
-        ///// <seealso cref="PauseTriggers" />
-        //Task ResumeTriggers(GroupMatcher<TriggerKey> matcher);
-
         /// <summary>
-        /// Pause all triggers - similar to calling <see cref="PauseTriggers" />
-        /// on every group, however, after using this method <see cref="ResumeAll" /> 
-        /// must be called to clear the scheduler's state of 'remembering' that all 
-        /// new triggers will be paused as they are added. 
+        ///     Resume (un-pause) all of the <see cref="ITrigger" />s in matching groups.
         /// </summary>
         /// <remarks>
-        /// When <see cref="ResumeAll" /> is called (to un-pause), trigger misfire
-        /// instructions WILL be applied.
+        ///     If any <see cref="ITrigger" /> missed one or more fire-times, then the
+        ///     <see cref="ITrigger" />'s misfire instruction will be applied.
         /// </remarks>
-        /// <seealso cref="ResumeAll" />
         /// <seealso cref="PauseTriggers" />
-        /// <seealso cref="Standby" />
-        public void PauseAll()
+        [Route("scheduler/resumetriggers/{matcher}")]
+        public void PutResumeTriggers(GroupMatcher<TriggerKey> matcher)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary> 
-        /// Resume (un-pause) all triggers - similar to calling 
-        /// <see cref="ResumeTriggers" /> on every group.
+        /// <summary>
+        ///     Pause all triggers - similar to calling <see cref="PauseTriggers" />
+        ///     on every group, however, after using this method <see cref="PutResumeAll" />
+        ///     must be called to clear the scheduler's state of 'remembering' that all
+        ///     new triggers will be paused as they are added.
         /// </summary>
         /// <remarks>
-        /// If any <see cref="ITrigger" /> missed one or more fire-times, then the
-        /// <see cref="ITrigger" />'s misfire instruction will be applied.
+        ///     When <see cref="PutResumeAll" /> is called (to un-pause), trigger misfire
+        ///     instructions WILL be applied.
         /// </remarks>
-        /// <seealso cref="PauseAll" />
-        public void ResumeAll()
+        /// <seealso cref="PutResumeAll" />
+        /// <seealso cref="PauseTriggers" />
+        /// <seealso cref="PutStandby" />
+        [Route("scheduler/pauseall")]
+        public void PutPauseAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        ///     Resume (un-pause) all triggers - similar to calling
+        ///     <see cref="PutResumeTriggers" /> on every group.
+        /// </summary>
+        /// <remarks>
+        ///     If any <see cref="ITrigger" /> missed one or more fire-times, then the
+        ///     <see cref="ITrigger" />'s misfire instruction will be applied.
+        /// </remarks>
+        /// <seealso cref="PutPauseAll" />
+        [Route("scheduler/resumeall")]
+        public void PutResumeAll()
         {
             throw new NotImplementedException();
         }
@@ -648,7 +675,7 @@ namespace QuartzWebApi.Controllers
         ///// <param name="updateTriggers">whether or not to update existing triggers that
         ///// referenced the already existing calendar so that they are 'correct'
         ///// based on the new trigger.</param>
-        ///// <param name="cancellationToken">The cancellation instruction.</param>
+        //
         //Task AddCalendar(
         //    string calName,
         //    ICalendar calendar,
@@ -657,17 +684,17 @@ namespace QuartzWebApi.Controllers
         //    );
 
         /// <summary>
-        /// Delete the identified <see cref="ICalendar" /> from the Scheduler.
+        ///     Delete the identified <see cref="ICalendar" /> from the Scheduler.
         /// </summary>
         /// <remarks>
-        /// If removal of the <code>Calendar</code> would result in
-        /// <see cref="ITrigger" />s pointing to non-existent calendars, then a
-        /// <see cref="SchedulerException" /> will be thrown.
+        ///     If removal of the <code>Calendar</code> would result in
+        ///     <see cref="ITrigger" />s pointing to non-existent calendars, then a
+        ///     <see cref="SchedulerException" /> will be thrown.
         /// </remarks>
         /// <param name="calName">Name of the calendar.</param>
-        /// <param name="cancellationToken">The cancellation instruction.</param>
         /// <returns>true if the Calendar was found and deleted.</returns>
-        public bool DeleteCalendar(string calName)
+        [Route("scheduler/deletecalender/{calName}")]
+        public bool GetDeleteCalendar(string calName)
         {
             throw new NotImplementedException();
         }
@@ -678,102 +705,103 @@ namespace QuartzWebApi.Controllers
         //Task<ICalendar?> GetCalendar(string calName, );
 
         /// <summary>
-        /// Get the names of all registered <see cref="ICalendar" />.
+        ///     Get the names of all registered <see cref="ICalendar" />.
         /// </summary>
-        IReadOnlyCollection<string> GetCalendarNames()
+        [Route("scheduler/getcalendarnames")]
+        public IReadOnlyCollection<string> GetCalendarNames()
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Request the cancellation, within this Scheduler instance, of all 
-        /// currently executing instances of the identified <see cref="IJob" />.
+        ///     Request the cancellation, within this Scheduler instance, of all
+        ///     currently executing instances of the identified <see cref="IJob" />.
         /// </summary>
         /// <remarks>
-        /// <para>
-        /// If more than one instance of the identified job is currently executing,
-        /// the cancellation token will be set on each instance.  However, there is a limitation that in the case that  
-        /// <see cref="Interrupt(JobKey, CancellationToken)" /> on one instances throws an exception, all 
-        /// remaining  instances (that have not yet been interrupted) will not have 
-        /// their <see cref="Interrupt(JobKey, CancellationToken)" /> method called.
-        /// </para>
-        /// 
-        /// <para>
-        /// If you wish to interrupt a specific instance of a job (when more than
-        /// one is executing) you can do so by calling 
-        /// <see cref="GetCurrentlyExecutingJobs" /> to obtain a handle 
-        /// to the job instance, and then invoke <see cref="Interrupt(JobKey, CancellationToken)" /> on it
-        /// yourself.
-        /// </para>
-        /// <para>
-        /// This method is not cluster aware.  That is, it will only interrupt 
-        /// instances of the identified InterruptableJob currently executing in this 
-        /// Scheduler instance, not across the entire cluster.
-        /// </para>
+        ///     <para>
+        ///         If more than one instance of the identified job is currently executing,
+        ///         the cancellation token will be set on each instance.  However, there is a limitation that in the case that
+        ///         <see cref="GetInterrupt(JobKey)" /> on one instances throws an exception, all
+        ///         remaining  instances (that have not yet been interrupted) will not have
+        ///         their <see cref="GetInterrupt(JobKey)" /> method called.
+        ///     </para>
+        ///     <para>
+        ///         If you wish to interrupt a specific instance of a job (when more than
+        ///         one is executing) you can do so by calling
+        ///         <see cref="GetCurrentlyExecutingJobs" /> to obtain a handle
+        ///         to the job instance, and then invoke <see cref="GetInterrupt(JobKey)" /> on it
+        ///         yourself.
+        ///     </para>
+        ///     <para>
+        ///         This method is not cluster aware.  That is, it will only interrupt
+        ///         instances of the identified InterruptableJob currently executing in this
+        ///         Scheduler instance, not across the entire cluster.
+        ///     </para>
         /// </remarks>
-        /// <returns> 
-        /// true is at least one instance of the identified job was found and interrupted.
+        /// <returns>
+        ///     true is at least one instance of the identified job was found and interrupted.
         /// </returns>
         /// <seealso cref="GetCurrentlyExecutingJobs" />
-        public bool Interrupt(JobKey jobKey)
+        [Route("scheduler/interrupt/jobkey/{jobKey}")]
+        public bool GetInterrupt(JobKey jobKey)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Request the cancellation, within this Scheduler instance, of the 
-        /// identified executing job instance.
+        ///     Request the cancellation, within this Scheduler instance, of the
+        ///     identified executing job instance.
         /// </summary>
         /// <remarks>
-        /// This method is not cluster aware.  That is, it will only interrupt 
-        /// instances of the identified InterruptableJob currently executing in this 
-        /// Scheduler instance, not across the entire cluster.
+        ///     This method is not cluster aware.  That is, it will only interrupt
+        ///     instances of the identified InterruptableJob currently executing in this
+        ///     Scheduler instance, not across the entire cluster.
         /// </remarks>
         /// <seealso cref="GetCurrentlyExecutingJobs" />
         /// <seealso cref="IJobExecutionContext.FireInstanceId" />
-        /// <seealso cref="Interrupt(JobKey, CancellationToken)" />
+        /// <seealso cref="GetInterrupt(JobKey)" />
         /// <param name="fireInstanceId">
-        /// the unique identifier of the job instance to  be interrupted (see <see cref="IJobExecutionContext.FireInstanceId" />)
+        ///     the unique identifier of the job instance to  be interrupted (see
+        ///     <see cref="IJobExecutionContext.FireInstanceId" />)
         /// </param>
-        /// <param name="cancellationToken">The cancellation instruction.</param>
         /// <returns>true if the identified job instance was found and interrupted.</returns>
-        public bool Interrupt(string fireInstanceId)
+        [Route("scheduler/interrupt/fireinstanceid/{fireInstanceId}")]
+        public bool GetInterrupt(string fireInstanceId)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Determine whether a <see cref="IJob" /> with the given identifier already 
-        /// exists within the scheduler.
+        ///     Determine whether a <see cref="IJob" /> with the given identifier already
+        ///     exists within the scheduler.
         /// </summary>
         /// <param name="jobKey">the identifier to check for</param>
-        /// <param name="cancellationToken">The cancellation instruction.</param>
         /// <returns>true if a Job exists with the given identifier</returns>
-        public bool CheckExists(JobKey jobKey)
+        [Route("scheduler/checkexists/jobkey/{jobKey}")]
+        public bool GetCheckExistsJobKey(JobKey jobKey)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Determine whether a <see cref="ITrigger" /> with the given identifier already 
-        /// exists within the scheduler.
+        ///     Determine whether a <see cref="ITrigger" /> with the given identifier already
+        ///     exists within the scheduler.
         /// </summary>
         /// <param name="triggerKey">the identifier to check for</param>
-        /// <param name="cancellationToken">The cancellation instruction.</param>
         /// <returns>true if a Trigger exists with the given identifier</returns>
+        [Route("scheduler/checkexists/triggerkey/{triggerKey}")]
         public bool CheckExists(TriggerKey triggerKey)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Clears (deletes!) all scheduling data - all <see cref="IJob"/>s, <see cref="ITrigger" />s
-        /// <see cref="ICalendar"/>s.
+        ///     Clears (deletes!) all scheduling data - all <see cref="IJob" />s, <see cref="ITrigger" />s
+        ///     <see cref="ICalendar" />s.
         /// </summary>
+        [Route("scheduler/clear")]
         public void Clear()
         {
-
         }
-
     }
 }
