@@ -112,6 +112,14 @@
     <Compile Include="Controllers\JobsController.cs" />
     <Compile Include="Controllers\RunningJobsController.cs" />
     <Compile Include="Controllers\SchedulerController.cs" />
+    <Compile Include="Data\Calender.cs" />
+    <Compile Include="Data\Job.cs" />
+    <Compile Include="Data\JobDataMap.cs" />
+    <Compile Include="Data\JobDetail.cs" />
+    <Compile Include="Data\RunningJobs.cs" />
+    <Compile Include="Data\Scheduler.cs" />
+    <Compile Include="Data\Trigger.cs" />
+    <Compile Include="Data\TriggerKey.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -132,7 +140,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Data\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Scheduler\" />
   </ItemGroup>
