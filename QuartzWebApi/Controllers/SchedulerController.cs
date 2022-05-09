@@ -38,7 +38,7 @@ namespace QuartzWebApi.Controllers
         ///     Returns the name of the scheduler
         /// </summary>
         [HttpGet]
-        [Route("scheduler/getschedulername")]
+        [Route("scheduler/schedulername")]
         public string SchedulerName()
         {
             return CreateScheduler.Scheduler.SchedulerName;
