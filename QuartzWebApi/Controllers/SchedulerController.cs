@@ -48,7 +48,7 @@ namespace QuartzWebApi.Controllers
         ///     Returns the instance Id of the scheduler
         /// </summary>
         [HttpGet]
-        [Route("scheduler/getschedulerinstanceid")]
+        [Route("scheduler/schedulerinstanceid")]
         public string SchedulerInstanceId()
         {
             return CreateScheduler.Scheduler.SchedulerInstanceId;
@@ -196,7 +196,7 @@ namespace QuartzWebApi.Controllers
         /// <seealso cref="Standby" />
         /// <seealso cref="Shutdown(bool)" />
         [HttpPost]
-        [Route("scheduler/startdelayed")]
+        [Route("scheduler/startdelayed/{delay}")]
         public Task StartDelayed(TimeSpan delay)
         {
             return CreateScheduler.Scheduler.StartDelayed(delay);
@@ -327,9 +327,9 @@ namespace QuartzWebApi.Controllers
         ///         not durable, then the job will also be deleted.
         ///     </para>
         /// </summary>
-        [HttpGet]
-        [Route("scheduler/unschedulejob/{triggerKey}")]
-        public Task<bool> UnscheduleJob(TriggerKey triggerKey)
+        [HttpPost]
+        [Route("scheduler/unschedulejob")]
+        public Task<bool> UnscheduleJob([FromBody] TriggerKey triggerKey)
         {
             return CreateScheduler.Scheduler.UnscheduleJob(triggerKey);
         }
@@ -343,10 +343,9 @@ namespace QuartzWebApi.Controllers
         ///         not durable, then the job will also be deleted.
         ///     </para>
         ///     Note that while this bulk operation is likely more efficient than
-        ///     invoking <see cref="UnscheduleJob" /> several
-        ///     times, it may have the adverse affect of holding data locks for a
-        ///     single long duration of time (rather than lots of small durations
-        ///     of time).
+        ///     invoking <see cref="UnscheduleJob" /> several times, it may have the
+        ///     adverse affect of holding data locks for a single long duration of time
+        ///     (rather than lots of small durations of time).
         /// </remarks>
         [HttpGet]
         [Route("scheduler/unschedulejobs/{triggerKeys}")]
@@ -408,9 +407,9 @@ namespace QuartzWebApi.Controllers
         ///     associated <see cref="ITrigger" />s.
         /// </summary>
         /// <returns> true if the Job was found and deleted.</returns>
-        [HttpGet]
+        [HttpPost]
         [Route("scheduler/deletejob")]
-        public Task<bool> GetDeleteJob([FromBody] JobKey jobKey)
+        public Task<bool> DeleteJob([FromBody] JobKey jobKey)
         {
             return CreateScheduler.Scheduler.DeleteJob(jobKey);
         }
@@ -432,39 +431,39 @@ namespace QuartzWebApi.Controllers
         ///     true if all of the Jobs were found and deleted, false if
         ///     one or more were not deleted.
         /// </returns>
-        [HttpGet]
+        [HttpPost]
         [Route("scheduler/deletejobs")]
-        public bool DeleteJobs(IReadOnlyCollection<JobKey> jobKeys)
+        public Task<bool> DeleteJobs([FromBody] IReadOnlyCollection<JobKey> jobKeys)
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.DeleteJobs(jobKeys);
         }
 
         /// <summary>
-        ///     Trigger the identified <see cref="IJobDetail" />
-        ///     (Execute it now).
+        ///     Trigger the identified <see cref="IJobDetail" /> (Execute it now).
         /// </summary>
         [HttpPost]
         [Route("scheduler/triggerjob/{jobKey}")]
-        public void TriggerJob([FromBody] string jobKey)
+        public Task TriggerJob([FromBody] JobKey jobKey)
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.TriggerJob(jobKey);
         }
 
-        ///// <summary>
-        ///// Trigger the identified <see cref="IJobDetail" /> (Execute it now).
-        ///// </summary>
-        ///// <param name="data">
-        ///// the (possibly <see langword="null" />) JobDataMap to be
-        ///// associated with the trigger that fires the job immediately.
-        ///// </param>
-        ///// <param name="jobKey">
-        ///// The <see cref="JobKey"/> of the <see cref="IJob" /> to be executed.
-        ///// </param>
-        //
-        //Task TriggerJob(
-        //    JobKey jobKey,
-        //    JobDataMap data,
-        //    );
+        /// <summary>
+        /// Trigger the identified <see cref="IJobDetail" /> (Execute it now).
+        /// </summary>
+        /// <param name="data">
+        /// the (possibly <see langword="null" />) JobDataMap to be
+        /// associated with the trigger that fires the job immediately.
+        /// </param>
+        /// <param name="jobKey">
+        /// The <see cref="JobKey"/> of the <see cref="IJob" /> to be executed.
+        /// </param>
+        [HttpPost]
+        [Route("scheduler/triggerjob/{jobKey}")]
+        public Task TriggerJob([FromBody] JobKey jobKey, [FromBody] JobDataMap data)
+        {
+            return CreateScheduler.Scheduler.TriggerJob(jobKey, data);
+        }
 
         ///// <summary>
         ///// Pause the <see cref="IJobDetail" /> with the given
