@@ -137,6 +137,7 @@
     <Compile Include="Data\JobDataMap.cs" />
     <Compile Include="Data\JobDetail.cs" />
     <Compile Include="Data\RunningJobs.cs" />
+    <Compile Include="Data\SchedulerMetaData.cs" />
     <Compile Include="Data\Trigger.cs" />
     <Compile Include="Data\TriggerKey.cs" />
     <Compile Include="Global.asax.cs">

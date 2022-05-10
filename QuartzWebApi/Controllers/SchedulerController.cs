@@ -13,7 +13,7 @@ namespace QuartzWebApi.Controllers
         /// <summary>
         ///     Returns <c>true</c> if the given JobGroup is paused
         /// </summary>
-        /// <param name="groupName"></param>
+        /// <param name="groupName">The group name</param>
         /// <returns></returns>
         [HttpGet]
         [Route("scheduler/isjobgrouppaused/{groupName}")]
@@ -25,7 +25,7 @@ namespace QuartzWebApi.Controllers
         /// <summary>
         ///     Returns <c>true</c> if the given TriggerGroup is paused
         /// </summary>
-        /// <param name="groupName"></param>
+        /// <param name="groupName">The group name</param>
         /// <returns></returns>
         [HttpGet]
         [Route("scheduler/istriggergrouppaused/{groupName}")]
@@ -81,15 +81,20 @@ namespace QuartzWebApi.Controllers
             return CreateScheduler.Scheduler.IsShutdown;
         }
 
-        ///// <summary>
-        ///// Get a <see cref="SchedulerMetaData" /> object describing the settings
-        ///// and capabilities of the scheduler instance.
-        ///// </summary>
-        ///// <remarks>
-        ///// Note that the data returned is an 'instantaneous' snap-shot, and that as
-        ///// soon as it's returned, the meta data values may be different.
-        ///// </remarks>
-        //Task<SchedulerMetaData> GetMetaData();
+        /// <summary>
+        /// Get a <see cref="SchedulerMetaData" /> object describing the settings
+        /// and capabilities of the scheduler instance.
+        /// </summary>
+        /// <remarks>
+        /// Note that the data returned is an 'instantaneous' snap-shot, and that as
+        /// soon as it's returned, the meta data values may be different.
+        /// </remarks>
+        [HttpGet]
+        [Route("scheduler/getmetadata")]
+        public string GetMetaData()
+        {
+            return new Data.SchedulerMetaData(CreateScheduler.Scheduler.GetMetaData().Result).SerializeToString();
+        }
 
         ///// <summary>
         ///// Return a list of <see cref="IJobExecutionContext" /> objects that
@@ -111,29 +116,6 @@ namespace QuartzWebApi.Controllers
         ///// <seealso cref="IJobExecutionContext" />
         //Task<IReadOnlyCollection<IJobExecutionContext>> GetCurrentlyExecutingJobs(
         //    );
-
-        ///// <summary>
-        ///// Set the <see cref="JobFactory" /> that will be responsible for producing 
-        ///// instances of <see cref="IJob" /> classes.
-        ///// </summary>
-        ///// <remarks>
-        ///// JobFactories may be of use to those wishing to have their application
-        ///// produce <see cref="IJob" /> instances via some special mechanism, such as to
-        ///// give the opportunity for dependency injection.
-        ///// </remarks>
-        ///// <seealso cref="IJobFactory" />
-        //IJobFactory JobFactory { set; }
-
-        ///// <summary>
-        ///// Get a reference to the scheduler's <see cref="IListenerManager" />,
-        ///// through which listeners may be registered.
-        ///// </summary>
-        ///// <returns>the scheduler's <see cref="IListenerManager" /></returns>
-        ///// <seealso cref="ListenerManager" />
-        ///// <seealso cref="IJobListener" />
-        ///// <seealso cref="ITriggerListener" />
-        ///// <seealso cref="ISchedulerListener" />
-        //IListenerManager ListenerManager { get; }
 
         /// <summary>
         ///     Get the names of all known <see cref="IJobDetail" /> groups.
@@ -257,7 +239,7 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/shutdown")]
         public Task Shutdown()
         {
-            return CreateScheduler.Scheduler.Standby();
+            return CreateScheduler.Scheduler.Shutdown();
         }
 
         /// <summary>
@@ -290,11 +272,18 @@ namespace QuartzWebApi.Controllers
         ///// </remarks>
         //DateTimeOffset ScheduleJob(IJobDetail jobDetail, ITrigger trigger);
 
-        ///// <summary>
-        ///// Schedule the given <see cref="ITrigger" /> with the
-        ///// <see cref="IJob" /> identified by the <see cref="ITrigger" />'s settings.
-        ///// </summary>
-        //Task<DateTimeOffset> ScheduleJob(ITrigger trigger);
+        /// <summary>
+        ///     Schedule the given <see cref="ITrigger" /> with the <see cref="IJob" /> identified by the <see cref="ITrigger" />'s settings.
+        /// </summary>
+        /// <param name="trigger"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("scheduler/schedulejob")]
+        public Task<DateTimeOffset> ScheduleJob([FromBody] string trigger)
+        {
+            //trigger.
+            return null;
+        }
 
         ///// <summary>
         ///// Schedule all of the given jobs with the related set of triggers.
@@ -348,8 +337,8 @@ namespace QuartzWebApi.Controllers
         ///     (rather than lots of small durations of time).
         /// </remarks>
         [HttpGet]
-        [Route("scheduler/unschedulejobs/{triggerKeys}")]
-        public Task<bool> UnscheduleJobs(IReadOnlyCollection<TriggerKey> triggerKeys)
+        [Route("scheduler/unschedulejobs")]
+        public Task<bool> UnscheduleJobs([FromBody] IReadOnlyCollection<TriggerKey> triggerKeys)
         {
             return CreateScheduler.Scheduler.UnscheduleJobs(triggerKeys);
         }
