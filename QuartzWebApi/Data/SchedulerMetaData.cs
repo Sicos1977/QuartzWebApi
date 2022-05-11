@@ -85,7 +85,7 @@ namespace QuartzWebApi.Data
                 NullValueHandling = NullValueHandling.Include
             };
 
-            return JsonConvert.SerializeObject(this, Formatting.None);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
     }
 }

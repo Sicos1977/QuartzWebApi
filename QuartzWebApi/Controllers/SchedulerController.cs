@@ -179,9 +179,9 @@ namespace QuartzWebApi.Controllers
         /// <seealso cref="Shutdown(bool)" />
         [HttpPost]
         [Route("scheduler/startdelayed/{delay}")]
-        public Task StartDelayed(TimeSpan delay)
+        public Task StartDelayed(int delay)
         {
-            return CreateScheduler.Scheduler.StartDelayed(delay);
+            return CreateScheduler.Scheduler.StartDelayed(new TimeSpan(0, 0, delay));
         }
 
         /// <summary>
@@ -281,8 +281,8 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/schedulejob")]
         public Task<DateTimeOffset> ScheduleJob([FromBody] string trigger)
         {
-            //trigger.
-            return null;
+            var trigg = TriggerBuilder.Create().Build();
+            return CreateScheduler.Scheduler.ScheduleJob(new Data.Trigger);
         }
 
         ///// <summary>
