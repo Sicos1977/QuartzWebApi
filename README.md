@@ -139,3 +139,16 @@ Do a `POST` request to `scheduler/schedulejob` with in the body
 
 This will return a datetime offset about when the job will be executed, for example `"2022-05-12T16:17:00+00:00"`
 
+Errors returned
+===============
+
+When an error occures this is returned a .NET exception in JSON form like this
+
+```json
+{
+    "Message": "An error has occurred.",
+    "ExceptionMessage": "Unable to store Trigger: 'TriggerKeyGroup.TriggerKeyName', because one already exists with this identification.",
+    "ExceptionType": "Quartz.ObjectAlreadyExistsException",
+    "StackTrace": "   at Quartz.Simpl.RAMJobStore.StoreTriggerInternal(IOperableTrigger newTrigger, Boolean replaceExisting)\r\n   at Quartz.Simpl.RAMJobStore.StoreTrigger(IOperableTrigger newTrigger, Boolean replaceExisting, CancellationToken cancellationToken)\r\n   at Quartz.Core.QuartzScheduler.<ScheduleJob>d__83.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)\r\n   at System.Threading.Tasks.TaskHelpersExtensions.<CastToObject>d__1`1.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)\r\n   at System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__1.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)\r\n   at System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__5.MoveNext()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()\r\n   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)\r\n   at System.Web.Http.Dispatcher.HttpControllerDispatcher.<SendAsync>d__15.MoveNext()"
+}
+```
