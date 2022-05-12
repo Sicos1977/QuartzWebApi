@@ -1,55 +1,54 @@
 ﻿using System;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace QuartzWebApi.Data
 {
     public class SchedulerMetaData
     {
         #region Properties
-        [JsonProperty("inStandbyMode")]
+        [JsonProperty("InStandbyMode")]
         public bool InStandbyMode { get; }
 
-        [JsonProperty("jobStoreType")]
+        [JsonProperty("JobStoreType")]
         public Type JobStoreType { get; }
 
-        [JsonProperty("jobStoreClustered")]
+        [JsonProperty("JobStoreClustered")]
         public bool JobStoreClustered { get; }
 
-        [JsonProperty("jobsStoreSupportsPersistence")]
+        [JsonProperty("JobsStoreSupportsPersistence")]
         public bool JobStoreSupportsPersistence { get; }
 
-        [JsonProperty("numbersOfJobsExecuted")]
+        [JsonProperty("NumbersOfJobsExecuted")]
         public int NumbersOfJobsExecuted { get; }
 
-        [JsonProperty("runningSince")]
+        [JsonProperty("RunningSince")]
         public DateTimeOffset? RunningSince { get; }
 
-        [JsonProperty("schedulerInstanceId")]
+        [JsonProperty("SchedulerInstanceId")]
         public string SchedulerInstanceId { get; }
 
-        [JsonProperty("schedulerName")]
+        [JsonProperty("SchedulerName")]
         public string SchedulerName { get; }
 
-        [JsonProperty("schedulerRemote")]
+        [JsonProperty("SchedulerRemote")]
         public bool SchedulerRemote { get; }
 
-        [JsonProperty("schedulerType")]
+        [JsonProperty("SchedulerType")]
         public Type SchedulerType { get; }
 
-        [JsonProperty("shutdown")]
+        [JsonProperty("Shutdown")]
         public bool Shutdown { get; }
 
-        [JsonProperty("started")]
+        [JsonProperty("Started")]
         public bool Started { get; }
 
-        [JsonProperty("threadPoolSize")]
+        [JsonProperty("ThreadPoolSize")]
         public int ThreadPoolSize { get; }
 
-        [JsonProperty("threadPoolType")]
+        [JsonProperty("ThreadPoolType")]
         public Type ThreadPoolType { get; }
 
-        [JsonProperty("version")]
+        [JsonProperty("Version")]
         public string Version { get; }
 
         //[JsonProperty("summary")]
@@ -78,14 +77,27 @@ namespace QuartzWebApi.Data
         }
         #endregion
 
-        public string SerializeToString()
+        #region ToJsonString
+        /// <summary>
+        ///     Returns this object as a json string
+        /// </summary>
+        /// <returns></returns>
+        public string ToJsonString()
         {
-            var serializer = new JsonSerializer
-            {
-                NullValueHandling = NullValueHandling.Include
-            };
-
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
+        #endregion
+
+        #region FromJsonString
+        /// <summary>
+        ///     Returns the <see cref="Trigger"/> object from the given <paramref name="json"/> string
+        /// </summary>
+        /// <param name="json">The json string</param>
+        /// <returns><see cref="Trigger"/></returns>
+        public static SchedulerMetaData FromJsonString(string json)
+        {
+            return JsonConvert.DeserializeObject<SchedulerMetaData>(json);
+        }
+        #endregion
     }
 }

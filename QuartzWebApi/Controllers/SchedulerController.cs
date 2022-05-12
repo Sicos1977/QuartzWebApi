@@ -114,8 +114,7 @@ namespace QuartzWebApi.Controllers
         ///// </para>
         ///// </remarks>
         ///// <seealso cref="IJobExecutionContext" />
-        //Task<IReadOnlyCollection<IJobExecutionContext>> GetCurrentlyExecutingJobs(
-        //    );
+        //Task<IReadOnlyCollection<IJobExecutionContext>> GetCurrentlyExecutingJobs();
 
         /// <summary>
         ///     Get the names of all known <see cref="IJobDetail" /> groups.
@@ -126,8 +125,7 @@ namespace QuartzWebApi.Controllers
         {
             return CreateScheduler.Scheduler.GetJobGroupNames();
         }
-
-
+        
         /// <summary>
         ///     Get the names of all known <see cref="ITrigger" /> groups.
         /// </summary>
@@ -281,8 +279,8 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/schedulejob")]
         public Task<DateTimeOffset> ScheduleJob([FromBody] string trigger)
         {
-            var trigg = TriggerBuilder.Create().Build();
-            return CreateScheduler.Scheduler.ScheduleJob(new Data.Trigger);
+            var trig = Data.Trigger.FromJsonString(trigger).ToTrigger();
+            return CreateScheduler.Scheduler.ScheduleJob(trig);
         }
 
         ///// <summary>

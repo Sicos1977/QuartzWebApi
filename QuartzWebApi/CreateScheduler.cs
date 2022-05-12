@@ -36,7 +36,7 @@ namespace QuartzWebApi
 
             var job = new TestJob();
             var schedulerJob = JobBuilder.Create(job.GetType())
-                .WithIdentity(new JobKey("Test", "TestGroup"))
+                .WithIdentity(new JobKey("JobKeyName", "JobKeyGroup"))
                 .WithDescription("Test")
                 .RequestRecovery()
                 .Build();

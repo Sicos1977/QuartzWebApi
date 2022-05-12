@@ -6,37 +6,92 @@ namespace QuartzWebApi.Data
 {
     public class Trigger
     {
-        [JsonProperty("key")]
-        public Quartz.TriggerKey Key { get; }
+        #region Properties
+        [JsonProperty("TriggerKey")]
+        public Quartz.TriggerKey TriggerKey { get; private set; }
 
-        [JsonProperty("jobKey")]
-        public JobKey JobKey { get; }
+        [JsonProperty("JobKey")]
+        public JobKey JobKey { get; private set; }
 
-        [JsonProperty("description")]
-        public string Description { get; }
+        [JsonProperty("Description")]
+        public string Description { get; private set; }
 
-        [JsonProperty("calendarName")]
-        public string CalendarName { get; }
+        [JsonProperty("CalendarName")]
+        public string CalendarName { get; private set; }
 
-        [JsonProperty("jobDataMap")]
-        public Quartz.JobDataMap JobDataMap { get; }
+        [JsonProperty("JobDataMap")]
+        public Quartz.JobDataMap JobDataMap { get; private set; }
 
-        [JsonProperty("finalFireTimeUtc")]
-        public DateTimeOffset? FinalFireTimeUtc { get; }
+        [JsonProperty("CronSchedule")]
+        public string CronSchedule { get; private set; }
 
-        [JsonProperty("misfireInstruction")]
-        public int MisfireInstruction { get; }
+        [JsonProperty("StartTimeUtc")]
+        public DateTimeOffset StartTimeUtc { get; private set; }
 
-        [JsonProperty("endTimeUtc")]
-        public DateTimeOffset? EndTimeUtc { get; }
+        [JsonProperty("EndTimeUtc")]
+        public DateTimeOffset? EndTimeUtc { get; private set; }
 
-        [JsonProperty("startTimeUtc")]
-        public DateTimeOffset StartTimeUtc { get; }
+        [JsonProperty("FinalFireTimeUtc")]
+        public DateTimeOffset? FinalFireTimeUtc { get; private set; }
 
-        [JsonProperty("priority")]
-        public int Priority { get; set; }
+        [JsonProperty("Priority")]
+        public int Priority { get; private set; }
+        #endregion
 
-        [JsonProperty("hasMillisecondPrecision")]
-        public bool HasMillisecondPrecision { get; }
+        #region ToTrigger
+        /// <summary>
+        ///     Returns this object as a Quartz <see cref="ITrigger"/>
+        /// </summary>
+        /// <returns></returns>
+        public ITrigger ToTrigger()
+        {
+            var trigger = TriggerBuilder
+                .Create()
+                .ForJob(JobKey)
+                .WithIdentity(TriggerKey)
+                .WithPriority(Priority)
+                .StartAt(StartTimeUtc);
+
+            if (EndTimeUtc.HasValue)
+                trigger = trigger.EndAt(EndTimeUtc.Value);
+
+            if (!string.IsNullOrWhiteSpace(CronSchedule))
+                trigger = trigger.WithCronSchedule(CronSchedule);
+            
+            if (!string.IsNullOrWhiteSpace(CalendarName))
+                trigger = trigger.ModifiedByCalendar(CalendarName);
+
+            if (!string.IsNullOrWhiteSpace(Description))
+                trigger = trigger.WithDescription(Description);
+
+            if (JobDataMap != null)
+                trigger = trigger.UsingJobData(JobDataMap);
+
+            return trigger.Build();
+        }
+        #endregion
+
+        #region ToJsonString
+        /// <summary>
+        ///     Returns this object as a json string
+        /// </summary>
+        /// <returns></returns>
+        public string ToJsonString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+        }
+        #endregion
+
+        #region FromJsonString
+        /// <summary>
+        ///     Returns the <see cref="Trigger"/> object from the given <paramref name="json"/> string
+        /// </summary>
+        /// <param name="json">The json string</param>
+        /// <returns><see cref="Trigger"/></returns>
+        public static Trigger FromJsonString(string json)
+        {
+            return JsonConvert.DeserializeObject<Trigger>(json);
+        }
+        #endregion
     }
 }
