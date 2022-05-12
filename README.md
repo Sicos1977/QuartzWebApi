@@ -142,7 +142,7 @@ This will return a datetime offset about when the job will be executed, for exam
 Errors returned
 ===============
 
-When an error occures this is returned a .NET exception in JSON form like this
+When an error occures this is returned as a .NET exception in JSON format like this
 
 ```json
 {
