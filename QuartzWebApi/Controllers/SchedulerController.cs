@@ -93,7 +93,7 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/getmetadata")]
         public string GetMetaData()
         {
-            return new Data.SchedulerMetaData(CreateScheduler.Scheduler.GetMetaData().Result).SerializeToString();
+            return new Data.SchedulerMetaData(CreateScheduler.Scheduler.GetMetaData().Result).ToJsonString();
         }
 
         ///// <summary>
