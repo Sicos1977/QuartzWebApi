@@ -114,7 +114,26 @@ Do a `POST` request to `scheduler/shutdown/{waitForJobsToComplete}` where `{wait
 Do a `POST` request to `scheduler/schedulejob` with in the body
 
 ```json
-// TODO
+{
+    "triggerKey": {
+        "Name": "TriggerKeyName",
+        "Group": "TriggerKeyGroup"
+    },
+    "jobKey": {
+        "Name": "JobKeyName",
+        "Group": "JobKeyGroup"
+    },
+    "description": "Description",
+    "calendarName": "CalendarName",
+    "jobDataMap": {
+        "Key1": "Value1",
+        "Key2": "Value2"
+    },
+    "startTimeUtc": "2022-05-12T16:16:37.7210025+00:00",
+    "endTimeUtc": "2022-05-13T02:16:37.7210025+00:00",
+    "finalFireTimeUtc": "2022-05-13T22:16:37.7210025+00:00",
+    "priority": 5
+}
 ```
 
 This will return a datetime offset about when the job will be executed
