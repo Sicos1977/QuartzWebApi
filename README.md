@@ -218,9 +218,7 @@ Do a `POST` request to `scheduler/triggerjob` with in the body the key of the jo
     "Name": "JobKeyName1",
     "Group": "JobKeyGroup1"
 }
-```      
-    
-this will return `true` when the job is deleted or `false` when not       
+```     
     
 Errors returned
 ===============
