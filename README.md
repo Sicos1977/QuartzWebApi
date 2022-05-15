@@ -139,6 +139,42 @@ Do a `POST` request to `scheduler/schedulejob` with in the body
 
 This will return a datetime offset about when the job will be executed, for example `"2022-05-12T16:17:00+00:00"`
 
+TODO: Task ScheduleJobs(IReadOnlyDictionary<IJobDetail, IReadOnlyCollection<ITrigger>> triggersAndJobs, bool replace);
+
+TODO: Task ScheduleJob(IJobDetail jobDetail,IReadOnlyCollection<ITrigger> triggersForJob,bool replace,);
+    
+### Unschedule a job
+
+Do a `POST` request to `scheduler/unschedulejob` with in the body the trigger of the job
+   
+```json    
+{
+    "Name": "TriggerKeyName",
+    "Group": "TriggerKeyGroup"
+}
+```    
+ 
+### Unschedule multiple jobs
+
+Do a `POST` request to `scheduler/unschedulejobs` with in the body the triggers of the job to unschedule
+   
+```json    
+[
+    {
+        "Name": "TriggerKeyName1",
+        "Group": "TriggerKeyGroup1"
+    },
+    {
+        "Name": "TriggerKeyName1",
+        "Group": "TriggerKeyGroup1"
+    }
+]
+```      
+    
+this will return `true` when the jobs are unscheduled or `false` when not
+    
+TODO: Task<DateTimeOffset?> RescheduleJob(TriggerKey triggerKey, ITrigger newTrigger)    
+    
 Errors returned
 ===============
 
