@@ -301,11 +301,7 @@ namespace QuartzWebApi.Controllers
         ///// specifically, if the keys are not unique) and the replace 
         ///// parameter is not set to true then an exception will be thrown.
         ///// </remarks>
-        //Task ScheduleJob(
-        //    IJobDetail jobDetail,
-        //    IReadOnlyCollection<ITrigger> triggersForJob,
-        //    bool replace,
-        //    );
+        //Task ScheduleJob(IJobDetail jobDetail,IReadOnlyCollection<ITrigger> triggersForJob,bool replace,);
 
         /// <summary>
         ///     Remove the indicated <see cref="ITrigger" /> from the scheduler.
@@ -334,31 +330,33 @@ namespace QuartzWebApi.Controllers
         ///     adverse affect of holding data locks for a single long duration of time
         ///     (rather than lots of small durations of time).
         /// </remarks>
-        [HttpGet]
+        [HttpPost]
         [Route("scheduler/unschedulejobs")]
         public Task<bool> UnscheduleJobs([FromBody] IReadOnlyCollection<TriggerKey> triggerKeys)
         {
             return CreateScheduler.Scheduler.UnscheduleJobs(triggerKeys);
         }
 
-        ///// <summary>
-        ///// Remove (delete) the <see cref="ITrigger" /> with the
-        ///// given key, and store the new given one - which must be associated
-        ///// with the same job (the new trigger must have the job name &amp; group specified) 
-        ///// - however, the new trigger need not have the same name as the old trigger.
-        ///// </summary>
-        ///// <param name="triggerKey">The <see cref="ITrigger" /> to be replaced.</param>
-        ///// <param name="newTrigger">
-        /////     The new <see cref="ITrigger" /> to be stored.
-        ///// </param>
-        //
-        ///// <returns> 
-        ///// <see langword="null" /> if a <see cref="ITrigger" /> with the given
-        ///// name and group was not found and removed from the store (and the 
-        ///// new trigger is therefore not stored),  otherwise
-        ///// the first fire time of the newly scheduled trigger.
-        ///// </returns>
-        //Task<DateTimeOffset?> RescheduleJob(TriggerKey triggerKey, ITrigger newTrigger);
+        /// <summary>
+        /// Remove (delete) the <see cref="ITrigger" /> with the
+        /// given key, and store the new given one - which must be associated
+        /// with the same job (the new trigger must have the job name &amp; group specified) 
+        /// - however, the new trigger need not have the same name as the old trigger.
+        /// </summary>
+        /// <param name="triggerKey">The <see cref="ITrigger" /> to be replaced.</param>
+        /// <param name="newTrigger">
+        ///     The new <see cref="ITrigger" /> to be stored.
+        /// </param>
+        /// <returns> 
+        /// <see langword="null" /> if a <see cref="ITrigger" /> with the given
+        /// name and group was not found and removed from the store (and the 
+        /// new trigger is therefore not stored),  otherwise
+        /// the first fire time of the newly scheduled trigger.
+        /// </returns>
+        Task<DateTimeOffset?> RescheduleJob(TriggerKey triggerKey, ITrigger newTrigger)
+        {
+            return null;
+        }
 
         ///// <summary>
         ///// Add the given <see cref="IJob" /> to the Scheduler - with no associated
@@ -370,10 +368,7 @@ namespace QuartzWebApi.Controllers
         ///// The <see cref="IJob" /> must by definition be 'durable', if it is not,
         ///// SchedulerException will be thrown.
         ///// </remarks>
-        //Task AddJob(
-        //    IJobDetail jobDetail,
-        //    bool replace,
-        //    );
+        //Task AddJob(IJobDetail jobDetail, bool replace);
 
         ///// <summary>
         ///// Add the given <see cref="IJob" /> to the Scheduler - with no associated
@@ -429,7 +424,7 @@ namespace QuartzWebApi.Controllers
         ///     Trigger the identified <see cref="IJobDetail" /> (Execute it now).
         /// </summary>
         [HttpPost]
-        [Route("scheduler/triggerjob/{jobKey}")]
+        [Route("scheduler/triggerjob")]
         public Task TriggerJob([FromBody] JobKey jobKey)
         {
             return CreateScheduler.Scheduler.TriggerJob(jobKey);
