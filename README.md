@@ -153,10 +153,12 @@ Do a `POST` request to `scheduler/unschedulejob` with in the body the trigger of
     "Group": "TriggerKeyGroup"
 }
 ```    
+    
+this will return `true` when the job is unscheduled or `false` when not    
  
 ### Unschedule multiple jobs
 
-Do a `POST` request to `scheduler/unschedulejobs` with in the body the triggers of the job to unschedule
+Do a `POST` request to `scheduler/unschedulejobs` with in the body the triggers of the jobs to unschedule
    
 ```json    
 [
@@ -165,8 +167,8 @@ Do a `POST` request to `scheduler/unschedulejobs` with in the body the triggers 
         "Group": "TriggerKeyGroup1"
     },
     {
-        "Name": "TriggerKeyName1",
-        "Group": "TriggerKeyGroup1"
+        "Name": "TriggerKeyName2",
+        "Group": "TriggerKeyGroup2"
     }
 ]
 ```      
@@ -174,6 +176,51 @@ Do a `POST` request to `scheduler/unschedulejobs` with in the body the triggers 
 this will return `true` when the jobs are unscheduled or `false` when not
     
 TODO: Task<DateTimeOffset?> RescheduleJob(TriggerKey triggerKey, ITrigger newTrigger)    
+    
+TODO: Task AddJob(IJobDetail jobDetail, bool replace);
+    
+### Delete a job
+
+Do a `POST` request to `scheduler/deletejob` with in the body the key of the job
+   
+```json    
+{
+    "Name": "JobKeyName",
+    "Group": "JobKeyGroup"
+}
+```    
+    
+this will return `true` when the job is deleted or `false` when not        
+    
+### Delete multiple jobs
+
+Do a `POST` request to `scheduler/deletejobs` with in the body the keys of the jobs
+   
+```json    
+[
+    {
+        "Name": "JobKeyName1",
+        "Group": "JobKeyGroup1"
+    },
+    {
+        "Name": "JobKeyName2",
+        "Group": "JobKeyGroup2"
+    }
+]
+```    
+    
+### Trigger a job to execute NOW
+
+Do a `POST` request to `scheduler/triggerjob` with in the body the key of the job
+   
+```json    
+{
+    "Name": "JobKeyName1",
+    "Group": "JobKeyGroup1"
+}
+```      
+    
+this will return `true` when the job is deleted or `false` when not       
     
 Errors returned
 ===============
