@@ -220,6 +220,51 @@ Do a `POST` request to `scheduler/triggerjob` with in the body the key of the jo
 }
 ```     
     
+### Trigger a job to execute NOW and associated a JobDataMap
+
+Do a `POST` request to `scheduler/triggerjobwithdatamap` with in the body
+   
+```json    
+{    
+    "JobKey": {
+        "Name": "JobKeyName",
+        "Group": "JobKeyGroup"
+    },
+    "JobDataMap": {
+        "Key1": "Value1",
+        "Key2": "Value2"
+    }
+}
+```         
+
+### Pause a job
+    
+Do a `POST` request to `scheduler/pausejob` with in the body the key of the job
+   
+```json    
+{
+    "Name": "JobKeyName1",
+    "Group": "JobKeyGroup1"
+}
+```        
+    
+### Pause multiple jobs
+    
+Do a `POST` request to `scheduler/pausejobs` with in the body the keys of the jobs to pause
+   
+```json    
+[    
+    {
+        "Name": "JobKeyName1",
+        "Group": "JobKeyGroup1"
+    },
+    {
+        "Name": "JobKeyName2",
+        "Group": "JobKeyGroup2"
+    }    
+]    
+```     
+    
 Errors returned
 ===============
 
