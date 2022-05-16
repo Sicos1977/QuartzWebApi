@@ -5,6 +5,8 @@ using System.Web.Http;
 using Quartz;
 using Quartz.Impl.Matchers;
 using Quartz.Spi;
+using QuartzWebApi.Data;
+using TriggerKey = Quartz.TriggerKey;
 
 namespace QuartzWebApi.Controllers
 {
@@ -82,7 +84,7 @@ namespace QuartzWebApi.Controllers
         }
 
         /// <summary>
-        /// Get a <see cref="SchedulerMetaData" /> object describing the settings
+        /// Get a <see cref="Quartz.SchedulerMetaData" /> object describing the settings
         /// and capabilities of the scheduler instance.
         /// </summary>
         /// <remarks>
@@ -273,14 +275,14 @@ namespace QuartzWebApi.Controllers
         /// <summary>
         ///     Schedule the given <see cref="ITrigger" /> with the <see cref="IJob" /> identified by the <see cref="ITrigger" />'s settings.
         /// </summary>
-        /// <param name="trigger"></param>
+        /// <param name="json"></param>
         /// <returns></returns>
         [HttpPost]
         [Route("scheduler/schedulejob")]
-        public Task<DateTimeOffset> ScheduleJob([FromBody] string trigger)
+        public Task<DateTimeOffset> ScheduleJob([FromBody] string json)
         {
-            var trig = Data.Trigger.FromJsonString(trigger).ToTrigger();
-            return CreateScheduler.Scheduler.ScheduleJob(trig);
+            var trigger = Data.Trigger.FromJsonString(json).ToTrigger();
+            return CreateScheduler.Scheduler.ScheduleJob(trigger);
         }
 
         ///// <summary>
@@ -433,52 +435,57 @@ namespace QuartzWebApi.Controllers
         /// <summary>
         /// Trigger the identified <see cref="IJobDetail" /> (Execute it now).
         /// </summary>
-        /// <param name="data">
-        /// the (possibly <see langword="null" />) JobDataMap to be
-        /// associated with the trigger that fires the job immediately.
-        /// </param>
-        /// <param name="jobKey">
-        /// The <see cref="JobKey"/> of the <see cref="IJob" /> to be executed.
+        /// <param name="json">
+        /// The <see cref="JobKey"/> with associated <see cref="Quartz.JobDataMap"/> of the <see cref="IJob" /> to be executed.
         /// </param>
         [HttpPost]
-        [Route("scheduler/triggerjob/{jobKey}")]
-        public Task TriggerJob([FromBody] JobKey jobKey, [FromBody] JobDataMap data)
+        [Route("scheduler/triggerjobwithdatamap")]
+        public Task TriggerJob([FromBody] string json)
         {
-            return CreateScheduler.Scheduler.TriggerJob(jobKey, data);
+            var jobKeyWithDataMap = JobKeyWithDataMap.FromJsonString(json);
+            return CreateScheduler.Scheduler.TriggerJob(jobKeyWithDataMap.JobKey, jobKeyWithDataMap.JobDataMap);
         }
 
-        ///// <summary>
-        ///// Pause the <see cref="IJobDetail" /> with the given
-        ///// key - by pausing all of its current <see cref="ITrigger" />s.
-        ///// </summary>
-        //Task PauseJob(
-        //    JobKey jobKey,
-        //    );
+        /// <summary>
+        /// Pause the <see cref="IJobDetail" /> with the given
+        /// key - by pausing all of its current <see cref="ITrigger" />s.
+        /// </summary>
+        [HttpPost]
+        [Route("scheduler/pausejob")]
+        public Task PauseJob([FromBody] JobKey jobKey)
+        {
+            return CreateScheduler.Scheduler.PauseJob(jobKey);
+        }
 
-        ///// <summary>
-        ///// Pause all of the <see cref="IJobDetail" />s in the
-        ///// matching groups - by pausing all of their <see cref="ITrigger" />s.
-        ///// </summary>
-        ///// <remarks>
-        ///// <para>
-        ///// The Scheduler will "remember" that the groups are paused, and impose the
-        ///// pause on any new jobs that are added to any of those groups until it is resumed.
-        ///// </para>
-        ///// <para>NOTE: There is a limitation that only exactly matched groups
-        ///// can be remembered as paused.  For example, if there are pre-existing
-        ///// job in groups "aaa" and "bbb" and a matcher is given to pause
-        ///// groups that start with "a" then the group "aaa" will be remembered
-        ///// as paused and any subsequently added jobs in group "aaa" will be paused,
-        ///// however if a job is added to group "axx" it will not be paused,
-        ///// as "axx" wasn't known at the time the "group starts with a" matcher 
-        ///// was applied.  HOWEVER, if there are pre-existing groups "aaa" and
-        ///// "bbb" and a matcher is given to pause the group "axx" (with a
-        ///// group equals matcher) then no jobs will be paused, but it will be 
-        ///// remembered that group "axx" is paused and later when a job is added 
-        ///// in that group, it will become paused.</para>
-        ///// </remarks>
-        ///// <seealso cref="ResumeJobs" />
-        //Task PauseJobs(GroupMatcher<JobKey> matcher);
+        /// <summary>
+        /// Pause all of the <see cref="IJobDetail" />s in the
+        /// matching groups - by pausing all of their <see cref="ITrigger" />s.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The Scheduler will "remember" that the groups are paused, and impose the
+        /// pause on any new jobs that are added to any of those groups until it is resumed.
+        /// </para>
+        /// <para>NOTE: There is a limitation that only exactly matched groups
+        /// can be remembered as paused.  For example, if there are pre-existing
+        /// job in groups "aaa" and "bbb" and a matcher is given to pause
+        /// groups that start with "a" then the group "aaa" will be remembered
+        /// as paused and any subsequently added jobs in group "aaa" will be paused,
+        /// however if a job is added to group "axx" it will not be paused,
+        /// as "axx" wasn't known at the time the "group starts with a" matcher 
+        /// was applied.  HOWEVER, if there are pre-existing groups "aaa" and
+        /// "bbb" and a matcher is given to pause the group "axx" (with a
+        /// group equals matcher) then no jobs will be paused, but it will be 
+        /// remembered that group "axx" is paused and later when a job is added 
+        /// in that group, it will become paused.</para>
+        /// </remarks>
+        /// <seealso cref="ResumeJobs" />
+        [HttpPost]
+        [Route("scheduler/pausejobs")]
+        public Task PauseJobs([FromBody] GroupMatcher<JobKey> matcher)
+        {
+            //return CreateScheduler.Scheduler.PauseJobs(matcher);
+        }
 
         ///// <summary> 
         ///// Pause the <see cref="ITrigger" /> with the given key.
@@ -519,7 +526,7 @@ namespace QuartzWebApi.Controllers
         ///     instruction will be applied.
         /// </remarks>
         [HttpPost]
-        [Route("scheduler/resumejob/{jobKey}")]
+        [Route("scheduler/resumejob")]
         public void ResumeJob(JobKey jobKey)
         {
             throw new NotImplementedException();

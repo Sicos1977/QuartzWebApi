@@ -4,24 +4,18 @@ using Quartz;
 
 namespace QuartzWebApi.Data
 {
-    public class Trigger
+    public class Trigger : JobKeyWithDataMap
     {
         #region Properties
         [JsonProperty("TriggerKey")]
         public Quartz.TriggerKey TriggerKey { get; private set; }
-
-        [JsonProperty("JobKey")]
-        public JobKey JobKey { get; private set; }
 
         [JsonProperty("Description")]
         public string Description { get; private set; }
 
         [JsonProperty("CalendarName")]
         public string CalendarName { get; private set; }
-
-        [JsonProperty("JobDataMap")]
-        public Quartz.JobDataMap JobDataMap { get; private set; }
-
+        
         [JsonProperty("CronSchedule")]
         public string CronSchedule { get; private set; }
 
