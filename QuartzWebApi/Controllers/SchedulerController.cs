@@ -467,7 +467,7 @@ namespace QuartzWebApi.Controllers
         /// pause on any new jobs that are added to any of those groups until it is resumed.
         /// </para>
         /// <para>NOTE: There is a limitation that only exactly matched groups
-        /// can be remembered as paused.  For example, if there are pre-existing
+        /// can be remembered as paused. For example, if there are pre-existing
         /// job in groups "aaa" and "bbb" and a matcher is given to pause
         /// groups that start with "a" then the group "aaa" will be remembered
         /// as paused and any subsequently added jobs in group "aaa" will be paused,
@@ -484,37 +484,48 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/pausejobs")]
         public Task PauseJobs([FromBody] GroupMatcher<JobKey> matcher)
         {
-            //return CreateScheduler.Scheduler.PauseJobs(matcher);
+            //var match = GroupMatcher<JobKey>.GroupContains();
+            return CreateScheduler.Scheduler.PauseJobs(matcher);
         }
 
-        ///// <summary> 
-        ///// Pause the <see cref="ITrigger" /> with the given key.
-        ///// </summary>
-        //Task PauseTrigger(TriggerKey triggerKey);
+        /// <summary> 
+        /// Pause the <see cref="ITrigger" /> with the given key.
+        /// </summary>
+        [HttpPost]
+        [Route("scheduler/pausetrigger")]
+        public Task PauseTrigger([FromBody] TriggerKey triggerKey)
+        {
+            return CreateScheduler.Scheduler.PauseTrigger(triggerKey);
+        }
 
-        ///// <summary>
-        ///// Pause all of the <see cref="ITrigger" />s in the groups matching.
-        ///// </summary>
-        ///// <remarks>
-        ///// <para>
-        ///// The Scheduler will "remember" all the groups paused, and impose the
-        ///// pause on any new triggers that are added to any of those groups until it is resumed.
-        ///// </para>
-        ///// <para>NOTE: There is a limitation that only exactly matched groups
-        ///// can be remembered as paused.  For example, if there are pre-existing
-        ///// triggers in groups "aaa" and "bbb" and a matcher is given to pause
-        ///// groups that start with "a" then the group "aaa" will be remembered as
-        ///// paused and any subsequently added triggers in that group be paused,
-        ///// however if a trigger is added to group "axx" it will not be paused,
-        ///// as "axx" wasn't known at the time the "group starts with a" matcher 
-        ///// was applied.  HOWEVER, if there are pre-existing groups "aaa" and
-        ///// "bbb" and a matcher is given to pause the group "axx" (with a
-        ///// group equals matcher) then no triggers will be paused, but it will be 
-        ///// remembered that group "axx" is paused and later when a trigger is added
-        ///// in that group, it will become paused.</para>
-        ///// </remarks>
-        ///// <seealso cref="ResumeTriggers" />
-        //Task PauseTriggers(GroupMatcher<TriggerKey> matcher);
+        /// <summary>
+        /// Pause all of the <see cref="ITrigger" />s in the groups matching.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The Scheduler will "remember" all the groups paused, and impose the
+        /// pause on any new triggers that are added to any of those groups until it is resumed.
+        /// </para>
+        /// <para>NOTE: There is a limitation that only exactly matched groups
+        /// can be remembered as paused.  For example, if there are pre-existing
+        /// triggers in groups "aaa" and "bbb" and a matcher is given to pause
+        /// groups that start with "a" then the group "aaa" will be remembered as
+        /// paused and any subsequently added triggers in that group be paused,
+        /// however if a trigger is added to group "axx" it will not be paused,
+        /// as "axx" wasn't known at the time the "group starts with a" matcher 
+        /// was applied.  HOWEVER, if there are pre-existing groups "aaa" and
+        /// "bbb" and a matcher is given to pause the group "axx" (with a
+        /// group equals matcher) then no triggers will be paused, but it will be 
+        /// remembered that group "axx" is paused and later when a trigger is added
+        /// in that group, it will become paused.</para>
+        /// </remarks>
+        /// <seealso cref="ResumeTriggers" />
+        [HttpPost]
+        [Route("scheduler/pausetriggers")]
+        public Task PauseTriggers(GroupMatcher<TriggerKey> matcher)
+        {
+            return CreateScheduler.Scheduler.PauseTriggers(matcher);
+        }
 
         /// <summary>
         ///     Resume (un-pause) the <see cref="IJobDetail" /> with
