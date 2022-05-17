@@ -251,7 +251,7 @@ Do a `POST` request to `scheduler/pausejob` with in the body the key of the job
 ### Pause multiple jobs
     
 Do a `POST` request to `scheduler/pausejobs` with in the body the keys of the jobs to pause
-   
+TODO: Check json   
 ```json    
 [    
     {
@@ -264,6 +264,34 @@ Do a `POST` request to `scheduler/pausejobs` with in the body the keys of the jo
     }    
 ]    
 ```     
+    
+### Pause a trigger
+    
+Do a `POST` request to `scheduler/pausetrigger` with in the body the triggerkey
+   
+```json    
+{
+    "Name": "TriggerKeyName",
+    "Group": "TriggerKeyGroup"
+}
+```   
+    
+### Pause multiple triggers
+    
+Do a `POST` request to `scheduler/pausetriggers` with in the body the triggerkeys to pause
+TODO: Check json   
+```json    
+[    
+    {
+        "Name": "TriggerKeyName1",
+        "Group": "TriggerKeyGroup1"
+    },
+    {
+        "Name": "TriggerKeyName2",
+        "Group": "TriggerKeyGroup2"
+    }    
+]    
+```        
     
 Errors returned
 ===============
