@@ -1,3 +1,6 @@
+THIS IS STILL WORK IN PROGRESS SO NO FINISHED PRODUCT YET !!!!
+==============================================================
+
 # QuartzWebApi
 A REST api for Quartz.net
 
