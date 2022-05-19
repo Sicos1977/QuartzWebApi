@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using Newtonsoft.Json;
 
 namespace QuartzWebApi
 {
@@ -28,6 +29,7 @@ namespace QuartzWebApi
                     "application/json"));
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+            config.Formatters.JsonFormatter.SerializerSettings = new JsonSerializerSettings();
         }
     }
 }

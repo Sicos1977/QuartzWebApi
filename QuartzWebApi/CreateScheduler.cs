@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Net;
+using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
+using System.Web.Http;
 using Quartz;
 using Quartz.Impl;
 
@@ -48,6 +51,19 @@ namespace QuartzWebApi
                 .Build();
 
             Scheduler.ScheduleJob(schedulerJob, schedulerTrigger);
+        }
+
+        private static void SetPrincipal(IPrincipal principal)
+        {
+            Thread.CurrentPrincipal = principal;
+
+            if (HttpContext.Current != null)
+                HttpContext.Current.User = principal;
+        }
+
+        public static void Register(HttpConfiguration config)
+        {
+            config.Filters.Add(new AuthorizeAttribute());
         }
     }
 

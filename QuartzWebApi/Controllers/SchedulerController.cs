@@ -10,6 +10,7 @@ using TriggerKey = Quartz.TriggerKey;
 
 namespace QuartzWebApi.Controllers
 {
+    //[Authorize]
     public class SchedulerController : ApiController
     {
         /// <summary>
@@ -98,25 +99,30 @@ namespace QuartzWebApi.Controllers
             return new Data.SchedulerMetaData(CreateScheduler.Scheduler.GetMetaData().Result).ToJsonString();
         }
 
-        ///// <summary>
-        ///// Return a list of <see cref="IJobExecutionContext" /> objects that
-        ///// represent all currently executing Jobs in this Scheduler instance.
-        ///// </summary>
-        ///// <remarks>
-        ///// <para>
-        ///// This method is not cluster aware.  That is, it will only return Jobs
-        ///// currently executing in this Scheduler instance, not across the entire
-        ///// cluster.
-        ///// </para>
-        ///// <para>
-        ///// Note that the list returned is an 'instantaneous' snap-shot, and that as
-        ///// soon as it's returned, the true list of executing jobs may be different.
-        ///// Also please read the doc associated with <see cref="IJobExecutionContext" />-
-        ///// especially if you're using remoting.
-        ///// </para>
-        ///// </remarks>
-        ///// <seealso cref="IJobExecutionContext" />
-        //Task<IReadOnlyCollection<IJobExecutionContext>> GetCurrentlyExecutingJobs();
+        /// <summary>
+        /// Return a list of <see cref="IJobExecutionContext" /> objects that
+        /// represent all currently executing Jobs in this Scheduler instance.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This method is not cluster aware.  That is, it will only return Jobs
+        /// currently executing in this Scheduler instance, not across the entire
+        /// cluster.
+        /// </para>
+        /// <para>
+        /// Note that the list returned is an 'instantaneous' snap-shot, and that as
+        /// soon as it's returned, the true list of executing jobs may be different.
+        /// Also please read the doc associated with <see cref="IJobExecutionContext" />-
+        /// especially if you're using remoting.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="IJobExecutionContext" />
+        [HttpGet]
+        [Route("scheduler/getcurrentlyexecutingjobs")]
+        public Task<IReadOnlyCollection<IJobExecutionContext>> GetCurrentlyExecutingJobs()
+        {
+            return CreateScheduler.Scheduler.GetCurrentlyExecutingJobs();
+        }
 
         /// <summary>
         ///     Get the names of all known <see cref="IJobDetail" /> groups.

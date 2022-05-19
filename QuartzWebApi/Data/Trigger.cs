@@ -19,6 +19,16 @@ namespace QuartzWebApi.Data
         [JsonProperty("CronSchedule")]
         public string CronSchedule { get; private set; }
 
+
+
+        [JsonProperty("NextFireTimeUtc")]
+        public DateTimeOffset? NextFireTimeUtc { get; private set; }
+
+        [JsonProperty("NextFireTimeUtc")]
+        public DateTimeOffset? PreviousFireTimeUtc { get; private set; }
+
+
+
         [JsonProperty("StartTimeUtc")]
         public DateTimeOffset StartTimeUtc { get; private set; }
 
@@ -82,7 +92,7 @@ namespace QuartzWebApi.Data
         /// </summary>
         /// <param name="json">The json string</param>
         /// <returns><see cref="Trigger"/></returns>
-        public static Trigger FromJsonString(string json)
+        public new static Trigger FromJsonString(string json)
         {
             return JsonConvert.DeserializeObject<Trigger>(json);
         }
