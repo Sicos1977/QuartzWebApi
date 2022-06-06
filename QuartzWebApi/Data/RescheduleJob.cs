@@ -6,10 +6,10 @@ namespace QuartzWebApi.Data
     public class RescheduleJob
     {
         #region Properties
-        [JsonProperty("CurrentTriggerKey")]
+        [JsonProperty("CurrentTriggerKey")] 
         public TriggerKey CurrentTriggerKey { get; private set; }
 
-        [JsonProperty("NewTrigger")]
+        [JsonProperty("NewTrigger")] 
         public Trigger Trigger { get; private set; }
         #endregion
 
@@ -26,10 +26,12 @@ namespace QuartzWebApi.Data
 
         #region FromJsonString
         /// <summary>
-        ///     Returns the <see cref="Data.Trigger"/> object from the given <paramref name="json"/> string
+        ///     Returns the <see cref="RescheduleJob" /> object from the given <paramref name="json" /> string
         /// </summary>
         /// <param name="json">The json string</param>
-        /// <returns><see cref="Data.Trigger"/></returns>
+        /// <returns>
+        ///     <see cref="Data.Trigger" />
+        /// </returns>
         public static RescheduleJob FromJsonString(string json)
         {
             return JsonConvert.DeserializeObject<RescheduleJob>(json);

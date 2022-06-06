@@ -130,9 +130,9 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\SchedulerController.cs" />
     <Compile Include="CreateScheduler.cs" />
+    <Compile Include="Data\AddJob.cs" />
     <Compile Include="Data\Calender.cs" />
     <Compile Include="Data\RescheduleJob.cs" />
-    <Compile Include="Data\JobDataMap.cs" />
     <Compile Include="Data\JobDetail.cs" />
     <Compile Include="Data\JobExecutionContext.cs" />
     <Compile Include="Data\JobKeyWithDataMap.cs" />

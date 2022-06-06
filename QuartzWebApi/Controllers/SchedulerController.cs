@@ -346,17 +346,16 @@ namespace QuartzWebApi.Controllers
         }
 
         /// <summary>
-        /// Remove (delete) the <see cref="ITrigger" /> with the
-        /// given key, and store the new given one - which must be associated
-        /// with the same job (the new trigger must have the job name &amp; group specified) 
-        /// - however, the new trigger need not have the same name as the old trigger.
+        ///     Remove (delete) the <see cref="ITrigger" /> with the given key, and store the
+        ///     new given one - which must be associated with the same job (the new trigger must
+        ///     have the job name &amp; group specified)  - however, the new trigger need not have
+        ///     the same name as the old trigger.
         /// </summary>
-        /// <param name="json">The The json</param>
+        /// <param name="json">The json</param>
         /// <returns> 
-        /// <see langword="null" /> if a <see cref="ITrigger" /> with the given
-        /// name and group was not found and removed from the store (and the 
-        /// new trigger is therefore not stored),  otherwise
-        /// the first fire time of the newly scheduled trigger.
+        ///     <see langword="null" /> if a <see cref="ITrigger" /> with the given name and group
+        ///     was not found and removed from the store (and the  new trigger is therefore not stored),
+        ///     otherwise the first fire time of the newly scheduled trigger.
         /// </returns>
         [HttpPost]
         [Route("scheduler/reschedulejob")]
@@ -366,31 +365,24 @@ namespace QuartzWebApi.Controllers
             return CreateScheduler.Scheduler.RescheduleJob(rescheduleJob.CurrentTriggerKey, rescheduleJob.Trigger.ToTrigger());
         }
 
-        ///// <summary>
-        ///// Add the given <see cref="IJob" /> to the Scheduler - with no associated
-        ///// <see cref="ITrigger" />. The <see cref="IJob" /> will be 'dormant' until
-        ///// it is scheduled with a <see cref="ITrigger" />, or <see cref="TriggerJob(Quartz.JobKey, CancellationToken)" />
-        ///// is called for it.
-        ///// </summary>
-        ///// <remarks>
-        ///// The <see cref="IJob" /> must by definition be 'durable', if it is not,
-        ///// SchedulerException will be thrown.
-        ///// </remarks>
-        //Task AddJob(IJobDetail jobDetail, bool replace);
-
-        ///// <summary>
-        ///// Add the given <see cref="IJob" /> to the Scheduler - with no associated
-        ///// <see cref="ITrigger" />. The <see cref="IJob" /> will be 'dormant' until
-        ///// it is scheduled with a <see cref="ITrigger" />, or <see cref="TriggerJob(Quartz.JobKey, CancellationToken)" />
-        ///// is called for it.
-        ///// </summary>
-        ///// <remarks>
-        ///// With the <paramref name="storeNonDurableWhileAwaitingScheduling"/> parameter
-        ///// set to <code>true</code>, a non-durable job can be stored.  Once it is
-        ///// scheduled, it will resume normal non-durable behavior (i.e. be deleted
-        ///// once there are no remaining associated triggers).
-        ///// </remarks>
-        //Task AddJob(IJobDetail jobDetail, bool replace, bool storeNonDurableWhileAwaitingScheduling);
+        /// <summary>
+        ///     Add the given <see cref="IJob" /> to the Scheduler - with no associated
+        ///     <see cref="ITrigger" />. The <see cref="IJob" /> will be 'dormant' until
+        ///     it is scheduled with a <see cref="ITrigger" />, or TriggerJob /> is called for it.
+        /// </summary>
+        /// <remarks>
+        ///     With the <see cref="Data.AddJob.StoreNonDurableWhileAwaitingScheduling"/> parameter
+        ///     set to <code>true</code>, a non-durable job can be stored.  Once it is
+        ///     scheduled, it will resume normal non-durable behavior (i.e. be deleted
+        ///     once there are no remaining associated triggers).
+        /// </remarks>
+        [HttpPost]
+        [Route("scheduler/addjob")]
+        public Task AddJob([FromBody] string json)
+        {
+            var addJob = Data.AddJob.FromJsonString(json);
+            return CreateScheduler.Scheduler.AddJob(addJob.ToJobDetail(), addJob.Replace, addJob.StoreNonDurableWhileAwaitingScheduling);
+        }
 
         /// <summary>
         ///     Delete the identified <see cref="IJob" /> from the Scheduler - and any
