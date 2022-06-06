@@ -204,7 +204,40 @@ Do a `POST` request to `scheduler/unschedulejobs` with in the body the triggers 
     
 this will return `true` when the jobs are unscheduled or `false` when not
     
-TODO: Task<DateTimeOffset?> RescheduleJob(TriggerKey triggerKey, ITrigger newTrigger)    
+### Reschedule job
+
+Do a `POST` request to `scheduler/reschedulejob` with in the body the reschedulejob object
+
+```json    
+{
+    "CurrentTriggerKey": {
+        "Name": "CurrentTriggerKeyName",
+        "Group": "CurrentTriggerKeyGroup"
+    },
+    "NewTrigger": {
+        "TriggerKey": {
+            "Name": "NewTriggerKeyName",
+            "Group": "NewTriggerKeyGroup"
+        },
+        "JobKey": {
+            "Name": "NewJobKeyName",
+            "Group": "NewJobKeyGroup"
+        },
+        "Description": "Description",
+        "CalendarName": "CalendarName",
+        "JobDataMap": {
+            "Key1": "Value1",
+            "Key2": "Value2"
+        },
+        "StartTimeUtc": "2022-05-12T16:16:37.7210025+00:00",
+        "EndTimeUtc": "2022-05-13T02:16:37.7210025+00:00",
+        "FinalFireTimeUtc": "2022-05-13T22:16:37.7210025+00:00",
+        "CronSchedule": "0 * * ? * *",
+        "Priority": 5
+    }
+}
+```  
+
     
 TODO: Task AddJob(IJobDetail jobDetail, bool replace);
     
