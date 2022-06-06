@@ -128,12 +128,10 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\JobsController.cs" />
-    <Compile Include="Controllers\RunningJobsController.cs" />
     <Compile Include="Controllers\SchedulerController.cs" />
     <Compile Include="CreateScheduler.cs" />
     <Compile Include="Data\Calender.cs" />
-    <Compile Include="Data\Job.cs" />
+    <Compile Include="Data\RescheduleJob.cs" />
     <Compile Include="Data\JobDataMap.cs" />
     <Compile Include="Data\JobDetail.cs" />
     <Compile Include="Data\JobExecutionContext.cs" />
@@ -141,7 +139,6 @@
     <Compile Include="Data\RunningJobs.cs" />
     <Compile Include="Data\SchedulerMetaData.cs" />
     <Compile Include="Data\Trigger.cs" />
-    <Compile Include="Data\TriggerKey.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

@@ -287,7 +287,7 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/schedulejob")]
         public Task<DateTimeOffset> ScheduleJob([FromBody] string json)
         {
-            var trigger = Data.Trigger.FromJsonString(json).ToTrigger();
+            var trigger = Trigger.FromJsonString(json).ToTrigger();
             return CreateScheduler.Scheduler.ScheduleJob(trigger);
         }
 
@@ -351,19 +351,19 @@ namespace QuartzWebApi.Controllers
         /// with the same job (the new trigger must have the job name &amp; group specified) 
         /// - however, the new trigger need not have the same name as the old trigger.
         /// </summary>
-        /// <param name="triggerKey">The <see cref="ITrigger" /> to be replaced.</param>
-        /// <param name="newTrigger">
-        ///     The new <see cref="ITrigger" /> to be stored.
-        /// </param>
+        /// <param name="json">The The json</param>
         /// <returns> 
         /// <see langword="null" /> if a <see cref="ITrigger" /> with the given
         /// name and group was not found and removed from the store (and the 
         /// new trigger is therefore not stored),  otherwise
         /// the first fire time of the newly scheduled trigger.
         /// </returns>
-        Task<DateTimeOffset?> RescheduleJob(TriggerKey triggerKey, ITrigger newTrigger)
+        [HttpPost]
+        [Route("scheduler/reschedulejob")]
+        public Task<DateTimeOffset?> RescheduleJob([FromBody] string json)
         {
-            return null;
+            var rescheduleJob = Data.RescheduleJob.FromJsonString(json);
+            return CreateScheduler.Scheduler.RescheduleJob(rescheduleJob.CurrentTriggerKey, rescheduleJob.Trigger.ToTrigger());
         }
 
         ///// <summary>

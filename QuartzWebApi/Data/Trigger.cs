@@ -8,7 +8,7 @@ namespace QuartzWebApi.Data
     {
         #region Properties
         [JsonProperty("TriggerKey")]
-        public Quartz.TriggerKey TriggerKey { get; private set; }
+        public TriggerKey TriggerKey { get; private set; }
 
         [JsonProperty("Description")]
         public string Description { get; private set; }
@@ -18,17 +18,13 @@ namespace QuartzWebApi.Data
         
         [JsonProperty("CronSchedule")]
         public string CronSchedule { get; private set; }
-
-
-
+        
         [JsonProperty("NextFireTimeUtc")]
         public DateTimeOffset? NextFireTimeUtc { get; private set; }
 
-        [JsonProperty("NextFireTimeUtc")]
+        [JsonProperty("PreviousFireTimeUtc")]
         public DateTimeOffset? PreviousFireTimeUtc { get; private set; }
-
-
-
+        
         [JsonProperty("StartTimeUtc")]
         public DateTimeOffset StartTimeUtc { get; private set; }
 
