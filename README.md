@@ -238,6 +238,7 @@ Do a `POST` request to `scheduler/reschedulejob` with in the body the reschedule
 }
 ```  
 
+Returns 'null' if a trigger with the given name and group was not found and removed from the store (and the new trigger is therefore not stored),  otherwise the first fire time of the newly scheduled trigger
     
 TODO: Task AddJob(IJobDetail jobDetail, bool replace);
     
