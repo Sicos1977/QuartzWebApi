@@ -482,7 +482,11 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/pausejobs")]
         public Task PauseJobs([FromBody] GroupMatcher<JobKey> matcher)
         {
-            //var match = GroupMatcher<JobKey>.GroupContains();
+            GroupMatcher<JobKey>.GroupContains("");
+            GroupMatcher<JobKey>.GroupEndsWith("");
+            GroupMatcher<JobKey>.GroupEquals("");
+            GroupMatcher<JobKey>.GroupStartsWith("");
+
             return CreateScheduler.Scheduler.PauseJobs(matcher);
         }
 
@@ -536,9 +540,9 @@ namespace QuartzWebApi.Controllers
         /// </remarks>
         [HttpPost]
         [Route("scheduler/resumejob")]
-        public void ResumeJob(JobKey jobKey)
+        public Task ResumeJob(JobKey jobKey)
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.ResumeJob(jobKey);
         }
 
         /// <summary>
@@ -550,12 +554,12 @@ namespace QuartzWebApi.Controllers
         ///     missed one or more fire-times, then the <see cref="ITrigger" />'s
         ///     misfire instruction will be applied.
         /// </remarks>
-        /// <seealso cref="PutPauseJobs" />
+        /// <seealso cref="PauseJobs" />
         [HttpPost]
-        [Route("scheduler/resumejobs/{matcher}")]
-        public void ResumeJobs(GroupMatcher<JobKey> matcher)
+        [Route("scheduler/resumejobs")]
+        public Task ResumeJobs([FromBody] GroupMatcher<JobKey> matcher)
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.ResumeJobs(matcher);
         }
 
         /// <summary>
@@ -567,10 +571,10 @@ namespace QuartzWebApi.Controllers
         ///     <see cref="ITrigger" />'s misfire instruction will be applied.
         /// </remarks>
         [HttpPost]
-        [Route("scheduler/resumetrigger/{triggerKey}")]
-        public void ResumeTrigger(TriggerKey triggerKey)
+        [Route("scheduler/resumetrigger")]
+        public Task ResumeTrigger([FromBody] TriggerKey triggerKey)
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.ResumeTrigger(triggerKey);
         }
 
         /// <summary>
@@ -582,10 +586,10 @@ namespace QuartzWebApi.Controllers
         /// </remarks>
         /// <seealso cref="PauseTriggers" />
         [HttpPost]
-        [Route("scheduler/resumetriggers/{matcher}")]
-        public void ResumeTriggers(GroupMatcher<TriggerKey> matcher)
+        [Route("scheduler/resumetriggers")]
+        public Task ResumeTriggers([FromBody] GroupMatcher<TriggerKey> matcher)
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.ResumeTriggers(matcher);
         }
 
         /// <summary>
@@ -832,6 +836,7 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/clear")]
         public void Clear()
         {
+            CreateScheduler.Scheduler.Clear();
         }
     }
 }
