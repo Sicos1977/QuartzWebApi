@@ -480,14 +480,10 @@ namespace QuartzWebApi.Controllers
         /// <seealso cref="ResumeJobs" />
         [HttpPost]
         [Route("scheduler/pausejobs")]
-        public Task PauseJobs([FromBody] GroupMatcher<JobKey> matcher)
+        public Task PauseJobs([FromBody] string json)
         {
-            GroupMatcher<JobKey>.GroupContains("");
-            GroupMatcher<JobKey>.GroupEndsWith("");
-            GroupMatcher<JobKey>.GroupEquals("");
-            GroupMatcher<JobKey>.GroupStartsWith("");
-
-            return CreateScheduler.Scheduler.PauseJobs(matcher);
+            var groupMatcher = Data.GroupMatcher<JobKey>.FromJsonString(json);
+            return CreateScheduler.Scheduler.PauseJobs(groupMatcher.ToGroupMatcher());
         }
 
         /// <summary> 
@@ -524,9 +520,10 @@ namespace QuartzWebApi.Controllers
         /// <seealso cref="ResumeTriggers" />
         [HttpPost]
         [Route("scheduler/pausetriggers")]
-        public Task PauseTriggers(GroupMatcher<TriggerKey> matcher)
+        public Task PauseTriggers([FromBody] string json)
         {
-            return CreateScheduler.Scheduler.PauseTriggers(matcher);
+            var groupMatcher = Data.GroupMatcher<TriggerKey>.FromJsonString(json);
+            return CreateScheduler.Scheduler.PauseTriggers(groupMatcher.ToGroupMatcher());
         }
 
         /// <summary>
@@ -557,9 +554,10 @@ namespace QuartzWebApi.Controllers
         /// <seealso cref="PauseJobs" />
         [HttpPost]
         [Route("scheduler/resumejobs")]
-        public Task ResumeJobs([FromBody] GroupMatcher<JobKey> matcher)
+        public Task ResumeJobs([FromBody] string json)
         {
-            return CreateScheduler.Scheduler.ResumeJobs(matcher);
+            var groupMatcher = Data.GroupMatcher<JobKey>.FromJsonString(json);
+            return CreateScheduler.Scheduler.ResumeJobs(groupMatcher.ToGroupMatcher());
         }
 
         /// <summary>
@@ -587,9 +585,10 @@ namespace QuartzWebApi.Controllers
         /// <seealso cref="PauseTriggers" />
         [HttpPost]
         [Route("scheduler/resumetriggers")]
-        public Task ResumeTriggers([FromBody] GroupMatcher<TriggerKey> matcher)
+        public Task ResumeTriggers([FromBody] string json)
         {
-            return CreateScheduler.Scheduler.ResumeTriggers(matcher);
+            var groupMatcher = Data.GroupMatcher<TriggerKey>.FromJsonString(json);
+            return CreateScheduler.Scheduler.ResumeTriggers(groupMatcher.ToGroupMatcher());
         }
 
         /// <summary>

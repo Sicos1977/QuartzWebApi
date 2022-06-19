@@ -79,6 +79,7 @@
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -132,6 +133,7 @@
     <Compile Include="CreateScheduler.cs" />
     <Compile Include="Data\AddJob.cs" />
     <Compile Include="Data\Calender.cs" />
+    <Compile Include="Data\GroupMatcher.cs" />
     <Compile Include="Data\RescheduleJob.cs" />
     <Compile Include="Data\JobDetail.cs" />
     <Compile Include="Data\JobExecutionContext.cs" />
