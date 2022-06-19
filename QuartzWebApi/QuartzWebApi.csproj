@@ -142,6 +142,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Loggers\Console.cs" />
+    <Compile Include="Loggers\File.cs" />
+    <Compile Include="Loggers\Stream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
