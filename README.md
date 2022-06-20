@@ -326,26 +326,22 @@ Do a `POST` request to `scheduler/pausejob` with in the body the key of the job
    
 ```json    
 {
-    "Name": "JobKeyName1",
-    "Group": "JobKeyGroup1"
+    "Name": "JobKeyName",
+    "Group": "JobKeyGroup"
 }
 ```        
     
 ### Pause multiple jobs
     
-Do a `POST` request to `scheduler/pausejobs` with in the body the keys of the jobs to pause
-TODO: Check json   
+Do a `POST` request to `scheduler/pausejobs` with in the body the group matching object that defined what jobs to pause
+
+The values for `Type` can be: `Contains`, `EndsWith`, `Equals` or `StartsWith`
+    
 ```json    
-[    
-    {
-        "Name": "JobKeyName1",
-        "Group": "JobKeyGroup1"
-    },
-    {
-        "Name": "JobKeyName2",
-        "Group": "JobKeyGroup2"
-    }    
-]    
+{
+  "Type": "Contains",
+  "Value": "<The job keys to match>"
+}   
 ```     
     
 ### Pause a trigger
@@ -361,20 +357,64 @@ Do a `POST` request to `scheduler/pausetrigger` with in the body the triggerkey
     
 ### Pause multiple triggers
     
-Do a `POST` request to `scheduler/pausetriggers` with in the body the triggerkeys to pause
-TODO: Check json   
+Do a `POST` request to `scheduler/pausetriggers` with in the body the group matching object that defined what triggers to pause
+    
+The values for `Type` can be: `Contains`, `EndsWith`, `Equals` or `StartsWith`
+    
 ```json    
-[    
-    {
-        "Name": "TriggerKeyName1",
-        "Group": "TriggerKeyGroup1"
-    },
-    {
-        "Name": "TriggerKeyName2",
-        "Group": "TriggerKeyGroup2"
-    }    
-]    
+{
+  "Type": "Contains",
+  "Value": "<The trigger keys to match>"
+}   
 ```        
+    
+### Resume a job
+    
+Do a `POST` request to `scheduler/resumejob` with in the body the key of the job
+    
+```json    
+{
+    "Name": "JobKeyName",
+    "Group": "JobKeyGroup"
+}
+```         
+    
+### Resume multiple jobs
+    
+Do a `POST` request to `scheduler/resumejobs` with in the body the group matching object that defined what jobs to resume
+    
+The values for `Type` can be: `Contains`, `EndsWith`, `Equals` or `StartsWith`
+    
+```json    
+{
+  "Type": "Contains",
+  "Value": "<The job keys to match>"
+}   
+```     
+    
+### Resume a trigger
+    
+Do a `POST` request to `scheduler/resumetrigger` with in the body the key of the trigger
+    
+```json    
+{
+    "Name": "TriggerKeyName",
+    "Group": "TriggerKeyGroup"
+}
+```      
+    
+### Resume multiple triggers
+    
+Do a `POST` request to `scheduler/resumetriggers` with in the body the group matching object that defined what triggers to resume
+    
+The values for `Type` can be: `Contains`, `EndsWith`, `Equals` or `StartsWith`
+    
+```json    
+{
+  "Type": "Contains",
+  "Value": "<The trigger keys to match>"
+}   
+```     
     
 Errors returned
 ===============
