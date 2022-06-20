@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace QuartzWebApi.Data
 {
@@ -42,6 +43,7 @@ namespace QuartzWebApi.Data
         /// <summary>
         ///     The type
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         [JsonProperty("Type")]
         public GroupMatcherType Type { get; set; }
 

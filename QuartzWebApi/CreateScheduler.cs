@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Http;
 using Quartz;
 using Quartz.Impl;
+using QuartzWebApi.Data;
 
 namespace QuartzWebApi
 {
