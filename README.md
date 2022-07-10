@@ -138,9 +138,9 @@ Do a `POST` request to `scheduler/shutdown`
 
 Do a `POST` request to `scheduler/shutdown/{waitForJobsToComplete}` where `{waitForJobsToComplete}` is `true`
 
-### Schedule a job
+### Schedule the give trigger with the job identified by the trigger
 
-Do a `POST` request to `scheduler/schedulejob` with in the body
+Do a `POST` request to `scheduler/schedulejobidentifiedwithtrigger` with in the body
 
 ```json
 {
@@ -168,10 +168,45 @@ Do a `POST` request to `scheduler/schedulejob` with in the body
 
 This will return a datetime offset about when the job will be executed, for example `"2022-05-12T16:17:00+00:00"`
 
+### Schedule multiple jobs with one or more associated trigger
+
 TODO: Task ScheduleJobs(IReadOnlyDictionary<IJobDetail, IReadOnlyCollection<ITrigger>> triggersAndJobs, bool replace);
 
-TODO: Task ScheduleJob(IJobDetail jobDetail,IReadOnlyCollection<ITrigger> triggersForJob,bool replace,);
-    
+### Schedule a job with one or more associated trigger
+
+TODO: Task ScheduleJobs(IReadOnlyDictionary<IJobDetail, IReadOnlyCollection<ITrigger>> triggersAndJobs, bool replace);
+
+### Schedule a job with a related set of triggers
+
+Do a `POST` request to `scheduler/schedulejobwithtriggers` with in the body the job and related set of triggers
+   
+
+```json
+{
+    "TriggerKey": {
+        "Name": "TriggerKeyName",
+        "Group": "TriggerKeyGroup"
+    },
+    "JobKey": {
+        "Name": "JobKeyName",
+        "Group": "JobKeyGroup"
+    },
+    "Description": "Description",
+    "CalendarName": "CalendarName",
+    "JobDataMap": {
+        "Key1": "Value1",
+        "Key2": "Value2"
+    },
+    "StartTimeUtc": "2022-05-12T16:16:37.7210025+00:00",
+    "EndTimeUtc": "2022-05-13T02:16:37.7210025+00:00",
+    "FinalFireTimeUtc": "2022-05-13T22:16:37.7210025+00:00",
+    "CronSchedule": "0 * * ? * *",
+    "Priority": 5
+}
+```   
+   
+   
+   
 ### Unschedule a job
 
 Do a `POST` request to `scheduler/unschedulejob` with in the body the trigger of the job
