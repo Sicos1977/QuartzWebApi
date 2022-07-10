@@ -27,6 +27,19 @@ namespace QuartzWebApi.Data
         public bool Replace { get; private set; }
         #endregion
 
+        #region Constructor
+        /// <summary>
+        ///     Makes this object and sets it's needed properties
+        /// </summary>
+        /// <param name="jobDetail"><see cref="JobDetail"/></param>
+        /// <param name="triggers">A list with related <see cref="Trigger"/>'s</param>
+        public JobDetailWithTriggers(JobDetail jobDetail, List<Trigger> triggers)
+        {
+            JobDetail = jobDetail;
+            Triggers = triggers;
+        }
+        #endregion
+
         #region ToReadOnlyTriggerCollection
         /// <summary>
         ///     Returns the <see cref="Triggers"/> as a <see cref="IReadOnlyCollection{T}"/>

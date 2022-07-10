@@ -23,6 +23,14 @@ namespace QuartzWebApi
 
         static CreateScheduler()
         {
+            var jdwt = new JobDetailWithTriggers()
+            {
+
+            }
+
+            jdwt.JobDetail = new JobDetail();
+
+
             var properties = new NameValueCollection
             {
                 ["quartz.scheduler.exporter.bindName"] = "Scheduler",

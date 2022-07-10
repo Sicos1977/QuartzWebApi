@@ -7,16 +7,29 @@ namespace QuartzWebApi.Data
     {
         #region Properties
         /// <summary>
-        ///     The job key
+        ///     The <see cref="JobKey"/>
         /// </summary>
         [JsonProperty("JobKey")]
         public JobKey JobKey { get; private set; }
 
         /// <summary>
-        ///     The job data map
+        ///     The <see cref="JobDataMap"/>
         /// </summary>
         [JsonProperty("JobDataMap")]
-        public Quartz.JobDataMap JobDataMap { get; private set; }
+        public JobDataMap JobDataMap { get; private set; }
+        #endregion
+
+        #region Constructor
+        /// <summary>
+        ///     Makes this object and sets it's needed properties
+        /// </summary>
+        /// <param name="jobKey">The <see cref="JobKey"/></param>
+        /// <param name="jobDataMap">The <see cref="JobDataMap"/></param>
+        public JobKeyWithDataMap(JobKey jobKey, JobDataMap jobDataMap)
+        {
+            JobKey = jobKey;
+            JobDataMap = jobDataMap;
+        }
         #endregion
 
         #region ToJsonString
