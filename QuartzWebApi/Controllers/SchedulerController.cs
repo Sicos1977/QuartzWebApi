@@ -284,39 +284,48 @@ namespace QuartzWebApi.Controllers
         /// <param name="json"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("scheduler/schedulejob")]
-        public Task<DateTimeOffset> ScheduleJob([FromBody] string json)
+        [Route("scheduler/schedulejobidentifiedwithtrigger")]
+        public Task<DateTimeOffset> ScheduleJobIdentifiedWithTrigger([FromBody] string json)
         {
             var trigger = Trigger.FromJsonString(json).ToTrigger();
             return CreateScheduler.Scheduler.ScheduleJob(trigger);
         }
 
-        /// <summary>
-        /// Schedule all of the given jobs with the related set of triggers.
-        /// </summary>
-        /// <remarks>
-        /// <para>If any of the given jobs or triggers already exist (or more
-        /// specifically, if the keys are not unique) and the replace
-        /// parameter is not set to true then an exception will be thrown.</para>
-        /// </remarks>
-        [HttpPost]
-        [Route("scheduler/schedulejob")]
-        public Task ScheduleJobs([FromBody] string json)
-        {
-            // IReadOnlyDictionary<IJobDetail, IReadOnlyCollection<ITrigger>> triggersAndJobs, bool replace
-            var triggerAndJobs
-            return CreateScheduler.Scheduler.ScheduleJobs(trigger);
-        }
-
         ///// <summary>
-        ///// Schedule the given job with the related set of triggers.
+        ///// Schedule all of the given jobs with the related set of triggers.
         ///// </summary>
         ///// <remarks>
-        ///// If any of the given job or triggers already exist (or more
-        ///// specifically, if the keys are not unique) and the replace 
-        ///// parameter is not set to true then an exception will be thrown.
+        ///// <para>If any of the given jobs or triggers already exist (or more
+        ///// specifically, if the keys are not unique) and the replace
+        ///// parameter is not set to true then an exception will be thrown.</para>
         ///// </remarks>
-        //Task ScheduleJob(IJobDetail jobDetail,IReadOnlyCollection<ITrigger> triggersForJob,bool replace,);
+        //[HttpPost]
+        //[Route("scheduler/schedulejobs")]
+        //public Task ScheduleJobs([FromBody] string json)
+        //{
+        //    // IReadOnlyDictionary<IJobDetail, IReadOnlyCollection<ITrigger>> triggersAndJobs, bool replace
+        //    var triggerAndJobs
+        //    return CreateScheduler.Scheduler.ScheduleJobs(trigger);
+        //}
+
+        /// <summary>
+        ///     Schedule the given job with the related set of triggers.
+        /// </summary>
+        /// <remarks>
+        ///     If any of the given job or triggers already exist (or more
+        ///     specifically, if the keys are not unique) and the replace 
+        ///     parameter is not set to true then an exception will be thrown.
+        /// </remarks>
+        [HttpPost]
+        [Route("scheduler/schedulejobwithtriggers")]
+        public Task ScheduleJobWithTriggers([FromBody] string json)
+        {
+            var jobDetailWithTriggers = Data.JobDetailWithTriggers.FromJsonString(json);
+            return CreateScheduler.Scheduler.ScheduleJob(
+                jobDetailWithTriggers.JobDetail.ToJobDetail(),
+                jobDetailWithTriggers.ToReadOnlyTriggerCollection(),
+                jobDetailWithTriggers.Replace);
+        }
 
         /// <summary>
         ///     Remove the indicated <see cref="ITrigger" /> from the scheduler.
@@ -378,7 +387,7 @@ namespace QuartzWebApi.Controllers
         ///     it is scheduled with a <see cref="ITrigger" />, or TriggerJob /> is called for it.
         /// </summary>
         /// <remarks>
-        ///     With the <see cref="Data.AddJob.StoreNonDurableWhileAwaitingScheduling"/> parameter
+        ///     With the <see cref="Data.JobDetail.StoreNonDurableWhileAwaitingScheduling"/> parameter
         ///     set to <code>true</code>, a non-durable job can be stored.  Once it is
         ///     scheduled, it will resume normal non-durable behavior (i.e. be deleted
         ///     once there are no remaining associated triggers).
@@ -387,7 +396,7 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/addjob")]
         public Task AddJob([FromBody] string json)
         {
-            var addJob = Data.AddJob.FromJsonString(json);
+            var addJob = Data.JobDetail.FromJsonString(json);
             return CreateScheduler.Scheduler.AddJob(addJob.ToJobDetail(), addJob.Replace, addJob.StoreNonDurableWhileAwaitingScheduling);
         }
 
