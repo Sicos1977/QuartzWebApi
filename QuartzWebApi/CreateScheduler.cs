@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
 using System.Security.Principal;
@@ -23,12 +24,17 @@ namespace QuartzWebApi
 
         static CreateScheduler()
         {
-            var jdwt = new JobDetailWithTriggers()
+            var jdm = new JobDataMap { { "key", "value" } };
+            var jd = new JobDetail(new JobKey("Name", "Group"), "description", "jobType", jdm, true, false, false);
+            var triggers = new List<Trigger>
             {
+                new Trigger(new TriggerKey("name", "group"), "description", "calenderName", "cronSchedule",
+                    DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow,
+                    DateTimeOffset.UtcNow, 5, new JobKey("name", "value"), jdm)
+            };
 
-            }
-
-            jdwt.JobDetail = new JobDetail();
+            var jdwt = new JobDetailWithTriggers(jd, triggers);
+            var t = jdwt.ToJsonString();
 
 
             var properties = new NameValueCollection
