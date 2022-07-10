@@ -6,9 +6,15 @@ namespace QuartzWebApi.Data
     public class JobKeyWithDataMap
     {
         #region Properties
+        /// <summary>
+        ///     The job key
+        /// </summary>
         [JsonProperty("JobKey")]
         public JobKey JobKey { get; private set; }
 
+        /// <summary>
+        ///     The job data map
+        /// </summary>
         [JsonProperty("JobDataMap")]
         public Quartz.JobDataMap JobDataMap { get; private set; }
         #endregion

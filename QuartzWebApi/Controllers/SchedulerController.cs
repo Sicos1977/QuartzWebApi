@@ -291,15 +291,22 @@ namespace QuartzWebApi.Controllers
             return CreateScheduler.Scheduler.ScheduleJob(trigger);
         }
 
-        ///// <summary>
-        ///// Schedule all of the given jobs with the related set of triggers.
-        ///// </summary>
-        ///// <remarks>
-        ///// <para>If any of the given jobs or triggers already exist (or more
-        ///// specifically, if the keys are not unique) and the replace
-        ///// parameter is not set to true then an exception will be thrown.</para>
-        ///// </remarks>
-        //Task ScheduleJobs(IReadOnlyDictionary<IJobDetail, IReadOnlyCollection<ITrigger>> triggersAndJobs, bool replace);
+        /// <summary>
+        /// Schedule all of the given jobs with the related set of triggers.
+        /// </summary>
+        /// <remarks>
+        /// <para>If any of the given jobs or triggers already exist (or more
+        /// specifically, if the keys are not unique) and the replace
+        /// parameter is not set to true then an exception will be thrown.</para>
+        /// </remarks>
+        [HttpPost]
+        [Route("scheduler/schedulejob")]
+        public Task ScheduleJobs([FromBody] string json)
+        {
+            // IReadOnlyDictionary<IJobDetail, IReadOnlyCollection<ITrigger>> triggersAndJobs, bool replace
+            var triggerAndJobs
+            return CreateScheduler.Scheduler.ScheduleJobs(trigger);
+        }
 
         ///// <summary>
         ///// Schedule the given job with the related set of triggers.

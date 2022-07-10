@@ -8,7 +8,7 @@ namespace QuartzWebApi.Data
     {
         #region Properties
         /// <summary>
-        /// The key that identifies this jobs uniquely.
+        ///     The key that identifies this jobs uniquely.
         /// </summary>
         [JsonProperty("JobKey")]
         public JobKey JobKey { get; private set; }
@@ -21,26 +21,26 @@ namespace QuartzWebApi.Data
         public string Description { get; private set; }
 
         /// <summary>
-        /// Get or sets the instance of <see cref="IJob" /> that will be executed.
+        ///     Get or sets the instance of <see cref="IJob" /> that will be executed.
         /// </summary>
         [JsonProperty("JobType")]
         public string JobType { get; private set;}
 
         /// <summary>
-        /// Get or set the <see cref="JobDataMap" /> that is associated with the <see cref="IJob" />.
+        ///     Get or set the <see cref="JobDataMap" /> that is associated with the <see cref="IJob" />.
         /// </summary>
         [JsonProperty("JobDataMap")]
         public JobDataMap JobDataMap { get; private set; }
 
         /// <summary>
-        /// Whether or not the <see cref="IJob" /> should remain stored after it is
-        /// orphaned (no <see cref="ITrigger" />s point to it).
+        ///     Whether or not the <see cref="IJob" /> should remain stored after it is
+        ///     orphaned (no <see cref="ITrigger" />s point to it).
         /// </summary>
         /// <remarks>
-        /// If not explicitly set, the default value is <see langword="false" />.
+        ///     If not explicitly set, the default value is <see langword="false" />.
         /// </remarks>
         /// <returns> 
-        /// <see langword="true" /> if the Job should remain persisted after being orphaned.
+        ///     <see langword="true" /> if the Job should remain persisted after being orphaned.
         /// </returns>
         [JsonProperty("Durable")]
         public bool Durable { get; private set; }

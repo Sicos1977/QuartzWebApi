@@ -7,33 +7,63 @@ namespace QuartzWebApi.Data
     public class Trigger : JobKeyWithDataMap
     {
         #region Properties
+        /// <summary>
+        ///     The <see cref="TriggerKey"/>
+        /// </summary>
         [JsonProperty("TriggerKey")]
         public TriggerKey TriggerKey { get; private set; }
 
+        /// <summary>
+        ///     A description for the <see cref="Trigger"/>
+        /// </summary>
         [JsonProperty("Description")]
         public string Description { get; private set; }
 
+        /// <summary>
+        ///     The name of the calender to use or <c>null</c> when not
+        /// </summary>
         [JsonProperty("CalendarName")]
         public string CalendarName { get; private set; }
         
+        /// <summary>
+        ///     The cron schedule
+        /// </summary>
         [JsonProperty("CronSchedule")]
         public string CronSchedule { get; private set; }
         
+        /// <summary>
+        ///     The next fire time in UTC
+        /// </summary>
         [JsonProperty("NextFireTimeUtc")]
         public DateTimeOffset? NextFireTimeUtc { get; private set; }
 
+        /// <summary>
+        ///     The previous fire time in UTC
+        /// </summary>
         [JsonProperty("PreviousFireTimeUtc")]
         public DateTimeOffset? PreviousFireTimeUtc { get; private set; }
         
+        /// <summary>
+        ///     The start time in UTC
+        /// </summary>
         [JsonProperty("StartTimeUtc")]
         public DateTimeOffset StartTimeUtc { get; private set; }
 
+        /// <summary>
+        ///     The end time in UTC
+        /// </summary>
         [JsonProperty("EndTimeUtc")]
         public DateTimeOffset? EndTimeUtc { get; private set; }
 
+        /// <summary>
+        ///     The final fire time in UTC
+        /// </summary>
         [JsonProperty("FinalFireTimeUtc")]
         public DateTimeOffset? FinalFireTimeUtc { get; private set; }
 
+        /// <summary>
+        ///     The priority
+        /// </summary>
         [JsonProperty("Priority")]
         public int Priority { get; private set; }
         #endregion
@@ -76,7 +106,7 @@ namespace QuartzWebApi.Data
         ///     Returns this object as a json string
         /// </summary>
         /// <returns></returns>
-        public string ToJsonString()
+        public new string ToJsonString()
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }

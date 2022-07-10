@@ -6,9 +6,15 @@ namespace QuartzWebApi.Data
     public class RescheduleJob
     {
         #region Properties
+        /// <summary>
+        ///     The current trigger key
+        /// </summary>
         [JsonProperty("CurrentTriggerKey")] 
         public TriggerKey CurrentTriggerKey { get; private set; }
 
+        /// <summary>
+        ///     The new trigger
+        /// </summary>
         [JsonProperty("NewTrigger")] 
         public Trigger Trigger { get; private set; }
         #endregion
