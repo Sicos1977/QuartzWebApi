@@ -49,6 +49,26 @@ Do a `GET` request to `scheduler/schedulername`
 
 Do a `GET` request to `scheduler/schedulerinstanceid`
 
+### Get the schedulers context
+
+Do a `GET` request to `scheduler/schedulercontext`
+
+When the context is;
+
+- key1 - value1
+- key2 - value2
+- key3 - value3
+
+it will return
+
+```json
+{
+    "key1": "value1",
+    "key2": "value2",
+    "key3": "value3"
+}
+```
+
 ### Check if a scheduler is in standby mode
 
 Do a `GET` request to `scheduler/instandbymode` , this will return `true` or `false`
