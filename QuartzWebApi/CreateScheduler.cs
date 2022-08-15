@@ -24,19 +24,6 @@ namespace QuartzWebApi
 
         static CreateScheduler()
         {
-            var jdm = new JobDataMap { { "key", "value" } };
-            var jd = new JobDetail(new JobKey("Name", "Group"), "description", "jobType", jdm, true, false, false);
-            var triggers = new List<Trigger>
-            {
-                new Trigger(new TriggerKey("name", "group"), "description", "calenderName", "cronSchedule",
-                    DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow,
-                    DateTimeOffset.UtcNow, 5, new JobKey("name", "value"), jdm)
-            };
-
-            var jdwt = new JobDetailWithTriggers(jd, triggers);
-            var t = jdwt.ToJsonString();
-
-
             var properties = new NameValueCollection
             {
                 ["quartz.scheduler.exporter.bindName"] = "Scheduler",
@@ -50,6 +37,11 @@ namespace QuartzWebApi
             };
 
             Scheduler = new StdSchedulerFactory(properties).GetScheduler().Result;
+
+            Scheduler.Context.Add("key1", "value1");
+            Scheduler.Context.Add("key2", "value2");
+            Scheduler.Context.Add("key3", "value3");
+
             Scheduler.Start();
 
             var job = new TestJob();

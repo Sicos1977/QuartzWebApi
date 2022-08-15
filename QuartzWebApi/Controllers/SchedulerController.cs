@@ -57,10 +57,15 @@ namespace QuartzWebApi.Controllers
             return CreateScheduler.Scheduler.SchedulerInstanceId;
         }
 
-        ///// <summary>
-        ///// Returns the <see cref="SchedulerContext" /> of the <see cref="IScheduler" />.
-        ///// </summary>
-        //SchedulerContext Context { get; }
+        /// <summary>
+        /// Returns the <see cref="SchedulerContext" /> of the <see cref="IScheduler" />.
+        /// </summary>
+        [HttpGet]
+        [Route("scheduler/schedulercontext")]
+        public SchedulerContext Context()
+        {
+            return CreateScheduler.Scheduler.Context;
+        }
 
         /// <summary>
         ///     Reports whether the <see cref="IScheduler" /> is in stand-by mode.
@@ -267,16 +272,25 @@ namespace QuartzWebApi.Controllers
             return CreateScheduler.Scheduler.Shutdown(waitForJobsToComplete);
         }
 
-        ///// <summary>
-        ///// Add the given <see cref="IJobDetail" /> to the
-        ///// Scheduler, and associate the given <see cref="ITrigger" /> with
-        ///// it.
-        ///// </summary>
-        ///// <remarks>
-        ///// If the given Trigger does not reference any <see cref="IJob" />, then it
-        ///// will be set to reference the Job passed with it into this method.
-        ///// </remarks>
-        //DateTimeOffset ScheduleJob(IJobDetail jobDetail, ITrigger trigger);
+        /// <summary>
+        /// Add the given <see cref="IJobDetail" /> to the
+        /// Scheduler, and associate the given <see cref="ITrigger" /> with
+        /// it.
+        /// </summary>
+        /// <remarks>
+        /// If the given Trigger does not reference any <see cref="IJob" />, then it
+        /// will be set to reference the Job passed with it into this method.
+        /// </remarks>
+        [HttpPost]
+        [Route("scheduler/schedulejobwithjobdetailandtrigger")]
+        public Task<DateTimeOffset> ScheduleJob([FromBody] string json)
+        {
+            var jobDetailWithTrigger = Data.JobDetailWithTrigger.FromJsonString(json);
+            // IJobDetail jobDetail, ITrigger trigger
+            return CreateScheduler.Scheduler.ScheduleJob(
+                jobDetailWithTrigger.JobDetail.ToJobDetail(),
+                jobDetailWithTrigger.Trigger.ToTrigger());
+        }
 
         /// <summary>
         ///     Schedule the given <see cref="ITrigger" /> with the <see cref="IJob" /> identified by the <see cref="ITrigger" />'s settings.
@@ -317,7 +331,7 @@ namespace QuartzWebApi.Controllers
         ///     parameter is not set to true then an exception will be thrown.
         /// </remarks>
         [HttpPost]
-        [Route("scheduler/schedulejobwithtriggers")]
+        [Route("scheduler/schedulejobwithjobdetailandtriggers")]
         public Task ScheduleJobWithTriggers([FromBody] string json)
         {
             var jobDetailWithTriggers = Data.JobDetailWithTriggers.FromJsonString(json);
