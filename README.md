@@ -198,30 +198,49 @@ TODO: Task ScheduleJobs(IReadOnlyDictionary<IJobDetail, IReadOnlyCollection<ITri
 
 ### Schedule a job with a related set of triggers
 
-Do a `POST` request to `scheduler/schedulejobwithtriggers` with in the body the job and related set of triggers
+Do a `POST` request to `scheduler/schedulejobwithjobdetailandtriggers` with in the body the job and related set of triggers
    
-
 ```json
 {
-    "TriggerKey": {
-        "Name": "TriggerKeyName",
-        "Group": "TriggerKeyGroup"
-    },
+  "JobDetail": {
     "JobKey": {
-        "Name": "JobKeyName",
-        "Group": "JobKeyGroup"
+      "Name": "Name",
+      "Group": "Group"
     },
-    "Description": "Description",
-    "CalendarName": "CalendarName",
+    "Description": "description",
+    "JobType": "jobType",
     "JobDataMap": {
-        "Key1": "Value1",
-        "Key2": "Value2"
+      "key": "value"
     },
-    "StartTimeUtc": "2022-05-12T16:16:37.7210025+00:00",
-    "EndTimeUtc": "2022-05-13T02:16:37.7210025+00:00",
-    "FinalFireTimeUtc": "2022-05-13T22:16:37.7210025+00:00",
-    "CronSchedule": "0 * * ? * *",
-    "Priority": 5
+    "Durable": true,
+    "Replace": false,
+    "StoreNonDurableWhileAwaitingScheduling": false
+  },
+  "Triggers": [
+    {
+      "TriggerKey": {
+        "Name": "name",
+        "Group": "group"
+      },
+      "Description": "description",
+      "CalendarName": "calenderName",
+      "CronSchedule": "cronSchedule",
+      "NextFireTimeUtc": "2022-08-15T17:08:00.5428338+00:00",
+      "PreviousFireTimeUtc": "2022-08-15T17:08:00.5728159+00:00",
+      "StartTimeUtc": "2022-08-15T17:08:00.5738158+00:00",
+      "EndTimeUtc": "2022-08-15T17:08:00.5748157+00:00",
+      "FinalFireTimeUtc": "2022-08-15T17:08:00.5758153+00:00",
+      "Priority": 5,
+      "JobKey": {
+        "Name": "name",
+        "Group": "value"
+      },
+      "JobDataMap": {
+        "key": "value"
+      }
+    }
+  ],
+  "Replace": false
 }
 ```   
    
