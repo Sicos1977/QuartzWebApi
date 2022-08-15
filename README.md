@@ -224,12 +224,7 @@ Do a `POST` request to `scheduler/schedulejobwithjobdetailandtriggers` with in t
       },
       "Description": "description",
       "CalendarName": "calenderName",
-      "CronSchedule": "cronSchedule",
-      "NextFireTimeUtc": "2022-08-15T17:08:00.5428338+00:00",
-      "PreviousFireTimeUtc": "2022-08-15T17:08:00.5728159+00:00",
-      "StartTimeUtc": "2022-08-15T17:08:00.5738158+00:00",
-      "EndTimeUtc": "2022-08-15T17:08:00.5748157+00:00",
-      "FinalFireTimeUtc": "2022-08-15T17:08:00.5758153+00:00",
+      "CronSchedule": "0 * * ? * *",
       "Priority": 5,
       "JobKey": {
         "Name": "name",
@@ -244,7 +239,7 @@ Do a `POST` request to `scheduler/schedulejobwithjobdetailandtriggers` with in t
 }
 ```   
    
-   
+When you get an error like `Could not find an IJob class with the type '<the job type>'` then make sure that you have added the full namespace with the `JobType`
    
 ### Unschedule a job
 
