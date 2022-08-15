@@ -158,6 +158,48 @@ Do a `POST` request to `scheduler/shutdown`
 
 Do a `POST` request to `scheduler/shutdown/{waitForJobsToComplete}` where `{waitForJobsToComplete}` is `true`
 
+### Schedule a job with a job detail and a trigger
+
+Do a `POST` request to `scheduler/schedulejobwithjobdetailandtrigger` with in the body the job detail and the trigger
+   
+```json
+{
+  "JobDetail": {
+    "JobKey": {
+      "Name": "Name",
+      "Group": "Group"
+    },
+    "Description": "description",
+    "JobType": "jobType",
+    "JobDataMap": {
+      "key": "value"
+    },
+    "Durable": true,
+    "Replace": false,
+    "StoreNonDurableWhileAwaitingScheduling": false
+  },
+  "Trigger": {
+    "TriggerKey": {
+      "Name": "name",
+      "Group": "group"
+    },
+    "Description": "description",
+    "StartTimeUtc": "2022-08-15T17:34:04.5786231+00:00",
+    "EndTimeUtc": "2022-08-15T17:34:04.5786231+00:00",
+    "Priority": 5,
+    "CronSchedule": "0 * * ? * *",
+    "Priority": 5,    
+    "JobKey": {
+      "Name": "name",
+      "Group": "value"
+    },
+    "JobDataMap": {
+      "key": "value"
+    }
+  }
+}
+```  
+
 ### Schedule the give trigger with the job identified by the trigger
 
 Do a `POST` request to `scheduler/schedulejobidentifiedwithtrigger` with in the body
@@ -196,9 +238,9 @@ TODO: Task ScheduleJobs(IReadOnlyDictionary<IJobDetail, IReadOnlyCollection<ITri
 
 TODO: Task ScheduleJobs(IReadOnlyDictionary<IJobDetail, IReadOnlyCollection<ITrigger>> triggersAndJobs, bool replace);
 
-### Schedule a job with a related set of triggers
+### Schedule a job with a job detail and a related set of triggers
 
-Do a `POST` request to `scheduler/schedulejobwithjobdetailandtriggers` with in the body the job and related set of triggers
+Do a `POST` request to `scheduler/schedulejobwithjobdetailandtriggers` with in the body the job detail and a related set of triggers
    
 ```json
 {
