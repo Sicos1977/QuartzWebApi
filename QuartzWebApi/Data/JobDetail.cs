@@ -30,6 +30,9 @@ using Quartz;
 
 namespace QuartzWebApi.Data
 {
+    /// <summary>
+    ///     Class used to create or read json to get job details
+    /// </summary>
     public class JobDetail
     {
         #region Properties

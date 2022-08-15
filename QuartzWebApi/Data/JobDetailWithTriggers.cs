@@ -5,6 +5,9 @@ using Quartz;
 
 namespace QuartzWebApi.Data
 {
+    /// <summary>
+    ///     Class used to create or read json to get job details with triggers
+    /// </summary>
     public class JobDetailWithTriggers
     {
         #region Properties

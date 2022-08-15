@@ -29,6 +29,9 @@ using Newtonsoft.Json;
 
 namespace QuartzWebApi.Data
 {
+    /// <summary>
+    ///     Class used to read or create json to get the schedulers meta data
+    /// </summary>
     public class SchedulerMetaData
     {
         #region Properties

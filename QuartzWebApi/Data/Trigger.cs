@@ -30,6 +30,9 @@ using Quartz;
 
 namespace QuartzWebApi.Data
 {
+    /// <summary>
+    ///     Class used to create or read json to get a trigger with a job key and data map
+    /// </summary>
     public class Trigger : JobKeyWithDataMap
     {
         #region Properties

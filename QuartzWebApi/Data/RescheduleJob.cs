@@ -29,6 +29,9 @@ using Quartz;
 
 namespace QuartzWebApi.Data
 {
+    /// <summary>
+    ///     Class used to read or create json to reschedule a job
+    /// </summary>
     public class RescheduleJob
     {
         #region Properties
