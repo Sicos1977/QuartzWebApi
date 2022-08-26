@@ -43,11 +43,11 @@ Do a `POST` request to `scheduler/istriggergrouppaused/{groupName}`, where `{gro
 
 ### Get the schedulers name
 
-Do a `GET` request to `scheduler/schedulername`
+Do a `GET` request to `scheduler/schedulername`, this will return the name of the scheduler
 
 ### Get the schedulers instance id
 
-Do a `GET` request to `scheduler/schedulerinstanceid`
+Do a `GET` request to `scheduler/schedulerinstanceid`, this will return the schedulers instance id
 
 ### Get the schedulers context
 
@@ -79,7 +79,7 @@ Do a `GET` request to `scheduler/isshutdown` , this will return `true` or `false
 
 ### Get the schedulers meta-data
 
-Do a `GET` request to `scheduler/getmetadata` , this will return
+Do a `GET` request to `scheduler/getmetadata` , this will return the meta-data that will look something like this
 
 ```json
 {
@@ -90,7 +90,7 @@ Do a `GET` request to `scheduler/getmetadata` , this will return
     "NumbersOfJobsExecuted": 0,
     "RunningSince": "2022-05-11T16:30:06.5957565+00:00",
     "SchedulerInstanceId": "NON_CLUSTERED",
-    "SchedulerName": "Boven",
+    "SchedulerName": "The name of the scheduler",
     "SchedulerRemote": false,
     "SchedulerType": "Quartz.Impl.StdScheduler, Quartz, Version=3.4.0.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4",
     "Shutdown": false,
@@ -101,9 +101,20 @@ Do a `GET` request to `scheduler/getmetadata` , this will return
 }
 ```
 
+### Get the currently executing jobs
+
+Do a `GET` request to `scheduler/getcurrentlyexecutingjobs` , this will return the currently executing jobs that will look like this
+
+```json
+[
+    "JobGroup1",
+    "JobGroup2"
+]
+```
+
 ### Get the job group names
 
-Do a `GET` request to `scheduler/getjobgroupnames` , this will return
+Do a `GET` request to `scheduler/getjobgroupnames` , this will return the job group names that will look like this
 
 ```json
 [
