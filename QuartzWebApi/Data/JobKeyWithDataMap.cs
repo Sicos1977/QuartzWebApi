@@ -33,6 +33,14 @@ namespace QuartzWebApi.Data
             JobKey = jobKey;
             JobDataMap = jobDataMap;
         }
+
+        /// <summary>
+        ///     Makes this object and sets it's needed properties
+        /// </summary>
+        public JobKeyWithDataMap()
+        {
+
+        }
         #endregion
 
         #region ToJsonString

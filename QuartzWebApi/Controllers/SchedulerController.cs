@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Helpers;
 using System.Web.Http;
@@ -125,9 +127,15 @@ namespace QuartzWebApi.Controllers
         /// <seealso cref="IJobExecutionContext" />
         [HttpGet]
         [Route("scheduler/getcurrentlyexecutingjobs")]
-        public Task<IReadOnlyCollection<IJobExecutionContext>> GetCurrentlyExecutingJobs()
+        public Task<IReadOnlyCollection<JobExecutionContext>> GetCurrentlyExecutingJobs()
         {
-            return CreateScheduler.Scheduler.GetCurrentlyExecutingJobs();
+            var currentlyExecutingJobs = CreateScheduler.Scheduler.GetCurrentlyExecutingJobs().GetAwaiter().GetResult();
+
+            var result = currentlyExecutingJobs.Select(currentlyExecutingJob => new JobExecutionContext(currentlyExecutingJob)).ToList();
+
+            var r = new ReadOnlyCollection<JobExecutionContext>(result);
+            // TODO: Fix
+            return null;
         }
 
         /// <summary>

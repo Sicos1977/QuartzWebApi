@@ -25,7 +25,6 @@
 //
 
 using System;
-using System.Data;
 using Newtonsoft.Json;
 using Quartz;
 
@@ -119,6 +118,10 @@ namespace QuartzWebApi.Data
             StoreNonDurableWhileAwaitingScheduling = storeNonDurableWhileAwaitingScheduling;
         }
 
+        /// <summary>
+        ///     Create this object and sets it's needed properties
+        /// </summary>
+        /// <param name="jobDetail"><see cref="IJobDetail"/></param>
         public JobDetail(IJobDetail jobDetail)
         {
             JobKey = jobDetail.Key;

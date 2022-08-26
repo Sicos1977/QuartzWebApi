@@ -95,6 +95,12 @@ namespace QuartzWebApi.Data
         /// </summary>
         [JsonProperty("Priority")]
         public int Priority { get; private set; }
+
+        /// <summary>
+        ///     Returns <c>true</c> when it has millisecond precision
+        /// </summary>
+        [JsonProperty("HasMillisecondPrecision")]
+        public bool HasMillisecondPrecision { get; private set; }
         #endregion
 
         #region Constructor
@@ -137,6 +143,25 @@ namespace QuartzWebApi.Data
             EndTimeUtc = endTimeUtc;
             FinalFireTimeUtc = finalFireTimeUtc;
             Priority = priority;
+        }
+
+        /// <summary>
+        ///     Makes this object and sets all it's needed properties
+        /// </summary>
+        /// <param name="trigger"></param>
+        public Trigger(ITrigger trigger)
+        {
+            TriggerKey = trigger.Key;
+            Description = trigger.Description;
+            CalendarName = trigger.CalendarName;
+            //CronSchedule = trigger;
+            NextFireTimeUtc = trigger.GetNextFireTimeUtc();
+            PreviousFireTimeUtc = trigger.GetPreviousFireTimeUtc();
+            StartTimeUtc = trigger.StartTimeUtc;
+            EndTimeUtc = trigger.EndTimeUtc;
+            FinalFireTimeUtc = trigger.FinalFireTimeUtc;
+            Priority = trigger.Priority;
+            HasMillisecondPrecision = trigger.HasMillisecondPrecision;
         }
         #endregion
 
