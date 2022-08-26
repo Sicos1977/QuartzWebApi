@@ -25,6 +25,7 @@
 //
 
 using System;
+using System.Data;
 using Newtonsoft.Json;
 using Quartz;
 
@@ -116,6 +117,15 @@ namespace QuartzWebApi.Data
             Durable = durable;
             Replace = replace;
             StoreNonDurableWhileAwaitingScheduling = storeNonDurableWhileAwaitingScheduling;
+        }
+
+        public JobDetail(IJobDetail jobDetail)
+        {
+            JobKey = jobDetail.Key;
+            Description = jobDetail.Description;
+            JobType = jobDetail.JobType.ToString();
+            JobDataMap = jobDetail.JobDataMap;
+            Durable = jobDetail.Durable;
         }
         #endregion
 

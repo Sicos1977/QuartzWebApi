@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web.Helpers;
 using System.Web.Http;
 using Quartz;
 using Quartz.Impl.Matchers;
@@ -638,7 +639,7 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/pauseall")]
         public void PauseAll()
         {
-            throw new NotImplementedException();
+            CreateScheduler.Scheduler.PauseAll();
         }
 
         /// <summary>
@@ -654,47 +655,62 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/resumeall")]
         public void ResumeAll()
         {
-            throw new NotImplementedException();
+            CreateScheduler.Scheduler.ResumeAll();
         }
 
-        ///// <summary>
-        ///// Get the keys of all the <see cref="IJobDetail" />s in the matching groups.
-        ///// </summary>
-        //Task<IReadOnlyCollection<JobKey>> GetJobKeys(GroupMatcher<JobKey> matcher);
+        /// <summary>
+        /// Get the keys of all the <see cref="IJobDetail" />s in the matching groups.
+        /// </summary>
+        [HttpGet]
+        [Route("scheduler/getjobkeys")]
+        Task<IReadOnlyCollection<JobKey>> GetJobKeys([FromBody] string json)
+        {
+            var groupMatcher = Data.GroupMatcher<JobKey>.FromJsonString(json);
+            return CreateScheduler.Scheduler.GetJobKeys(groupMatcher.ToGroupMatcher());
+        }
 
-        ///// <summary>
-        ///// Get all <see cref="ITrigger" /> s that are associated with the
-        ///// identified <see cref="IJobDetail" />.
-        ///// </summary>
-        ///// <remarks>
-        ///// The returned Trigger objects will be snap-shots of the actual stored
-        ///// triggers.  If you wish to modify a trigger, you must re-store the
-        ///// trigger afterward (e.g. see <see cref="RescheduleJob(TriggerKey, ITrigger, CancellationToken)" />).
-        ///// </remarks>
-        //public IReadOnlyCollection<ITrigger> GetTriggersOfJob(JobKey jobKey)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        /// <summary>
+        /// Get all <see cref="ITrigger" /> s that are associated with the
+        /// identified <see cref="IJobDetail" />.
+        /// </summary>
+        /// <remarks>
+        /// The returned Trigger objects will be snap-shots of the actual stored
+        /// triggers.  If you wish to modify a trigger, you must re-store the
+        /// trigger afterward (e.g. see <see cref="RescheduleJob(TriggerKey, ITrigger, CancellationToken)" />).
+        /// </remarks>
+        [HttpGet]
+        [Route("scheduler/gettriggersofjob")]
+        public Task<IReadOnlyCollection<ITrigger>> GetTriggersOfJob(JobKey jobKey)
+        {
+            return CreateScheduler.Scheduler.GetTriggersOfJob(jobKey);
+        }
 
-        ///// <summary>
-        ///// Get the names of all the <see cref="ITrigger" />s in the given
-        ///// groups.
-        ///// </summary>
-        //IReadOnlyCollection<TriggerKey> GetTriggerKeys(GroupMatcher<TriggerKey> matcher)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        /// <summary>
+        /// Get the names of all the <see cref="ITrigger" />s in the given
+        /// groups.
+        /// </summary>
+        [HttpGet]
+        [Route("scheduler/gettriggerkeys")]
+        Task<IReadOnlyCollection<TriggerKey>> GetTriggerKeys([FromBody] string json)
+        {
+            var groupMatcher = Data.GroupMatcher<TriggerKey>.FromJsonString(json);
+            return CreateScheduler.Scheduler.GetTriggerKeys(groupMatcher.ToGroupMatcher());
+        }
 
-        ///// <summary>
-        ///// Get the <see cref="IJobDetail" /> for the <see cref="IJob" />
-        ///// instance with the given key .
-        ///// </summary>
-        ///// <remarks>
-        ///// The returned JobDetail object will be a snap-shot of the actual stored
-        ///// JobDetail.  If you wish to modify the JobDetail, you must re-store the
-        ///// JobDetail afterward (e.g. see <see cref="AddJob(IJobDetail, bool, CancellationToken)" />).
-        ///// </remarks>
-        //Task<IJobDetail?> GetJobDetail(JobKey jobKey);
+        /// <summary>
+        /// Get the <see cref="IJobDetail" /> for the <see cref="IJob" />
+        /// instance with the given key .
+        /// </summary>
+        /// <remarks>
+        /// The returned JobDetail object will be a snap-shot of the actual stored
+        /// JobDetail.  If you wish to modify the JobDetail, you must re-store the
+        /// JobDetail afterward (e.g. see <see cref="AddJob(IJobDetail, bool, CancellationToken)" />).
+        /// </remarks>
+        string GetJobDetail(JobKey jobKey)
+        {
+            var jobDetail = CreateScheduler.Scheduler.GetJobDetail(jobKey).GetAwaiter().GetResult();
+            return new JobDetail(jobDetail).ToJsonString();
+        }
 
         ///// <summary>
         ///// Get the <see cref="ITrigger" /> instance with the given key.
@@ -751,9 +767,9 @@ namespace QuartzWebApi.Controllers
         /// <returns>true if the Calendar was found and deleted.</returns>
         [HttpGet]
         [Route("scheduler/deletecalender/{calName}")]
-        public bool DeleteCalendar(string calName)
+        public Task<bool> DeleteCalendar(string calName)
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.DeleteCalendar(calName);
         }
 
         ///// <summary>
@@ -766,9 +782,9 @@ namespace QuartzWebApi.Controllers
         /// </summary>
         [HttpGet]
         [Route("scheduler/getcalendarnames")]
-        public IReadOnlyCollection<string> GetCalendarNames()
+        public Task<IReadOnlyCollection<string>> GetCalendarNames()
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.GetCalendarNames();
         }
 
         /// <summary>
@@ -826,9 +842,9 @@ namespace QuartzWebApi.Controllers
         /// <returns>true if the identified job instance was found and interrupted.</returns>
         [HttpGet]
         [Route("scheduler/interrupt/fireinstanceid/{fireInstanceId}")]
-        public bool Interrupt(string fireInstanceId)
+        public Task<bool> Interrupt(string fireInstanceId)
         {
-            throw new NotImplementedException();
+            return CreateScheduler.Scheduler.Interrupt(fireInstanceId);
         }
 
         /// <summary>
