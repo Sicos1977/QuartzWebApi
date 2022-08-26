@@ -854,10 +854,11 @@ namespace QuartzWebApi.Controllers
         /// <param name="jobKey">the identifier to check for</param>
         /// <returns>true if a Job exists with the given identifier</returns>
         [HttpGet]
-        [Route("scheduler/checkexists/jobkey/{jobKey}")]
-        public bool CheckExistsJobKey(JobKey jobKey)
+        [Route("scheduler/checkexists/jobkey")]
+        public Task<bool> CheckExistsJobKey([FromBody] string json)
         {
-            throw new NotImplementedException();
+            return null;
+            //return CreateScheduler.Scheduler.Interrupt(jobKey);
         }
 
         /// <summary>
