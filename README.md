@@ -30,7 +30,22 @@ Core Team
 =========
     Sicos1977 (Kees van Spelde)
 
-How to use
+Logging
+=======
+
+QuartzWebApi uses the Microsoft ILogger interface (https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.logging.ilogger?view=dotnet-plat-ext-5.0). You can use any logging library that uses this interface.
+
+QuartzWebApi has some build in loggers that can be found in the ```QuartzWebApi.Logger``` namespace. 
+
+For example
+
+```csharp
+var logger = !string.IsNullOrWhiteSpace(<some logfile>)
+                ? new ChromeHtmlToPdfLib.Loggers.Stream(File.OpenWrite(<some logfile>))
+                : new ChromeHtmlToPdfLib.Loggers.Console();
+```
+
+How to use the API
 ==========
 
 ### Check if a job group is paused
