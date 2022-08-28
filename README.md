@@ -45,8 +45,7 @@ var logger = !string.IsNullOrWhiteSpace(<some logfile>)
                 : new ChromeHtmlToPdfLib.Loggers.Console();
 ```
 
-Most of the log informartion is logged at the `information` level, small answers like booleans and `DateTimeOffsets` are also logged at this level.
-All the json that is received and sent back is logged at the `debug` level.
+Most of the log informartion is logged at the `information` level, small answers like `booleans`, `DateTimeOffsets` and small `strings` (like the schedulers name) are also logged at this level. All the json that is received and sent back is logged at the `debug` level.
 
 How to use the API
 ==========
