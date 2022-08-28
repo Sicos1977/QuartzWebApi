@@ -6,8 +6,9 @@ using Quartz;
 namespace QuartzWebApi.Data
 {
     /// <summary>
-    ///     Class used to create or read json to get job details with triggers
+    ///     Json wrapper to create a <see cref="Quartz.IJob"/> with a list of <see cref="Quartz.ITrigger"/>s
     /// </summary>
+
     public class JobDetailWithTriggers
     {
         #region Properties

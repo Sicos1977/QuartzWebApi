@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Helpers;
 using System.Web.Http;
-using System.Web.Http.Results;
 using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Spi;
 using QuartzWebApi.Data;
-using TriggerKey = Quartz.TriggerKey;
 
 namespace QuartzWebApi.Controllers
 {
@@ -135,7 +132,7 @@ namespace QuartzWebApi.Controllers
         {
             _logger.LogInformation("Received request to return the meta-data");
             var result = new Data.SchedulerMetaData(CreateScheduler.Scheduler.GetMetaData().Result).ToJsonString();
-            _logger.LogDebug($"Returning '{result}'");
+            _logger.LogInformation($"Returning '{result}'");
             return result;
         }
 
@@ -159,15 +156,12 @@ namespace QuartzWebApi.Controllers
         /// <seealso cref="IJobExecutionContext" />
         [HttpGet]
         [Route("scheduler/getcurrentlyexecutingjobs")]
-        public Task<IReadOnlyCollection<JobExecutionContext>> GetCurrentlyExecutingJobs()
+        public string GetCurrentlyExecutingJobs()
         {
             _logger.LogInformation("Received request to return the currently executing jobs");
-            var currentlyExecutingJobs = CreateScheduler.Scheduler.GetCurrentlyExecutingJobs().GetAwaiter().GetResult();
-
-            var result = currentlyExecutingJobs.Select(currentlyExecutingJob => new JobExecutionContext(currentlyExecutingJob)).ToList();
-
-            var r = new ReadOnlyCollection<JobExecutionContext>(result);
-            _logger.LogDebug($"Returning '{result}'");
+            var result = new JobExecutionContexts(CreateScheduler.Scheduler.GetCurrentlyExecutingJobs().GetAwaiter().GetResult()).ToJsonString();
+            _logger.LogInformation("Returning currently executing jobs");
+            _logger.LogDebug($"JSON '{result}'");
             return result;
         }
 
@@ -180,7 +174,8 @@ namespace QuartzWebApi.Controllers
         {
             _logger.LogInformation("Received request to return the job group names");
             var result = CreateScheduler.Scheduler.GetJobGroupNames();
-            _logger.LogDebug($"Returning '{result}'");
+            _logger.LogInformation("Returning job group names");
+            _logger.LogDebug($"JSON '{result}'");
             return result;
         }
 
@@ -193,7 +188,8 @@ namespace QuartzWebApi.Controllers
         {
             _logger.LogInformation("Received request to return the trigger group names");
             var result = CreateScheduler.Scheduler.GetTriggerGroupNames();
-            _logger.LogDebug($"Returning '{result}'");
+            _logger.LogInformation("Returning trigger group names");
+            _logger.LogDebug($"JSON '{result}'");
             return result;
         }
 
@@ -206,7 +202,8 @@ namespace QuartzWebApi.Controllers
         {
             _logger.LogInformation("Received request to return the paused trigger groups");
             var result = CreateScheduler.Scheduler.GetPausedTriggerGroups();
-            _logger.LogDebug($"Returning '{result}'");
+            _logger.LogInformation("Returning paused trigger groups");
+            _logger.LogDebug($"JSON '{result}'");
             return result;
         }
 
@@ -270,7 +267,7 @@ namespace QuartzWebApi.Controllers
         {
             _logger.LogInformation("Received request to check if the scheduler is started");
             var result = CreateScheduler.Scheduler.IsStarted;
-            _logger.LogDebug($"Returning '{result}'");
+            _logger.LogInformation($"Returning '{result}'");
             return result;
         }
 
@@ -297,7 +294,7 @@ namespace QuartzWebApi.Controllers
         {
             _logger.LogInformation("Received request to put the scheduler in standby mode");
             var result = CreateScheduler.Scheduler.Standby();
-            _logger.LogDebug("The scheduler is in standby mode");
+            _logger.LogInformation("The scheduler is in standby mode");
             return result;
         }
 
@@ -315,7 +312,7 @@ namespace QuartzWebApi.Controllers
         {
             _logger.LogInformation("Received request to shutdown the scheduler");
             var result = CreateScheduler.Scheduler.Shutdown();
-            _logger.LogDebug("The scheduler is shutdown");
+            _logger.LogInformation("The scheduler is shutdown");
             return result;
         }
 
@@ -341,7 +338,7 @@ namespace QuartzWebApi.Controllers
 
             var result = CreateScheduler.Scheduler.Shutdown(waitForJobsToComplete);
             
-            _logger.LogDebug("The scheduler is shutdown");
+            _logger.LogInformation("The scheduler is shutdown");
             return result;
         }
 
@@ -359,13 +356,13 @@ namespace QuartzWebApi.Controllers
         public Task<DateTimeOffset> ScheduleJob([FromBody] string json)
         {
             _logger.LogInformation("Received request to schedule a job with details and a trigger");
-            _logger.LogDebug($"Received json '{json}'");
+            _logger.LogDebug($"Received JSON '{json}'");
 
-            var jobDetailWithTrigger = Data.JobDetailWithTrigger.FromJsonString(json);
+            var jobDetailWithTrigger = JobDetailWithTrigger.FromJsonString(json);
             var result = CreateScheduler.Scheduler.ScheduleJob(
                 jobDetailWithTrigger.JobDetail.ToJobDetail(),
                 jobDetailWithTrigger.Trigger.ToTrigger());
-            
+
             _logger.LogDebug($"Job scheduled, returning '{result}'");
             return result;
         }
@@ -380,7 +377,7 @@ namespace QuartzWebApi.Controllers
         public Task<DateTimeOffset> ScheduleJobIdentifiedWithTrigger([FromBody] string json)
         {
             _logger.LogInformation("Received request to schedule a job identified by a trigger");
-            _logger.LogDebug($"Received json '{json}'");
+            _logger.LogDebug($"Received JSON '{json}'");
             
             var trigger = Trigger.FromJsonString(json).ToTrigger();
             var result = CreateScheduler.Scheduler.ScheduleJob(trigger);
@@ -419,9 +416,9 @@ namespace QuartzWebApi.Controllers
         public Task ScheduleJobWithTriggers([FromBody] string json)
         {
             _logger.LogInformation("Received request to schedule a job with triggers");
-            _logger.LogDebug($"Received json '{json}'");
+            _logger.LogDebug($"Received JSON '{json}'");
 
-            var jobDetailWithTriggers = Data.JobDetailWithTriggers.FromJsonString(json);
+            var jobDetailWithTriggers = JobDetailWithTriggers.FromJsonString(json);
             var result = CreateScheduler.Scheduler.ScheduleJob(
                 jobDetailWithTriggers.JobDetail.ToJobDetail(),
                 jobDetailWithTriggers.ToReadOnlyTriggerCollection(),
@@ -440,14 +437,14 @@ namespace QuartzWebApi.Controllers
         /// </summary>
         [HttpPost]
         [Route("scheduler/unschedulejob")]
-        public Task<bool> UnscheduleJob([FromBody] TriggerKey triggerKey)
+        public Task<bool> UnscheduleJob([FromBody] string json)
         {
-            _logger.LogInformation("Received request to unschedule a job with trigger");
-            _logger.LogDebug($"Received json '{json}'");
+            _logger.LogInformation("Received request to unschedule a job that matches the trigger");
+            _logger.LogDebug($"Received JSON '{json}'");
 
-            var result = CreateScheduler.Scheduler.UnscheduleJob(triggerKey);
+            var result = CreateScheduler.Scheduler.UnscheduleJob(Data.TriggerKey.FromJsonString(json).ToTriggerKey());
             
-            _logger.LogDebug("Job unscheduled");
+            _logger.LogInformation($"Job that matches the trigger unscheduled, returning '{result}'");
             return result;
         }
 
@@ -466,9 +463,15 @@ namespace QuartzWebApi.Controllers
         /// </remarks>
         [HttpPost]
         [Route("scheduler/unschedulejobs")]
-        public Task<bool> UnscheduleJobs([FromBody] IReadOnlyCollection<TriggerKey> triggerKeys)
+        public Task<bool> UnscheduleJobs([FromBody] string json)
         {
-            return CreateScheduler.Scheduler.UnscheduleJobs(triggerKeys);
+            _logger.LogInformation("Received request to unschedule all the jobs that match the given triggers");
+            _logger.LogDebug($"Received JSON '{json}'");
+
+            var result = CreateScheduler.Scheduler.UnscheduleJobs(TriggerKeys.FromJsonString(json).ToTriggerKeys());
+
+            _logger.LogInformation($"Jobs unscheduled that are matching the given triggers, returning '{result}'");
+            return result;
         }
 
         /// <summary>
@@ -487,8 +490,14 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/reschedulejob")]
         public Task<DateTimeOffset?> RescheduleJob([FromBody] string json)
         {
+            _logger.LogInformation("Received request to reschedule the job that match the given trigger key");
+            _logger.LogDebug($"Received JSON '{json}'");
+
             var rescheduleJob = Data.RescheduleJob.FromJsonString(json);
-            return CreateScheduler.Scheduler.RescheduleJob(rescheduleJob.CurrentTriggerKey, rescheduleJob.Trigger.ToTrigger());
+            var result = CreateScheduler.Scheduler.RescheduleJob(rescheduleJob.CurrentTriggerKey.ToTriggerKey(), rescheduleJob.Trigger.ToTrigger());
+
+            _logger.LogInformation($"Job rescheduled that matches the given trigger key, returning '{result}'");
+            return result;
         }
 
         /// <summary>
@@ -506,8 +515,14 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/addjob")]
         public Task AddJob([FromBody] string json)
         {
+            _logger.LogInformation("Received request to add job to the scheduler");
+            _logger.LogDebug($"Received JSON '{json}'");
+            
             var addJob = Data.JobDetail.FromJsonString(json);
-            return CreateScheduler.Scheduler.AddJob(addJob.ToJobDetail(), addJob.Replace, addJob.StoreNonDurableWhileAwaitingScheduling);
+            var result = CreateScheduler.Scheduler.AddJob(addJob.ToJobDetail(), addJob.Replace, addJob.StoreNonDurableWhileAwaitingScheduling);
+
+            _logger.LogInformation("Job added to the scheduler");
+            return result;
         }
 
         /// <summary>
@@ -517,9 +532,16 @@ namespace QuartzWebApi.Controllers
         /// <returns> true if the Job was found and deleted.</returns>
         [HttpPost]
         [Route("scheduler/deletejob")]
-        public Task<bool> DeleteJob([FromBody] JobKey jobKey)
+        public Task<bool> DeleteJob([FromBody] string json)
         {
-            return CreateScheduler.Scheduler.DeleteJob(jobKey);
+            _logger.LogInformation("Received request to delete a job that matches the given job key");
+            _logger.LogDebug($"Received JSON '{json}'");
+
+            var jobKey = Data.JobKey.FromJsonString(json);
+            var result = CreateScheduler.Scheduler.DeleteJob(jobKey.ToJobKey());
+
+            _logger.LogInformation($"Removed job from the scheduler, result '{result}'");
+            return result;
         }
 
         /// <summary>

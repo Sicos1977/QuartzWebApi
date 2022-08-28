@@ -1,5 +1,5 @@
 ﻿//
-// RescheduleJob.cs
+// Key.cs
 //
 // Author: Kees van Spelde <sicos2002@hotmail.com>
 //
@@ -22,53 +22,49 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-//
 
 using Newtonsoft.Json;
 
 namespace QuartzWebApi.Data
 {
     /// <summary>
-    ///     Class used to read or create json to reschedule a job
+    ///  A json wrapper for the <see cref="Quartz.TriggerKey"/> or <see cref="Quartz.JobKey"/>
     /// </summary>
-    public class RescheduleJob
+    public class Key
     {
-        #region Properties
+        #region Fields
         /// <summary>
-        ///     The current trigger key
+        ///     Returns the name of the trigger
         /// </summary>
-        [JsonProperty("CurrentTriggerKey")] 
-        public TriggerKey CurrentTriggerKey { get; private set; }
+        [JsonProperty("Name")]
+        public string Name { get; internal set; }
 
         /// <summary>
-        ///     The new trigger
+        ///     Returns the group of the trigger
         /// </summary>
-        [JsonProperty("NewTrigger")] 
-        public Trigger Trigger { get; private set; }
+        [JsonProperty("Group")]
+        public string Group { get; internal set; }
         #endregion
 
-        #region ToJsonString
+        #region Constructor
         /// <summary>
-        ///     Returns this object as a json string
+        ///     Makes this object and sets it's needed properties
         /// </summary>
-        /// <returns></returns>
-        public string ToJsonString()
+        /// <param name="name">The name</param>
+        public Key(string name)
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            Name = name;
         }
-        #endregion
 
-        #region FromJsonString
         /// <summary>
-        ///     Returns the <see cref="RescheduleJob" /> object from the given <paramref name="json" /> string
+        ///     Makes this object and sets it's needed properties
         /// </summary>
-        /// <param name="json">The json string</param>
-        /// <returns>
-        ///     <see cref="Data.Trigger" />
-        /// </returns>
-        public static RescheduleJob FromJsonString(string json)
+        /// <param name="name">The name</param>
+        /// <param name="group">The group</param>
+        public Key(string name, string group)
         {
-            return JsonConvert.DeserializeObject<RescheduleJob>(json);
+            Name = name;
+            Group = group;
         }
         #endregion
     }

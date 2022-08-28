@@ -31,7 +31,7 @@ using Quartz;
 namespace QuartzWebApi.Data
 {
     /// <summary>
-    ///     Class used to create or read json to get job details
+    ///     Json wrapper for the Quartz <see cref="IJobDetail"/>
     /// </summary>
     public class JobDetail
     {

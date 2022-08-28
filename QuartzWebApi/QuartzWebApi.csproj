@@ -138,11 +138,14 @@
     <Compile Include="Data\Calender.cs" />
     <Compile Include="Data\GroupMatcher.cs" />
     <Compile Include="Data\RescheduleJob.cs" />
-    <Compile Include="Data\JobExecutionContext.cs" />
+    <Compile Include="Data\JobExecutionContexts.cs" />
     <Compile Include="Data\JobKeyWithDataMap.cs" />
     <Compile Include="Data\RunningJobs.cs" />
     <Compile Include="Data\SchedulerMetaData.cs" />
     <Compile Include="Data\Trigger.cs" />
+    <Compile Include="Data\Key.cs" />
+    <Compile Include="Data\JobKeys.cs" />
+    <Compile Include="Data\TriggerKeys.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

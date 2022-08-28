@@ -64,7 +64,7 @@ namespace QuartzWebApi.Data
     #endregion
 
     /// <summary>
-    ///     Class used to read or create json to do group matching
+    ///     Json wrapper for a the Quartz <see cref="Quartz.Impl.Matchers.GroupMatcher{T}"/>
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class GroupMatcher<T> where T : Quartz.Util.Key<T>

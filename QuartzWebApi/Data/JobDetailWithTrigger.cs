@@ -3,7 +3,7 @@
 namespace QuartzWebApi.Data
 {
     /// <summary>
-    ///     Class used to create or read json to get job with details and trigger
+    ///     Json wrapper to create a <see cref="Quartz.IJob"/> with a <see cref="Quartz.ITrigger"/>
     /// </summary>
     public class JobDetailWithTrigger
     {

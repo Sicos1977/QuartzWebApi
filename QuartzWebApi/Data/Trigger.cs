@@ -37,13 +37,13 @@ namespace QuartzWebApi.Data
     {
         #region Properties
         /// <summary>
-        ///     The <see cref="TriggerKey"/>
+        ///     The <see cref="TriggerKey" />
         /// </summary>
         [JsonProperty("TriggerKey")]
         public TriggerKey TriggerKey { get; private set; }
 
         /// <summary>
-        ///     A description for the <see cref="Trigger"/>
+        ///     A description for the <see cref="Trigger" />
         /// </summary>
         [JsonProperty("Description")]
         public string Description { get; private set; }
@@ -53,13 +53,13 @@ namespace QuartzWebApi.Data
         /// </summary>
         [JsonProperty("CalendarName")]
         public string CalendarName { get; private set; }
-        
+
         /// <summary>
         ///     The cron schedule
         /// </summary>
         [JsonProperty("CronSchedule")]
         public string CronSchedule { get; private set; }
-        
+
         /// <summary>
         ///     The next fire time in UTC format
         /// </summary>
@@ -107,8 +107,8 @@ namespace QuartzWebApi.Data
         /// <summary>
         ///     Makes this object and sets all it's needed properties
         /// </summary>
-        /// <param name="triggerKey">The <see cref="TriggerKey"/></param>
-        /// <param name="description">A description for the <see cref="Trigger"/></param>
+        /// <param name="triggerKey">The <see cref="TriggerKey" /></param>
+        /// <param name="description">A description for the <see cref="Trigger" /></param>
         /// <param name="calendarName">The name of the calender to use or <c>null</c> when not</param>
         /// <param name="cronSchedule">The cron schedule</param>
         /// <param name="nextFireTimeUtc">The next fire time in UTC format</param>
@@ -117,8 +117,8 @@ namespace QuartzWebApi.Data
         /// <param name="endTimeUtc">The end time in UTC format</param>
         /// <param name="finalFireTimeUtc">The final fire time in UTC format</param>
         /// <param name="priority">The priority</param>
-        /// <param name="jobKey">The <see cref="JobKey"/></param>
-        /// <param name="jobDataMap">The <see cref="JobDataMap"/></param>
+        /// <param name="jobKey">The <see cref="JobKey" /></param>
+        /// <param name="jobDataMap">The <see cref="JobDataMap" /></param>
         public Trigger(
             TriggerKey triggerKey,
             string description,
@@ -130,8 +130,8 @@ namespace QuartzWebApi.Data
             DateTimeOffset? endTimeUtc,
             DateTimeOffset? finalFireTimeUtc,
             int priority,
-            JobKey jobKey, 
-            JobDataMap jobDataMap) : base (jobKey, jobDataMap)
+            JobKey jobKey,
+            JobDataMap jobDataMap) : base(jobKey, jobDataMap)
         {
             TriggerKey = triggerKey;
             Description = description;
@@ -151,7 +151,7 @@ namespace QuartzWebApi.Data
         /// <param name="trigger"></param>
         public Trigger(ITrigger trigger)
         {
-            TriggerKey = trigger.Key;
+            TriggerKey = new TriggerKey(trigger.Key);
             Description = trigger.Description;
             CalendarName = trigger.CalendarName;
             //CronSchedule = trigger;
@@ -167,15 +167,15 @@ namespace QuartzWebApi.Data
 
         #region ToTrigger
         /// <summary>
-        ///     Returns this object as a Quartz <see cref="ITrigger"/>
+        ///     Returns this object as a Quartz <see cref="ITrigger" />
         /// </summary>
         /// <returns></returns>
         public ITrigger ToTrigger()
         {
             var trigger = TriggerBuilder
                 .Create()
-                .ForJob(JobKey)
-                .WithIdentity(TriggerKey)
+                .ForJob(JobKey.ToTJobKey())
+                .WithIdentity(TriggerKey.ToTriggerKey())
                 .WithPriority(Priority)
                 .StartAt(StartTimeUtc);
 
@@ -184,7 +184,7 @@ namespace QuartzWebApi.Data
 
             if (!string.IsNullOrWhiteSpace(CronSchedule))
                 trigger = trigger.WithCronSchedule(CronSchedule);
-            
+
             if (!string.IsNullOrWhiteSpace(CalendarName))
                 trigger = trigger.ModifiedByCalendar(CalendarName);
 
@@ -211,10 +211,12 @@ namespace QuartzWebApi.Data
 
         #region FromJsonString
         /// <summary>
-        ///     Returns the <see cref="Trigger"/> object from the given <paramref name="json"/> string
+        ///     Returns the <see cref="Trigger" /> object from the given <paramref name="json" /> string
         /// </summary>
         /// <param name="json">The json string</param>
-        /// <returns><see cref="Trigger"/></returns>
+        /// <returns>
+        ///     <see cref="Trigger" />
+        /// </returns>
         public new static Trigger FromJsonString(string json)
         {
             return JsonConvert.DeserializeObject<Trigger>(json);

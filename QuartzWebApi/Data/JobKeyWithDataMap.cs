@@ -4,8 +4,9 @@ using Quartz;
 namespace QuartzWebApi.Data
 {
     /// <summary>
-    ///     Class used to create or read json to get a job with a data map
+    ///     Json wrapper to create a <see cref="Quartz.JobKey"/> with a <see cref="Quartz.JobDataMap"/>
     /// </summary>
+
     public class JobKeyWithDataMap
     {
         #region Properties
