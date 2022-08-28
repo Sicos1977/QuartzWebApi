@@ -24,13 +24,39 @@
 // THE SOFTWARE.
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace QuartzWebApi.Data
 {
     [JsonArray]
-    public class JobKeys : List<JobKeys>
+    public class JobKeys : List<JobKey>
     {
+        #region Constructor
+        /// <summary>
+        ///     Makes this object and sets all it's needed properties
+        /// </summary>
+        /// <param name="jobKeys">A <see cref="ReadOnlyCollection{T}"/> of <see cref="Quartz.JobKey"/>s</param>
+        public JobKeys(IReadOnlyCollection<Quartz.JobKey> jobKeys)
+        {
+            foreach(var jobKey in jobKeys)
+                Add(new JobKey(jobKey.Name, jobKey.Group));
+        }
+        #endregion
+
+        #region ToJobKeys
+        /// <summary>
+        ///     Returns a <see cref="ReadOnlyCollection{T}"/> of <see cref="Quartz.JobKey"/>s
+        /// </summary>
+        /// <returns></returns>
+        public IReadOnlyCollection<Quartz.JobKey> ToJobKeys()
+        {
+            var result = this.Select(m => m.ToJobKey()).ToList();
+            return new ReadOnlyCollection<Quartz.JobKey>(result);
+        }
+        #endregion
+
         #region ToJsonString
         /// <summary>
         ///     Returns this object as a json string
@@ -44,13 +70,13 @@ namespace QuartzWebApi.Data
 
         #region FromJsonString
         /// <summary>
-        ///     Returns the <see cref="JobDetail"/> object from the given <paramref name="json"/> string
+        ///     Returns the <see cref="JobKeys"/> object from the given <paramref name="json"/> string
         /// </summary>
         /// <param name="json">The json string</param>
         /// <returns><see cref="Data.Trigger"/></returns>
-        public static TriggerKeys FromJsonString(string json)
+        public static JobKeys FromJsonString(string json)
         {
-            return JsonConvert.DeserializeObject<TriggerKeys>(json);
+            return JsonConvert.DeserializeObject<JobKeys>(json);
         }
         #endregion
     }
@@ -87,7 +113,7 @@ namespace QuartzWebApi.Data
         }
         #endregion
 
-        #region ToTJobKey
+        #region ToJobKey
         /// <summary>
         ///     Returns this object as a Quartz <see cref="Quartz.JobKey"/>
         /// </summary>

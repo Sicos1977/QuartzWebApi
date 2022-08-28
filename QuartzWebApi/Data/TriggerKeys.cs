@@ -27,12 +27,25 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
+using Quartz;
 
 namespace QuartzWebApi.Data
 {
     [JsonArray]
     public class TriggerKeys : List<TriggerKey>
     {
+        #region Constructor
+        /// <summary>
+        ///     Makes this object and sets all it's needed properties
+        /// </summary>
+        /// <param name="triggerKeys">A <see cref="ReadOnlyCollection{T}"/> of <see cref="Quartz.TriggerKey"/>s</param>
+        public TriggerKeys(IReadOnlyCollection<Quartz.TriggerKey> triggerKeys)
+        {
+            foreach (var triggerKey in triggerKeys)
+                Add(new TriggerKey(triggerKey.Name, triggerKey.Group));
+        }
+        #endregion
+
         #region ToTriggerKeys
         /// <summary>
         ///     Returns a <see cref="ReadOnlyCollection{T}"/> of <see cref="Quartz.TriggerKey"/>s
