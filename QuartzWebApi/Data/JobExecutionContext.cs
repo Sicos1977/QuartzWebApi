@@ -25,11 +25,40 @@
 //
 
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Quartz;
 
 namespace QuartzWebApi.Data
 {
+    [JsonArray("JobExecutionContexts")]
+    public class JobExecutionContexts : List<JobExecutionContext>
+    {
+        #region ToJsonString
+        /// <summary>
+        ///     Returns this object as a json string
+        /// </summary>
+        /// <returns></returns>
+        public string ToJsonString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+        }
+        #endregion
+
+        #region FromJsonString
+        /// <summary>
+        ///     Returns the <see cref="JobExecutionContexts"/> object from the given <paramref name="json"/> string
+        /// </summary>
+        /// <param name="json">The json string</param>
+        /// <returns><see cref="Data.Trigger"/></returns>
+        public static JobExecutionContexts FromJsonString(string json)
+        {
+            return JsonConvert.DeserializeObject<JobExecutionContexts>(json);
+        }
+        #endregion
+    }
+
+    [JsonObject("JobExecutionContext")]
     public class JobExecutionContext
     {
         #region Properties
@@ -222,29 +251,6 @@ namespace QuartzWebApi.Data
             FireInstanceId = jobExecutionContext.FireInstanceId;
             Result = jobExecutionContext.Result;
             JobRunTime = jobExecutionContext.JobRunTime;
-        }
-        #endregion
-
-        #region ToJsonString
-        /// <summary>
-        ///     Returns this object as a json string
-        /// </summary>
-        /// <returns></returns>
-        public string ToJsonString()
-        {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
-        }
-        #endregion
-
-        #region FromJsonString
-        /// <summary>
-        ///     Returns the <see cref="JobExecutionContext"/> object from the given <paramref name="json"/> string
-        /// </summary>
-        /// <param name="json">The json string</param>
-        /// <returns><see cref="Data.Trigger"/></returns>
-        public static JobExecutionContext FromJsonString(string json)
-        {
-            return JsonConvert.DeserializeObject<JobExecutionContext>(json);
         }
         #endregion
     }

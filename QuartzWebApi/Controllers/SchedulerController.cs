@@ -5,8 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Helpers;
 using System.Web.Http;
+using System.Web.Http.Results;
+using Microsoft.Extensions.Logging;
 using Quartz;
-using Quartz.Impl.Matchers;
 using Quartz.Spi;
 using QuartzWebApi.Data;
 using TriggerKey = Quartz.TriggerKey;
@@ -16,6 +17,13 @@ namespace QuartzWebApi.Controllers
     //[Authorize]
     public class SchedulerController : ApiController
     {
+        #region Fields
+        /// <summary>
+        ///     When set then logging is written to this ILogger instance
+        /// </summary>
+        private ILogger _logger;
+        #endregion
+
         /// <summary>
         ///     Returns <c>true</c> if the given JobGroup is paused
         /// </summary>
@@ -25,7 +33,10 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/isjobgrouppaused/{groupName}")]
         public Task<bool> IsJobGroupPaused(string groupName)
         {
-            return CreateScheduler.Scheduler.IsJobGroupPaused(groupName);
+            _logger.LogInformation($"Received request to check if the job group '{groupName}' is paused");
+            var result = CreateScheduler.Scheduler.IsJobGroupPaused(groupName);
+            _logger.LogInformation($"Returning '{result}'");
+            return result;
         }
 
         /// <summary>
@@ -37,7 +48,10 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/istriggergrouppaused/{groupName}")]
         public Task<bool> IsTriggerGroupPaused(string groupName)
         {
-            return CreateScheduler.Scheduler.IsTriggerGroupPaused(groupName);
+            _logger.LogInformation($"Received request to check if the trigger group '{groupName}' is paused");
+            var result = CreateScheduler.Scheduler.IsTriggerGroupPaused(groupName);
+            _logger.LogInformation($"Returning '{result}'");
+            return result;
         }
 
         /// <summary>
@@ -47,7 +61,10 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/schedulername")]
         public string SchedulerName()
         {
-            return CreateScheduler.Scheduler.SchedulerName;
+            _logger.LogInformation("Received request to return the scheduler name");
+            var result = CreateScheduler.Scheduler.SchedulerName;
+            _logger.LogInformation($"Returning '{result}'");
+            return result;
         }
 
         /// <summary>
@@ -57,7 +74,10 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/schedulerinstanceid")]
         public string SchedulerInstanceId()
         {
-            return CreateScheduler.Scheduler.SchedulerInstanceId;
+            _logger.LogInformation("Received request to return the scheduler instance id");
+            var result = CreateScheduler.Scheduler.SchedulerInstanceId;
+            _logger.LogInformation($"Returning '{result}'");
+            return result;
         }
 
         /// <summary>
@@ -67,7 +87,10 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/schedulercontext")]
         public SchedulerContext Context()
         {
-            return CreateScheduler.Scheduler.Context;
+            _logger.LogInformation("Received request to return the scheduler context");
+            var result = CreateScheduler.Scheduler.Context;
+            _logger.LogDebug($"Returning '{result}'");
+            return result;
         }
 
         /// <summary>
@@ -79,7 +102,10 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/instandbymode")]
         public bool InStandbyMode()
         {
-            return CreateScheduler.Scheduler.InStandbyMode;
+            _logger.LogInformation("Received request to check if the scheduler is in standby mode");
+            var result = CreateScheduler.Scheduler.InStandbyMode;
+            _logger.LogInformation($"Returning '{result}'");
+            return result;
         }
 
         /// <summary>
@@ -89,7 +115,10 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/isshutdown")]
         public bool IsShutdown()
         {
-            return CreateScheduler.Scheduler.IsShutdown;
+            _logger.LogInformation("Received request to check if the scheduler is shutdown");
+            var result = CreateScheduler.Scheduler.IsShutdown;
+            _logger.LogInformation($"Returning '{result}'");
+            return result;
         }
 
         /// <summary>
@@ -104,7 +133,10 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/getmetadata")]
         public string GetMetaData()
         {
-            return new Data.SchedulerMetaData(CreateScheduler.Scheduler.GetMetaData().Result).ToJsonString();
+            _logger.LogInformation("Received request to return the meta-data");
+            var result = new Data.SchedulerMetaData(CreateScheduler.Scheduler.GetMetaData().Result).ToJsonString();
+            _logger.LogDebug($"Returning '{result}'");
+            return result;
         }
 
         /// <summary>
@@ -129,13 +161,14 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/getcurrentlyexecutingjobs")]
         public Task<IReadOnlyCollection<JobExecutionContext>> GetCurrentlyExecutingJobs()
         {
+            _logger.LogInformation("Received request to return the currently executing jobs");
             var currentlyExecutingJobs = CreateScheduler.Scheduler.GetCurrentlyExecutingJobs().GetAwaiter().GetResult();
 
             var result = currentlyExecutingJobs.Select(currentlyExecutingJob => new JobExecutionContext(currentlyExecutingJob)).ToList();
 
             var r = new ReadOnlyCollection<JobExecutionContext>(result);
-            // TODO: Fix
-            return null;
+            _logger.LogDebug($"Returning '{result}'");
+            return result;
         }
 
         /// <summary>
@@ -145,9 +178,12 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/getjobgroupnames")]
         public Task<IReadOnlyCollection<string>> GetJobGroupNames()
         {
-            return CreateScheduler.Scheduler.GetJobGroupNames();
+            _logger.LogInformation("Received request to return the job group names");
+            var result = CreateScheduler.Scheduler.GetJobGroupNames();
+            _logger.LogDebug($"Returning '{result}'");
+            return result;
         }
-        
+
         /// <summary>
         ///     Get the names of all known <see cref="ITrigger" /> groups.
         /// </summary>
@@ -155,7 +191,10 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/gettriggergroupnames")]
         public Task<IReadOnlyCollection<string>> GetTriggerGroupNames()
         {
-            return CreateScheduler.Scheduler.GetTriggerGroupNames();
+            _logger.LogInformation("Received request to return the trigger group names");
+            var result = CreateScheduler.Scheduler.GetTriggerGroupNames();
+            _logger.LogDebug($"Returning '{result}'");
+            return result;
         }
 
         /// <summary>
@@ -165,7 +204,10 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/getpausedtriggergroups")]
         public Task<IReadOnlyCollection<string>> GetPausedTriggerGroups()
         {
-            return CreateScheduler.Scheduler.GetPausedTriggerGroups();
+            _logger.LogInformation("Received request to return the paused trigger groups");
+            var result = CreateScheduler.Scheduler.GetPausedTriggerGroups();
+            _logger.LogDebug($"Returning '{result}'");
+            return result;
         }
 
         /// <summary>
@@ -185,7 +227,10 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/start")]
         public Task Start()
         {
-            return CreateScheduler.Scheduler.Start();
+            _logger.LogInformation("Received request to start the scheduler");
+            var result = CreateScheduler.Scheduler.Start();
+            _logger.LogInformation("The scheduler is started");
+            return result;
         }
 
         /// <summary>
@@ -201,7 +246,10 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/startdelayed/{delay}")]
         public Task StartDelayed(int delay)
         {
-            return CreateScheduler.Scheduler.StartDelayed(new TimeSpan(0, 0, delay));
+            _logger.LogInformation($"Received request to start the scheduler with a delay of '{delay}' minutes");
+            var result = CreateScheduler.Scheduler.StartDelayed(new TimeSpan(0, 0, delay));
+            _logger.LogInformation("The scheduler is started");
+            return result;
         }
 
         /// <summary>
@@ -220,7 +268,10 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/isstarted")]
         public bool IsStarted()
         {
-            return CreateScheduler.Scheduler.IsStarted;
+            _logger.LogInformation("Received request to check if the scheduler is started");
+            var result = CreateScheduler.Scheduler.IsStarted;
+            _logger.LogDebug($"Returning '{result}'");
+            return result;
         }
 
         /// <summary>
@@ -244,7 +295,10 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/standby")]
         public Task Standby()
         {
-            return CreateScheduler.Scheduler.Standby();
+            _logger.LogInformation("Received request to put the scheduler in standby mode");
+            var result = CreateScheduler.Scheduler.Standby();
+            _logger.LogDebug("The scheduler is in standby mode");
+            return result;
         }
 
         /// <summary>
@@ -259,7 +313,10 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/shutdown")]
         public Task Shutdown()
         {
-            return CreateScheduler.Scheduler.Shutdown();
+            _logger.LogInformation("Received request to shutdown the scheduler");
+            var result = CreateScheduler.Scheduler.Shutdown();
+            _logger.LogDebug("The scheduler is shutdown");
+            return result;
         }
 
         /// <summary>
@@ -278,7 +335,14 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/shutdown/{waitForJobsToComplete}")]
         public Task Shutdown(bool waitForJobsToComplete)
         {
-            return CreateScheduler.Scheduler.Shutdown(waitForJobsToComplete);
+            _logger.LogInformation(waitForJobsToComplete
+                ? "Received request to shutdown the scheduler but wait the the jobs to complete first"
+                : "Received request to shutdown the scheduler and not to wait for the jobs to complete first");
+
+            var result = CreateScheduler.Scheduler.Shutdown(waitForJobsToComplete);
+            
+            _logger.LogDebug("The scheduler is shutdown");
+            return result;
         }
 
         /// <summary>
@@ -294,11 +358,16 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/schedulejobwithjobdetailandtrigger")]
         public Task<DateTimeOffset> ScheduleJob([FromBody] string json)
         {
+            _logger.LogInformation("Received request to schedule a job with details and a trigger");
+            _logger.LogDebug($"Received json '{json}'");
+
             var jobDetailWithTrigger = Data.JobDetailWithTrigger.FromJsonString(json);
-            // IJobDetail jobDetail, ITrigger trigger
-            return CreateScheduler.Scheduler.ScheduleJob(
+            var result = CreateScheduler.Scheduler.ScheduleJob(
                 jobDetailWithTrigger.JobDetail.ToJobDetail(),
                 jobDetailWithTrigger.Trigger.ToTrigger());
+            
+            _logger.LogDebug($"Job scheduled, returning '{result}'");
+            return result;
         }
 
         /// <summary>
@@ -310,8 +379,14 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/schedulejobidentifiedwithtrigger")]
         public Task<DateTimeOffset> ScheduleJobIdentifiedWithTrigger([FromBody] string json)
         {
+            _logger.LogInformation("Received request to schedule a job identified by a trigger");
+            _logger.LogDebug($"Received json '{json}'");
+            
             var trigger = Trigger.FromJsonString(json).ToTrigger();
-            return CreateScheduler.Scheduler.ScheduleJob(trigger);
+            var result = CreateScheduler.Scheduler.ScheduleJob(trigger);
+
+            _logger.LogDebug($"Job scheduled, returning '{result}'");
+            return result;
         }
 
         ///// <summary>
@@ -340,14 +415,20 @@ namespace QuartzWebApi.Controllers
         ///     parameter is not set to true then an exception will be thrown.
         /// </remarks>
         [HttpPost]
-        [Route("scheduler/schedulejobwithjobdetailandtriggers")]
+        [Route("scheduler/schedulejobwithtriggers")]
         public Task ScheduleJobWithTriggers([FromBody] string json)
         {
+            _logger.LogInformation("Received request to schedule a job with triggers");
+            _logger.LogDebug($"Received json '{json}'");
+
             var jobDetailWithTriggers = Data.JobDetailWithTriggers.FromJsonString(json);
-            return CreateScheduler.Scheduler.ScheduleJob(
+            var result = CreateScheduler.Scheduler.ScheduleJob(
                 jobDetailWithTriggers.JobDetail.ToJobDetail(),
                 jobDetailWithTriggers.ToReadOnlyTriggerCollection(),
                 jobDetailWithTriggers.Replace);
+
+            _logger.LogDebug("Job scheduled");
+            return result;
         }
 
         /// <summary>
@@ -361,7 +442,13 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/unschedulejob")]
         public Task<bool> UnscheduleJob([FromBody] TriggerKey triggerKey)
         {
-            return CreateScheduler.Scheduler.UnscheduleJob(triggerKey);
+            _logger.LogInformation("Received request to unschedule a job with trigger");
+            _logger.LogDebug($"Received json '{json}'");
+
+            var result = CreateScheduler.Scheduler.UnscheduleJob(triggerKey);
+            
+            _logger.LogDebug("Job unscheduled");
+            return result;
         }
 
         /// <summary>
