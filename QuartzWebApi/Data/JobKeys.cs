@@ -38,7 +38,7 @@ namespace QuartzWebApi.Data
         ///     Makes this object and sets all it's needed properties
         /// </summary>
         /// <param name="jobKeys">A <see cref="ReadOnlyCollection{T}"/> of <see cref="Quartz.JobKey"/>s</param>
-        public JobKeys(IReadOnlyCollection<Quartz.JobKey> jobKeys)
+        public JobKeys(IEnumerable<Quartz.JobKey> jobKeys)
         {
             foreach(var jobKey in jobKeys)
                 Add(new JobKey(jobKey.Name, jobKey.Group));

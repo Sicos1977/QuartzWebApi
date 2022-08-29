@@ -972,14 +972,15 @@ namespace QuartzWebApi.Controllers
         }
         #endregion
 
+        #region GetTriggersOfJob
         /// <summary>
         ///     Get all <see cref="ITrigger" /> s that are associated with the
         /// identified <see cref="IJobDetail" />.
         /// </summary>
         /// <remarks>
-        /// The returned Trigger objects will be snap-shots of the actual stored
-        /// triggers.  If you wish to modify a trigger, you must re-store the
-        /// trigger afterward (e.g. see <see cref="RescheduleJob(TriggerKey, ITrigger, CancellationToken)" />).
+        ///     The returned Trigger objects will be snap-shots of the actual stored
+        ///     triggers. If you wish to modify a trigger, you must re-store the
+        ///     trigger afterward (e.g. see <see cref="RescheduleJob(string)" />).
         /// </remarks>
         [HttpGet]
         [Route("scheduler/gettriggersofjob")]
@@ -988,7 +989,7 @@ namespace QuartzWebApi.Controllers
             _logger.LogInformation("Received request to get all the triggers for the given job key");
             _logger.LogDebug($"Received JSON '{json}'");
 
-            var jobKey = Data.JobKey.FromJsonString(json);
+            var jobKey = JobKey.FromJsonString(json);
             var triggers = CreateScheduler.Scheduler.GetTriggersOfJob(jobKey.ToJobKey()).GetAwaiter().GetResult();
             var result = new Triggers(triggers).ToJsonString();
 
@@ -996,77 +997,128 @@ namespace QuartzWebApi.Controllers
             _logger.LogDebug($"JSON '{result}'");
             return result;
         }
+        #endregion
 
+        #region GetTriggerKeys
         /// <summary>
         /// Get the names of all the <see cref="ITrigger" />s in the given
         /// groups.
         /// </summary>
         [HttpGet]
         [Route("scheduler/gettriggerkeys")]
-        Task<IReadOnlyCollection<TriggerKey>> GetTriggerKeys([FromBody] string json)
+        public string GetTriggerKeys([FromBody] string json)
         {
-            var groupMatcher = Data.GroupMatcher<TriggerKey>.FromJsonString(json);
-            return CreateScheduler.Scheduler.GetTriggerKeys(groupMatcher.ToGroupMatcher());
-        }
+            _logger.LogInformation("Received request to get all the trigger keys that are matching the given group matcher");
+            _logger.LogDebug($"Received JSON '{json}'");
 
+            var groupMatcher = GroupMatcher<Quartz.TriggerKey>.FromJsonString(json);
+            var triggerKeys = CreateScheduler.Scheduler.GetTriggerKeys(groupMatcher.ToGroupMatcher()).GetAwaiter().GetResult();
+            var result = new TriggerKeys(triggerKeys).ToJsonString();
+
+            _logger.LogInformation("Returning all trigger keys that are matching the given group matcher");
+            _logger.LogDebug($"JSON '{result}'");
+            return result;
+        }
+        #endregion
+
+        #region GetJobDetail
         /// <summary>
-        /// Get the <see cref="IJobDetail" /> for the <see cref="IJob" />
-        /// instance with the given key .
+        ///     Get the <see cref="IJobDetail" /> for the <see cref="IJob" /> instance with the given key.
         /// </summary>
         /// <remarks>
-        /// The returned JobDetail object will be a snap-shot of the actual stored
-        /// JobDetail.  If you wish to modify the JobDetail, you must re-store the
-        /// JobDetail afterward (e.g. see <see cref="AddJob(IJobDetail, bool, CancellationToken)" />).
+        ///     The returned JobDetail object will be a snap-shot of the actual stored
+        ///     JobDetail.  If you wish to modify the JobDetail, you must re-store the
+        ///     JobDetail afterward (e.g. see <see cref="AddJob(string)" />).
         /// </remarks>
-        string GetJobDetail(JobKey jobKey)
+        [HttpGet]
+        [Route("scheduler/getjobdetail")]
+        public string GetJobDetail([FromBody] string json)
         {
-            var jobDetail = CreateScheduler.Scheduler.GetJobDetail(jobKey).GetAwaiter().GetResult();
-            return new JobDetail(jobDetail).ToJsonString();
+            _logger.LogInformation("Received request to get the job detail for the given job key");
+            _logger.LogDebug($"Received JSON '{json}'");
+
+            var jobKey = JobKey.FromJsonString(json);
+            var jobDetail = CreateScheduler.Scheduler.GetJobDetail(jobKey.ToJobKey()).GetAwaiter().GetResult();
+            var result = new JobDetail(jobDetail).ToJsonString();
+
+            _logger.LogInformation("Returning job detail for the give job key");
+            _logger.LogDebug($"JSON '{result}'");
+            return result;
+        }
+        #endregion
+
+        #region GetTrigger
+        /// <summary>
+        ///     Get the <see cref="ITrigger" /> instance with the given key.
+        /// </summary>
+        /// <remarks>
+        ///     The returned Trigger object will be a snap-shot of the actual stored
+        ///     trigger. If you wish to modify the trigger, you must re-store the
+        ///     trigger afterward (e.g. see <see cref="RescheduleJob(string)" />).
+        /// </remarks>
+        [HttpGet]
+        [Route("scheduler/gettrigger")]
+        public string GetTrigger([FromBody] string json)
+        {
+            _logger.LogInformation("Received request to get the trigger for the given trigger key");
+            _logger.LogDebug($"Received JSON '{json}'");
+
+            var triggerKey = TriggerKey.FromJsonString(json);
+            var trigger = CreateScheduler.Scheduler.GetTrigger(triggerKey.ToTriggerKey()).GetAwaiter().GetResult();
+            var result = new Trigger(trigger).ToJsonString();
+
+            _logger.LogInformation("Returning trigger for the given trigger key");
+            _logger.LogDebug($"JSON '{result}'");
+            return result;
+
+        }
+        #endregion
+
+        #region GetTriggerState
+        /// <summary>
+        ///     Get the current state of the identified <see cref="ITrigger" />.
+        /// </summary>
+        /// <seealso cref="TriggerState.Normal" />
+        /// <seealso cref="TriggerState.Paused" />
+        /// <seealso cref="TriggerState.Complete" />
+        /// <seealso cref="TriggerState.Blocked" />
+        /// <seealso cref="TriggerState.Error" />
+        /// <seealso cref="TriggerState.None" />
+        [HttpGet]
+        [Route("scheduler/gettriggerstate")]
+        public string GetTriggerState([FromBody] string json)
+        {
+            _logger.LogInformation("Received request to get the trigger state for the given trigger key");
+            _logger.LogDebug($"Received JSON '{json}'");
+
+            var triggerKey = TriggerKey.FromJsonString(json);
+            var triggerState = CreateScheduler.Scheduler.GetTriggerState(triggerKey.ToTriggerKey()).GetAwaiter().GetResult();
+            var result = triggerState.ToString();
+
+            _logger.LogInformation($"Returning '{result}'");
+            return result;
+        }
+        #endregion
+
+        /// <summary>
+        ///     Add (register) the given <see cref="ICalendar" /> to the Scheduler.
+        /// </summary>
+        /// <param name="calName">Name of the calendar.</param>
+        /// <param name="calendar">The calendar.</param>
+        /// <param name="replace">if set to <c>true</c> [replace].</param>
+        /// <param name="updateTriggers">
+        ///     whether or not to update existing triggers that
+        ///     referenced the already existing calendar so that they are 'correct'
+        ///     based on the new trigger.
+        /// </param>
+        [HttpPost]
+        [Route("scheduler/addcalendar")]
+        public Task AddCalendar(string calName, ICalendar calendar, bool replace, bool updateTriggers)
+        {
+            return null;
         }
 
-        ///// <summary>
-        ///// Get the <see cref="ITrigger" /> instance with the given key.
-        ///// </summary>
-        ///// <remarks>
-        ///// The returned Trigger object will be a snap-shot of the actual stored
-        ///// trigger. If you wish to modify the trigger, you must re-store the
-        ///// trigger afterward (e.g. see <see cref="RescheduleJob(TriggerKey, ITrigger, CancellationToken)" />).
-        ///// </remarks>
-        //Task<ITrigger?> GetTrigger(TriggerKey triggerKey)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        ///// <summary>
-        ///// Get the current state of the identified <see cref="ITrigger" />.
-        ///// </summary>
-        ///// <seealso cref="TriggerState.Normal" />
-        ///// <seealso cref="TriggerState.Paused" />
-        ///// <seealso cref="TriggerState.Complete" />
-        ///// <seealso cref="TriggerState.Blocked" />
-        ///// <seealso cref="TriggerState.Error" />
-        ///// <seealso cref="TriggerState.None" />
-        //Task<TriggerState> GetTriggerState(
-        //    TriggerKey triggerKey,
-        //    );
-
-        ///// <summary>
-        ///// Add (register) the given <see cref="ICalendar" /> to the Scheduler.
-        ///// </summary>
-        ///// <param name="calName">Name of the calendar.</param>
-        ///// <param name="calendar">The calendar.</param>
-        ///// <param name="replace">if set to <c>true</c> [replace].</param>
-        ///// <param name="updateTriggers">whether or not to update existing triggers that
-        ///// referenced the already existing calendar so that they are 'correct'
-        ///// based on the new trigger.</param>
-        //
-        //Task AddCalendar(
-        //    string calName,
-        //    ICalendar calendar,
-        //    bool replace,
-        //    bool updateTriggers,
-        //    );
-
+        #region DeleteCalendar
         /// <summary>
         ///     Delete the identified <see cref="ICalendar" /> from the Scheduler.
         /// </summary>
@@ -1077,17 +1129,31 @@ namespace QuartzWebApi.Controllers
         /// </remarks>
         /// <param name="calName">Name of the calendar.</param>
         /// <returns>true if the Calendar was found and deleted.</returns>
-        [HttpGet]
-        [Route("scheduler/deletecalender/{calName}")]
-        public Task<bool> DeleteCalendar(string calName)
+        [HttpPost]
+        [Route("scheduler/deletecalendar/{calName}")]
+        public bool DeleteCalendar(string calName)
         {
-            return CreateScheduler.Scheduler.DeleteCalendar(calName);
-        }
+            _logger.LogInformation($"Received request to delete the calendar '{calName}' from the scheduler");
 
-        ///// <summary>
-        ///// Get the <see cref="ICalendar" /> instance with the given name.
-        ///// </summary>
-        //Task<ICalendar?> GetCalendar(string calName, );
+            var result = CreateScheduler.Scheduler.DeleteCalendar(calName).GetAwaiter().GetResult();
+
+            _logger.LogInformation($"Returning '{result}'");
+            return result;
+        }
+        #endregion
+
+        /// <summary>
+        /// Get the <see cref="ICalendar" /> instance with the given name.
+        /// </summary>
+        [HttpGet]
+        [Route("scheduler/getcalendar/{calName}")]
+        public Task<ICalendar?> GetCalendar(string calName)
+        {
+            _logger.LogInformation($"Received request to get the calendar with the name '{calName}' from the scheduler");
+
+            var result = CreateScheduler.Scheduler.GetCalendar(calName).GetAwaiter().GetResult();
+            return null;
+        }
 
         /// <summary>
         ///     Get the names of all registered <see cref="ICalendar" />.
@@ -1099,6 +1165,7 @@ namespace QuartzWebApi.Controllers
             return CreateScheduler.Scheduler.GetCalendarNames();
         }
 
+        #region InterruptJobKey
         /// <summary>
         ///     Request the cancellation, within this Scheduler instance, of all
         ///     currently executing instances of the identified <see cref="IJob" />.
@@ -1107,15 +1174,15 @@ namespace QuartzWebApi.Controllers
         ///     <para>
         ///         If more than one instance of the identified job is currently executing,
         ///         the cancellation token will be set on each instance.  However, there is a limitation that in the case that
-        ///         <see cref="Interrupt(JobKey)" /> on one instances throws an exception, all
+        ///         <see cref="InterruptJobKey(string)" /> on one instances throws an exception, all
         ///         remaining  instances (that have not yet been interrupted) will not have
-        ///         their <see cref="Interrupt(JobKey)" /> method called.
+        ///         their <see cref="InterruptJobKey(string)" /> method called.
         ///     </para>
         ///     <para>
         ///         If you wish to interrupt a specific instance of a job (when more than
         ///         one is executing) you can do so by calling
-        ///         <see cref="CurrentlyExecutingJobs" /> to obtain a handle
-        ///         to the job instance, and then invoke <see cref="Interrupt(JobKey)" /> on it
+        ///         <see cref="GetCurrentlyExecutingJobs" /> to obtain a handle
+        ///         to the job instance, and then invoke <see cref="InterruptJobKey(string)" /> on it
         ///         yourself.
         ///     </para>
         ///     <para>
@@ -1127,14 +1194,23 @@ namespace QuartzWebApi.Controllers
         /// <returns>
         ///     true is at least one instance of the identified job was found and interrupted.
         /// </returns>
-        /// <seealso cref="CurrentlyExecutingJobs" />
+        /// <seealso cref="GetCurrentlyExecutingJobs" />
         [HttpGet]
-        [Route("scheduler/interrupt/jobkey/{jobKey}")]
-        public bool Interrupt(JobKey jobKey)
+        [Route("scheduler/interruptjobkey")]
+        public bool InterruptJobKey([FromBody] string json)
         {
-            throw new NotImplementedException();
-        }
+            _logger.LogInformation("Received request for cancellation, within this Scheduler instance, of all currently executing instances of the identified job");
+            _logger.LogDebug($"Received JSON '{json}'");
 
+            var jobKey = JobKey.FromJsonString(json);
+            var result = CreateScheduler.Scheduler.Interrupt(jobKey.ToJobKey()).GetAwaiter().GetResult();
+
+            _logger.LogInformation($"Returning '{result}'");
+            return result;
+        }
+        #endregion
+
+        #region InterruptFireInstanceId
         /// <summary>
         ///     Request the cancellation, within this Scheduler instance, of the
         ///     identified executing job instance.
@@ -1144,48 +1220,72 @@ namespace QuartzWebApi.Controllers
         ///     instances of the identified InterruptableJob currently executing in this
         ///     Scheduler instance, not across the entire cluster.
         /// </remarks>
-        /// <seealso cref="CurrentlyExecutingJobs" />
+        /// <seealso cref="GetCurrentlyExecutingJobs" />
         /// <seealso cref="IJobExecutionContext.FireInstanceId" />
-        /// <seealso cref="Interrupt(JobKey)" />
+        /// <seealso cref="InterruptJobKey(string)" />
         /// <param name="fireInstanceId">
         ///     the unique identifier of the job instance to  be interrupted (see
         ///     <see cref="IJobExecutionContext.FireInstanceId" />)
         /// </param>
         /// <returns>true if the identified job instance was found and interrupted.</returns>
         [HttpGet]
-        [Route("scheduler/interrupt/fireinstanceid/{fireInstanceId}")]
-        public Task<bool> Interrupt(string fireInstanceId)
+        [Route("scheduler/interruptfireinstanceid/{fireInstanceId}")]
+        public bool InterruptFireInstanceId(string fireInstanceId)
         {
-            return CreateScheduler.Scheduler.Interrupt(fireInstanceId);
-        }
+            _logger.LogInformation("Received request for cancellation, within this Scheduler instance, of the identified executing job instance");
 
+            var result = CreateScheduler.Scheduler.Interrupt(fireInstanceId).GetAwaiter().GetResult();
+
+            _logger.LogInformation($"Returning '{result}'");
+            return result;
+        }
+        #endregion
+
+        #region CheckExistsJobKey
         /// <summary>
         ///     Determine whether a <see cref="IJob" /> with the given identifier already
         ///     exists within the scheduler.
         /// </summary>
-        /// <param name="jobKey">the identifier to check for</param>
+        /// <param name="json">the identifier to check for</param>
         /// <returns>true if a Job exists with the given identifier</returns>
         [HttpGet]
-        [Route("scheduler/checkexists/jobkey")]
-        public Task<bool> CheckExistsJobKey([FromBody] string json)
+        [Route("scheduler/checkexistsjobkey")]
+        public bool CheckExistsJobKey([FromBody] string json)
         {
-            return null;
-            //return CreateScheduler.Scheduler.Interrupt(jobKey);
-        }
+            _logger.LogInformation("Received request to check if the given job key exists");
+            _logger.LogDebug($"Received JSON '{json}'");
 
+            var jobKey = JobKey.FromJsonString(json);
+            var result = CreateScheduler.Scheduler.CheckExists(jobKey.ToJobKey()).GetAwaiter().GetResult();
+
+            _logger.LogInformation($"Returning '{result}'");
+            return result;
+        }
+        #endregion
+
+        #region CheckExistsTriggerKey
         /// <summary>
         ///     Determine whether a <see cref="ITrigger" /> with the given identifier already
         ///     exists within the scheduler.
         /// </summary>
-        /// <param name="triggerKey">the identifier to check for</param>
+        /// <param name="json">the identifier to check for</param>
         /// <returns>true if a Trigger exists with the given identifier</returns>
         [HttpGet]
-        [Route("scheduler/checkexists/triggerkey/{triggerKey}")]
-        public bool CheckExists(TriggerKey triggerKey)
+        [Route("scheduler/checkexiststriggerkey")]
+        public bool CheckExistsTriggerKey([FromBody] string json)
         {
-            throw new NotImplementedException();
-        }
+            _logger.LogInformation("Received request to check if the given job key exists");
+            _logger.LogDebug($"Received JSON '{json}'");
 
+            var triggerKey = TriggerKey.FromJsonString(json);
+            var result = CreateScheduler.Scheduler.CheckExists(triggerKey.ToTriggerKey()).GetAwaiter().GetResult();
+
+            _logger.LogInformation($"Returning '{result}'");
+            return result;
+        }
+        #endregion
+
+        #region Clear
         /// <summary>
         ///     Clears (deletes!) all scheduling data - all <see cref="IJob" />s, <see cref="ITrigger" />s
         ///     <see cref="ICalendar" />s.
@@ -1194,7 +1294,10 @@ namespace QuartzWebApi.Controllers
         [Route("scheduler/clear")]
         public void Clear()
         {
+            _logger.LogInformation("Received request to clear the whole scheduler");
             CreateScheduler.Scheduler.Clear();
+            _logger.LogInformation("Scheduler cleared");
         }
+        #endregion
     }
 }

@@ -40,7 +40,7 @@ namespace QuartzWebApi.Data
         ///     Makes this object and sets all it's needed properties
         /// </summary>
         /// <param name="triggers">A <see cref="ReadOnlyCollection{T}"/> of <see cref="Quartz.ITrigger"/>s</param>
-        public Triggers(IReadOnlyCollection<Quartz.ITrigger> triggers)
+        public Triggers(IEnumerable<ITrigger> triggers)
         {
             foreach (var trigger in triggers)
                 Add(new Trigger(trigger));
@@ -217,7 +217,7 @@ namespace QuartzWebApi.Data
         {
             var trigger = TriggerBuilder
                 .Create()
-                .ForJob(JobKey.ToTJobKey())
+                .ForJob(JobKey.ToJobKey())
                 .WithIdentity(TriggerKey.ToTriggerKey())
                 .WithPriority(Priority)
                 .StartAt(StartTimeUtc);

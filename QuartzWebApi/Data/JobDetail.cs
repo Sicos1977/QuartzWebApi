@@ -124,7 +124,7 @@ namespace QuartzWebApi.Data
         /// <param name="jobDetail"><see cref="IJobDetail"/></param>
         public JobDetail(IJobDetail jobDetail)
         {
-            JobKey = jobDetail.Key;
+            JobKey = new JobKey(jobDetail.Key);
             Description = jobDetail.Description;
             JobType = jobDetail.JobType.ToString();
             JobDataMap = jobDetail.JobDataMap;
@@ -145,7 +145,7 @@ namespace QuartzWebApi.Data
                 throw new Exception($"Could not find an IJob class with the type '{JobType}'");
 
             var job = JobBuilder.Create(type)
-               .WithIdentity(JobKey)
+               .WithIdentity(JobKey.ToJobKey())
                .WithDescription(Description)
                .StoreDurably(Durable)
                .RequestRecovery()

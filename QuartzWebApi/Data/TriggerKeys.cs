@@ -39,7 +39,7 @@ namespace QuartzWebApi.Data
         ///     Makes this object and sets all it's needed properties
         /// </summary>
         /// <param name="triggerKeys">A <see cref="ReadOnlyCollection{T}"/> of <see cref="Quartz.TriggerKey"/>s</param>
-        public TriggerKeys(IReadOnlyCollection<Quartz.TriggerKey> triggerKeys)
+        public TriggerKeys(IEnumerable<Quartz.TriggerKey> triggerKeys)
         {
             foreach (var triggerKey in triggerKeys)
                 Add(new TriggerKey(triggerKey.Name, triggerKey.Group));
