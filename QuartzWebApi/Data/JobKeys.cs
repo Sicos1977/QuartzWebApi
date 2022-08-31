@@ -82,7 +82,7 @@ namespace QuartzWebApi.Data
     }
 
     /// <summary>
-    ///  A json wrapper for the <see cref="Quartz.JobKey"/>
+    ///     A json wrapper for the <see cref="Quartz.JobKey"/>
     /// </summary>
     public class JobKey : Key
     {

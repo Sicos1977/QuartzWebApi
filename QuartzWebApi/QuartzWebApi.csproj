@@ -135,7 +135,7 @@
     <Compile Include="Data\JobDetailWithTrigger.cs" />
     <Compile Include="Data\JobDetailWithTriggers.cs" />
     <Compile Include="Data\ScheduleJobs.cs" />
-    <Compile Include="Data\AddCalender.cs" />
+    <Compile Include="Data\Calendar.cs" />
     <Compile Include="Data\GroupMatcher.cs" />
     <Compile Include="Data\RescheduleJob.cs" />
     <Compile Include="Data\JobExecutionContexts.cs" />

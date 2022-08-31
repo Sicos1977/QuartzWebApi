@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using Microsoft.Extensions.Logging;
 using Quartz;
+using Quartz.Impl.Calendar;
 using Quartz.Spi;
 using QuartzWebApi.Data;
 using JobKey = QuartzWebApi.Data.JobKey;
@@ -1103,19 +1104,16 @@ namespace QuartzWebApi.Controllers
         /// <summary>
         ///     Add (register) the given <see cref="ICalendar" /> to the Scheduler.
         /// </summary>
-        /// <param name="calName">Name of the calendar.</param>
-        /// <param name="calendar">The calendar.</param>
-        /// <param name="replace">if set to <c>true</c> [replace].</param>
-        /// <param name="updateTriggers">
-        ///     whether or not to update existing triggers that
-        ///     referenced the already existing calendar so that they are 'correct'
-        ///     based on the new trigger.
-        /// </param>
+        /// <param name="json">The <see cref="ICalendar"/> information</param>
         [HttpPost]
         [Route("scheduler/addcalendar")]
-        public Task AddCalendar(string calName, ICalendar calendar, bool replace, bool updateTriggers)
+        public Task AddCalendar([FromBody] string json)
         {
-            return null;
+            _logger.LogInformation("Received request to add a calendar to the scheduler");
+            _logger.LogDebug($"Received JSON '{json}'");
+
+            var calendar = Data.Calendar.FromJsonString(json);
+            return CreateScheduler.Scheduler.AddCalendar(calendar.Name, calendar.ToCalendar(), calendar.Replace, calendar.UpdateTriggers);
         }
 
         #region DeleteCalendar
@@ -1147,7 +1145,7 @@ namespace QuartzWebApi.Controllers
         /// </summary>
         [HttpGet]
         [Route("scheduler/getcalendar/{calName}")]
-        public Task<ICalendar?> GetCalendar(string calName)
+        public Task<ICalendar> GetCalendar(string calName)
         {
             _logger.LogInformation($"Received request to get the calendar with the name '{calName}' from the scheduler");
 
