@@ -251,6 +251,9 @@ namespace QuartzWebApi.Data
                     throw new ArgumentOutOfRangeException();
             }
 
+            if (!string.IsNullOrEmpty(CalendarBase))
+                result.CalendarBase = CreateScheduler.Scheduler.GetCalendar(CalendarBase).GetAwaiter().GetResult();
+
             return result;
         }
         #endregion
