@@ -31,6 +31,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,6 +41,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=3.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -131,9 +133,13 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\SchedulerController.cs" />
     <Compile Include="CreateScheduler.cs" />
+    <Compile Include="Data\AddCalendarType.cs" />
+    <Compile Include="Data\GroupMatcherType.cs" />
     <Compile Include="Data\JobDetail.cs" />
     <Compile Include="Data\JobDetailWithTrigger.cs" />
     <Compile Include="Data\JobDetailWithTriggers.cs" />
+    <Compile Include="Data\JobExecutionContext.cs" />
+    <Compile Include="Data\JobKey.cs" />
     <Compile Include="Data\ScheduleJobs.cs" />
     <Compile Include="Data\Calendar.cs" />
     <Compile Include="Data\GroupMatcher.cs" />

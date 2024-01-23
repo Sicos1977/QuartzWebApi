@@ -28,123 +28,55 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace QuartzWebApi.Data
+namespace QuartzWebApi.Data;
+
+[JsonArray]
+public class JobKeys : List<JobKey>
 {
-    [JsonArray]
-    public class JobKeys : List<JobKey>
-    {
-        #region Constructor
-        /// <summary>
-        ///     Makes this object and sets all it's needed properties
-        /// </summary>
-        /// <param name="jobKeys">A <see cref="ReadOnlyCollection{T}"/> of <see cref="Quartz.JobKey"/>s</param>
-        public JobKeys(IEnumerable<Quartz.JobKey> jobKeys)
-        {
-            foreach(var jobKey in jobKeys)
-                Add(new JobKey(jobKey.Name, jobKey.Group));
-        }
-        #endregion
-
-        #region ToJobKeys
-        /// <summary>
-        ///     Returns a <see cref="ReadOnlyCollection{T}"/> of <see cref="Quartz.JobKey"/>s
-        /// </summary>
-        /// <returns></returns>
-        public IReadOnlyCollection<Quartz.JobKey> ToJobKeys()
-        {
-            var result = this.Select(m => m.ToJobKey()).ToList();
-            return new ReadOnlyCollection<Quartz.JobKey>(result);
-        }
-        #endregion
-
-        #region ToJsonString
-        /// <summary>
-        ///     Returns this object as a json string
-        /// </summary>
-        /// <returns></returns>
-        public string ToJsonString()
-        {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
-        }
-        #endregion
-
-        #region FromJsonString
-        /// <summary>
-        ///     Returns the <see cref="JobKeys"/> object from the given <paramref name="json"/> string
-        /// </summary>
-        /// <param name="json">The json string</param>
-        /// <returns><see cref="Data.Trigger"/></returns>
-        public static JobKeys FromJsonString(string json)
-        {
-            return JsonConvert.DeserializeObject<JobKeys>(json);
-        }
-        #endregion
-    }
-
+    #region Constructor
     /// <summary>
-    ///     A json wrapper for the <see cref="Quartz.JobKey"/>
+    ///     Makes this object and sets all it's needed properties
     /// </summary>
-    public class JobKey : Key
+    /// <param name="jobKeys">A <see cref="ReadOnlyCollection{T}"/> of <see cref="Quartz.JobKey"/>s</param>
+    public JobKeys(IEnumerable<Quartz.JobKey> jobKeys)
     {
-        #region Constructor
-        /// <summary>
-        ///     Makes this object and sets it's needed properties
-        /// </summary>
-        /// <param name="name">The name of the job</param>
-        public JobKey(string name) : base(name)
-        {
-        }
-
-        /// <summary>
-        ///     Makes this object and sets it's needed properties
-        /// </summary>
-        /// <param name="name">The name of the trigger</param>
-        /// <param name="group">The group of the trigger</param>
-        public JobKey(string name, string group) : base(name, group)
-        {
-        }
-
-        /// <summary>
-        ///     Makes this object and sets it's needed properties
-        /// </summary>
-        /// <param name="key">The <see cref="Quartz.JobKey"/></param>
-        public JobKey(Quartz.JobKey key) : base(key.Name, key.Group)
-        {
-        }
-        #endregion
-
-        #region ToJobKey
-        /// <summary>
-        ///     Returns this object as a Quartz <see cref="Quartz.JobKey"/>
-        /// </summary>
-        /// <returns></returns>
-        public Quartz.JobKey ToJobKey()
-        {
-            return new Quartz.JobKey(Name, Group);
-        }
-        #endregion
-
-        #region ToJsonString
-        /// <summary>
-        ///     Returns this object as a json string
-        /// </summary>
-        /// <returns></returns>
-        public string ToJsonString()
-        {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
-        }
-        #endregion
-
-        #region FromJsonString
-        /// <summary>
-        ///     Returns the <see cref="JobKey"/> object from the given <paramref name="json"/> string
-        /// </summary>
-        /// <param name="json">The json string</param>
-        /// <returns><see cref="Data.Trigger"/></returns>
-        public static JobKey FromJsonString(string json)
-        {
-            return JsonConvert.DeserializeObject<JobKey>(json);
-        }
-        #endregion
+        foreach(var jobKey in jobKeys)
+            Add(new JobKey(jobKey.Name, jobKey.Group));
     }
+    #endregion
+
+    #region ToJobKeys
+    /// <summary>
+    ///     Returns a <see cref="ReadOnlyCollection{T}"/> of <see cref="Quartz.JobKey"/>s
+    /// </summary>
+    /// <returns></returns>
+    public IReadOnlyCollection<Quartz.JobKey> ToJobKeys()
+    {
+        var result = this.Select(m => m.ToJobKey()).ToList();
+        return new ReadOnlyCollection<Quartz.JobKey>(result);
+    }
+    #endregion
+
+    #region ToJsonString
+    /// <summary>
+    ///     Returns this object as a json string
+    /// </summary>
+    /// <returns></returns>
+    public string ToJsonString()
+    {
+        return JsonConvert.SerializeObject(this, Formatting.Indented);
+    }
+    #endregion
+
+    #region FromJsonString
+    /// <summary>
+    ///     Returns the <see cref="JobKeys"/> object from the given <paramref name="json"/> string
+    /// </summary>
+    /// <param name="json">The json string</param>
+    /// <returns><see cref="Data.Trigger"/></returns>
+    public static JobKeys FromJsonString(string json)
+    {
+        return JsonConvert.DeserializeObject<JobKeys>(json);
+    }
+    #endregion
 }

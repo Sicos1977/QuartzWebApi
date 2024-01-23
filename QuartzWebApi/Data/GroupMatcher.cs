@@ -25,122 +25,91 @@
 //
 
 using System;
-using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace QuartzWebApi.Data
+namespace QuartzWebApi.Data;
+
+#region GroupMatcherType
+#endregion
+
+/// <summary>
+///     Json wrapper for the Quartz <see cref="Quartz.Impl.Matchers.GroupMatcher{T}"/>
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public class GroupMatcher<T> where T : Quartz.Util.Key<T>
 {
-    #region GroupMatcherType
+    #region Properties
     /// <summary>
-    ///     The matching type
+    ///     The <see cref="GroupMatcherType"/>
     /// </summary>
-    public enum GroupMatcherType
+    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonProperty("Type")]
+    public GroupMatcherType Type { get; private set; }
+
+    /// <summary>
+    ///     The value to match
+    /// </summary>
+    [JsonProperty("Value")]
+    public string Value { get; private set; }
+    #endregion
+
+    #region Constructor
+    /// <summary>
+    ///     Makes this object and sets it's needed properties
+    /// </summary>
+    /// <param name="type">The <see cref="GroupMatcherType"/></param>
+    /// <param name="value">The value to match</param>
+    public GroupMatcher(GroupMatcherType type, string value)
     {
-        /// <summary>
-        ///     Should contain
-        /// </summary>
-        [DataMember(Name = "Contains")]
-        Contains,
-
-        /// <summary>
-        ///     Should end with
-        /// </summary>
-        [DataMember(Name = "EndsWith")]
-        EndsWith,
-
-        /// <summary>
-        ///     Should equal
-        /// </summary>
-        [DataMember(Name = "Equals")]
-        Equals,
-
-        /// <summary>
-        ///     Should start with
-        /// </summary>
-        [DataMember(Name = "StartsWith")]
-        StartsWith
+        Type = type;
+        Value = value;
     }
     #endregion
 
+    #region ToJsonString
     /// <summary>
-    ///     Json wrapper for a the Quartz <see cref="Quartz.Impl.Matchers.GroupMatcher{T}"/>
+    ///     Returns this object as a json string
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class GroupMatcher<T> where T : Quartz.Util.Key<T>
+    /// <returns></returns>
+    public string ToJsonString()
     {
-        #region Properties
-        /// <summary>
-        ///     The <see cref="GroupMatcherType"/>
-        /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
-        [JsonProperty("Type")]
-        public GroupMatcherType Type { get; private set; }
-
-        /// <summary>
-        ///     The value to match
-        /// </summary>
-        [JsonProperty("Value")]
-        public string Value { get; private set; }
-        #endregion
-
-        #region Constructor
-        /// <summary>
-        ///     Makes this object and sets it's needed properties
-        /// </summary>
-        /// <param name="type">The <see cref="GroupMatcherType"/></param>
-        /// <param name="value">The value to match</param>
-        public GroupMatcher(GroupMatcherType type, string value)
-        {
-            Type = type;
-            Value = value;
-        }
-        #endregion
-
-        #region ToJsonString
-        /// <summary>
-        ///     Returns this object as a json string
-        /// </summary>
-        /// <returns></returns>
-        public string ToJsonString()
-        {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
-        }
-        #endregion
-
-        #region FromJsonString
-        /// <summary>
-        ///     Returns the <see cref="GroupMatcher{T}"/> object from the given <paramref name="json"/> string
-        /// </summary>
-        /// <param name="json">The json string</param>
-        /// <returns><see cref="Data.Trigger"/></returns>
-        public static GroupMatcher<T> FromJsonString(string json)
-        {
-            return JsonConvert.DeserializeObject<GroupMatcher<T>>(json);
-        }
-        #endregion
-
-        #region ToGroupMatcher
-        public Quartz.Impl.Matchers.GroupMatcher<T> ToGroupMatcher()
-        {
-            switch (Type)
-            {
-                case GroupMatcherType.Contains:
-                    return Quartz.Impl.Matchers.GroupMatcher<T>.GroupContains(Value);
-
-                case GroupMatcherType.EndsWith:
-                    return Quartz.Impl.Matchers.GroupMatcher<T>.GroupEndsWith(Value);
-
-                case GroupMatcherType.Equals:
-                    return Quartz.Impl.Matchers.GroupMatcher<T>.GroupEquals(Value);
-
-                case GroupMatcherType.StartsWith:
-                    return Quartz.Impl.Matchers.GroupMatcher<T>.GroupStartsWith(Value);
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-        #endregion
+        return JsonConvert.SerializeObject(this, Formatting.Indented);
     }
+    #endregion
+
+    #region FromJsonString
+    /// <summary>
+    ///     Returns the <see cref="GroupMatcher{T}"/> object from the given <paramref name="json"/> string
+    /// </summary>
+    /// <param name="json">The json string</param>
+    /// <returns><see cref="Data.Trigger"/></returns>
+    public static GroupMatcher<T> FromJsonString(string json)
+    {
+        return JsonConvert.DeserializeObject<GroupMatcher<T>>(json);
+    }
+    #endregion
+
+    #region ToGroupMatcher
+    public Quartz.Impl.Matchers.GroupMatcher<T> ToGroupMatcher()
+    {
+        switch (Type)
+        {
+            case GroupMatcherType.Contains:
+                return Quartz.Impl.Matchers.GroupMatcher<T>.GroupContains(Value);
+
+            case GroupMatcherType.EndsWith:
+                return Quartz.Impl.Matchers.GroupMatcher<T>.GroupEndsWith(Value);
+
+            case GroupMatcherType.Equals:
+                return Quartz.Impl.Matchers.GroupMatcher<T>.GroupEquals(Value);
+
+            case GroupMatcherType.StartsWith:
+                return Quartz.Impl.Matchers.GroupMatcher<T>.GroupStartsWith(Value);
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+    #endregion
 }
