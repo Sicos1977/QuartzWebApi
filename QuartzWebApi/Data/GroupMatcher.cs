@@ -27,21 +27,19 @@
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Quartz.Util;
 
 namespace QuartzWebApi.Data;
 
-#region GroupMatcherType
-#endregion
-
 /// <summary>
-///     Json wrapper for the Quartz <see cref="Quartz.Impl.Matchers.GroupMatcher{T}"/>
+///     Json wrapper for the Quartz <see cref="Quartz.Impl.Matchers.GroupMatcher{T}" />
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class GroupMatcher<T> where T : Quartz.Util.Key<T>
+public class GroupMatcher<T> where T : Key<T>
 {
     #region Properties
     /// <summary>
-    ///     The <see cref="GroupMatcherType"/>
+    ///     The <see cref="GroupMatcherType" />
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
     [JsonProperty("Type")]
@@ -58,7 +56,7 @@ public class GroupMatcher<T> where T : Quartz.Util.Key<T>
     /// <summary>
     ///     Makes this object and sets it's needed properties
     /// </summary>
-    /// <param name="type">The <see cref="GroupMatcherType"/></param>
+    /// <param name="type">The <see cref="GroupMatcherType" /></param>
     /// <param name="value">The value to match</param>
     public GroupMatcher(GroupMatcherType type, string value)
     {
@@ -80,10 +78,12 @@ public class GroupMatcher<T> where T : Quartz.Util.Key<T>
 
     #region FromJsonString
     /// <summary>
-    ///     Returns the <see cref="GroupMatcher{T}"/> object from the given <paramref name="json"/> string
+    ///     Returns the <see cref="GroupMatcher{T}" /> object from the given <paramref name="json" /> string
     /// </summary>
     /// <param name="json">The json string</param>
-    /// <returns><see cref="Data.Trigger"/></returns>
+    /// <returns>
+    ///     <see cref="Data.Trigger" />
+    /// </returns>
     public static GroupMatcher<T> FromJsonString(string json)
     {
         return JsonConvert.DeserializeObject<GroupMatcher<T>>(json);

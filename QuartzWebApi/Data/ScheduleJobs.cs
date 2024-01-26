@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
-namespace QuartzWebApi.Data
+namespace QuartzWebApi.Data;
+
+public class ScheduleJobs : List<JobDetail>
 {
-    public class ScheduleJobs : List<JobDetail>
-    {
-    }
 }

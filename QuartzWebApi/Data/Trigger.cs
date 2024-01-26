@@ -25,245 +25,201 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using Newtonsoft.Json;
 using Quartz;
 
-namespace QuartzWebApi.Data
+namespace QuartzWebApi.Data;
+
+/// <summary>
+///     Class used to create or read json to get a trigger with a job key and data map
+/// </summary>
+public class Trigger : JobKeyWithDataMap
 {
-    [JsonArray]
-    public class Triggers : List<Trigger>
+    #region Properties
+    /// <summary>
+    ///     The <see cref="TriggerKey" />
+    /// </summary>
+    [JsonProperty("TriggerKey")]
+    public TriggerKey TriggerKey { get; private set; }
+
+    /// <summary>
+    ///     A description for the <see cref="Trigger" />
+    /// </summary>
+    [JsonProperty("Description")]
+    public string Description { get; private set; }
+
+    /// <summary>
+    ///     The name of the calender to use or <c>null</c> when not
+    /// </summary>
+    [JsonProperty("CalendarName")]
+    public string CalendarName { get; private set; }
+
+    /// <summary>
+    ///     The cron schedule
+    /// </summary>
+    [JsonProperty("CronSchedule")]
+    public string CronSchedule { get; private set; }
+
+    /// <summary>
+    ///     The next fire time in UTC format
+    /// </summary>
+    [JsonProperty("NextFireTimeUtc")]
+    public DateTimeOffset? NextFireTimeUtc { get; private set; }
+
+    /// <summary>
+    ///     The previous fire time in UTC format
+    /// </summary>
+    [JsonProperty("PreviousFireTimeUtc")]
+    public DateTimeOffset? PreviousFireTimeUtc { get; private set; }
+
+    /// <summary>
+    ///     The start time in UTC format
+    /// </summary>
+    [JsonProperty("StartTimeUtc")]
+    public DateTimeOffset StartTimeUtc { get; private set; }
+
+    /// <summary>
+    ///     The end time in UTC format
+    /// </summary>
+    [JsonProperty("EndTimeUtc")]
+    public DateTimeOffset? EndTimeUtc { get; private set; }
+
+    /// <summary>
+    ///     The final fire time in UTC format
+    /// </summary>
+    [JsonProperty("FinalFireTimeUtc")]
+    public DateTimeOffset? FinalFireTimeUtc { get; private set; }
+
+    /// <summary>
+    ///     The priority
+    /// </summary>
+    [JsonProperty("Priority")]
+    public int Priority { get; private set; }
+
+    /// <summary>
+    ///     Returns <c>true</c> when it has millisecond precision
+    /// </summary>
+    [JsonProperty("HasMillisecondPrecision")]
+    public bool HasMillisecondPrecision { get; private set; }
+    #endregion
+
+    #region Constructor
+    /// <summary>
+    ///     Makes this object and sets all it's needed properties
+    /// </summary>
+    /// <param name="triggerKey">The <see cref="TriggerKey" /></param>
+    /// <param name="description">A description for the <see cref="Trigger" /></param>
+    /// <param name="calendarName">The name of the calender to use or <c>null</c> when not</param>
+    /// <param name="cronSchedule">The cron schedule</param>
+    /// <param name="nextFireTimeUtc">The next fire time in UTC format</param>
+    /// <param name="previousFireTimeUtc">The previous fire time in UTC format</param>
+    /// <param name="startTimeUtc">The start time in UTC format</param>
+    /// <param name="endTimeUtc">The end time in UTC format</param>
+    /// <param name="finalFireTimeUtc">The final fire time in UTC format</param>
+    /// <param name="priority">The priority</param>
+    /// <param name="jobKey">The <see cref="JobKey" /></param>
+    /// <param name="jobDataMap">The <see cref="JobDataMap" /></param>
+    public Trigger(
+        TriggerKey triggerKey,
+        string description,
+        string calendarName,
+        string cronSchedule,
+        DateTimeOffset? nextFireTimeUtc,
+        DateTimeOffset? previousFireTimeUtc,
+        DateTimeOffset startTimeUtc,
+        DateTimeOffset? endTimeUtc,
+        DateTimeOffset? finalFireTimeUtc,
+        int priority,
+        JobKey jobKey,
+        JobDataMap jobDataMap) : base(jobKey, jobDataMap)
     {
-        #region Constructor
-        /// <summary>
-        ///     Makes this object and sets all it's needed properties
-        /// </summary>
-        /// <param name="triggers">A <see cref="ReadOnlyCollection{T}"/> of <see cref="Quartz.ITrigger"/>s</param>
-        public Triggers(IEnumerable<ITrigger> triggers)
-        {
-            foreach (var trigger in triggers)
-                Add(new Trigger(trigger));
-        }
-        #endregion
-
-        #region ToJsonString
-        /// <summary>
-        ///     Returns this object as a json string
-        /// </summary>
-        /// <returns></returns>
-        public string ToJsonString()
-        {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
-        }
-        #endregion
-
-        #region FromJsonString
-        /// <summary>
-        ///     Returns the <see cref="Triggers" /> object from the given <paramref name="json" /> string
-        /// </summary>
-        /// <param name="json">The json string</param>
-        /// <returns>
-        ///     <see cref="Trigger" />
-        /// </returns>
-        public static Triggers FromJsonString(string json)
-        {
-            return JsonConvert.DeserializeObject<Triggers>(json);
-        }
-        #endregion
+        TriggerKey = triggerKey;
+        Description = description;
+        CalendarName = calendarName;
+        CronSchedule = cronSchedule;
+        NextFireTimeUtc = nextFireTimeUtc;
+        PreviousFireTimeUtc = previousFireTimeUtc;
+        StartTimeUtc = startTimeUtc;
+        EndTimeUtc = endTimeUtc;
+        FinalFireTimeUtc = finalFireTimeUtc;
+        Priority = priority;
     }
 
     /// <summary>
-    ///     Class used to create or read json to get a trigger with a job key and data map
+    ///     Makes this object and sets all it's needed properties
     /// </summary>
-    public class Trigger : JobKeyWithDataMap
+    /// <param name="trigger"></param>
+    public Trigger(ITrigger trigger)
     {
-        #region Properties
-        /// <summary>
-        ///     The <see cref="TriggerKey" />
-        /// </summary>
-        [JsonProperty("TriggerKey")]
-        public TriggerKey TriggerKey { get; private set; }
-
-        /// <summary>
-        ///     A description for the <see cref="Trigger" />
-        /// </summary>
-        [JsonProperty("Description")]
-        public string Description { get; private set; }
-
-        /// <summary>
-        ///     The name of the calender to use or <c>null</c> when not
-        /// </summary>
-        [JsonProperty("CalendarName")]
-        public string CalendarName { get; private set; }
-
-        /// <summary>
-        ///     The cron schedule
-        /// </summary>
-        [JsonProperty("CronSchedule")]
-        public string CronSchedule { get; private set; }
-
-        /// <summary>
-        ///     The next fire time in UTC format
-        /// </summary>
-        [JsonProperty("NextFireTimeUtc")]
-        public DateTimeOffset? NextFireTimeUtc { get; private set; }
-
-        /// <summary>
-        ///     The previous fire time in UTC format
-        /// </summary>
-        [JsonProperty("PreviousFireTimeUtc")]
-        public DateTimeOffset? PreviousFireTimeUtc { get; private set; }
-
-        /// <summary>
-        ///     The start time in UTC format
-        /// </summary>
-        [JsonProperty("StartTimeUtc")]
-        public DateTimeOffset StartTimeUtc { get; private set; }
-
-        /// <summary>
-        ///     The end time in UTC format
-        /// </summary>
-        [JsonProperty("EndTimeUtc")]
-        public DateTimeOffset? EndTimeUtc { get; private set; }
-
-        /// <summary>
-        ///     The final fire time in UTC format
-        /// </summary>
-        [JsonProperty("FinalFireTimeUtc")]
-        public DateTimeOffset? FinalFireTimeUtc { get; private set; }
-
-        /// <summary>
-        ///     The priority
-        /// </summary>
-        [JsonProperty("Priority")]
-        public int Priority { get; private set; }
-
-        /// <summary>
-        ///     Returns <c>true</c> when it has millisecond precision
-        /// </summary>
-        [JsonProperty("HasMillisecondPrecision")]
-        public bool HasMillisecondPrecision { get; private set; }
-        #endregion
-
-        #region Constructor
-        /// <summary>
-        ///     Makes this object and sets all it's needed properties
-        /// </summary>
-        /// <param name="triggerKey">The <see cref="TriggerKey" /></param>
-        /// <param name="description">A description for the <see cref="Trigger" /></param>
-        /// <param name="calendarName">The name of the calender to use or <c>null</c> when not</param>
-        /// <param name="cronSchedule">The cron schedule</param>
-        /// <param name="nextFireTimeUtc">The next fire time in UTC format</param>
-        /// <param name="previousFireTimeUtc">The previous fire time in UTC format</param>
-        /// <param name="startTimeUtc">The start time in UTC format</param>
-        /// <param name="endTimeUtc">The end time in UTC format</param>
-        /// <param name="finalFireTimeUtc">The final fire time in UTC format</param>
-        /// <param name="priority">The priority</param>
-        /// <param name="jobKey">The <see cref="JobKey" /></param>
-        /// <param name="jobDataMap">The <see cref="JobDataMap" /></param>
-        public Trigger(
-            TriggerKey triggerKey,
-            string description,
-            string calendarName,
-            string cronSchedule,
-            DateTimeOffset? nextFireTimeUtc,
-            DateTimeOffset? previousFireTimeUtc,
-            DateTimeOffset startTimeUtc,
-            DateTimeOffset? endTimeUtc,
-            DateTimeOffset? finalFireTimeUtc,
-            int priority,
-            JobKey jobKey,
-            JobDataMap jobDataMap) : base(jobKey, jobDataMap)
-        {
-            TriggerKey = triggerKey;
-            Description = description;
-            CalendarName = calendarName;
-            CronSchedule = cronSchedule;
-            NextFireTimeUtc = nextFireTimeUtc;
-            PreviousFireTimeUtc = previousFireTimeUtc;
-            StartTimeUtc = startTimeUtc;
-            EndTimeUtc = endTimeUtc;
-            FinalFireTimeUtc = finalFireTimeUtc;
-            Priority = priority;
-        }
-
-        /// <summary>
-        ///     Makes this object and sets all it's needed properties
-        /// </summary>
-        /// <param name="trigger"></param>
-        public Trigger(ITrigger trigger)
-        {
-            TriggerKey = new TriggerKey(trigger.Key);
-            Description = trigger.Description;
-            CalendarName = trigger.CalendarName;
-            //CronSchedule = trigger;
-            NextFireTimeUtc = trigger.GetNextFireTimeUtc();
-            PreviousFireTimeUtc = trigger.GetPreviousFireTimeUtc();
-            StartTimeUtc = trigger.StartTimeUtc;
-            EndTimeUtc = trigger.EndTimeUtc;
-            FinalFireTimeUtc = trigger.FinalFireTimeUtc;
-            Priority = trigger.Priority;
-            HasMillisecondPrecision = trigger.HasMillisecondPrecision;
-        }
-        #endregion
-
-        #region ToTrigger
-        /// <summary>
-        ///     Returns this object as a Quartz <see cref="ITrigger" />
-        /// </summary>
-        /// <returns></returns>
-        public ITrigger ToTrigger()
-        {
-            var trigger = TriggerBuilder
-                .Create()
-                .ForJob(JobKey.ToJobKey())
-                .WithIdentity(TriggerKey.ToTriggerKey())
-                .WithPriority(Priority)
-                .StartAt(StartTimeUtc);
-
-            if (EndTimeUtc.HasValue)
-                trigger = trigger.EndAt(EndTimeUtc.Value);
-
-            if (!string.IsNullOrWhiteSpace(CronSchedule))
-                trigger = trigger.WithCronSchedule(CronSchedule);
-
-            if (!string.IsNullOrWhiteSpace(CalendarName))
-                trigger = trigger.ModifiedByCalendar(CalendarName);
-
-            if (!string.IsNullOrWhiteSpace(Description))
-                trigger = trigger.WithDescription(Description);
-
-            if (JobDataMap != null)
-                trigger = trigger.UsingJobData(JobDataMap);
-
-            return trigger.Build();
-        }
-        #endregion
-
-        #region ToJsonString
-        /// <summary>
-        ///     Returns this object as a json string
-        /// </summary>
-        /// <returns></returns>
-        public new string ToJsonString()
-        {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
-        }
-        #endregion
-
-        #region FromJsonString
-        /// <summary>
-        ///     Returns the <see cref="Trigger" /> object from the given <paramref name="json" /> string
-        /// </summary>
-        /// <param name="json">The json string</param>
-        /// <returns>
-        ///     <see cref="Trigger" />
-        /// </returns>
-        public new static Trigger FromJsonString(string json)
-        {
-            return JsonConvert.DeserializeObject<Trigger>(json);
-        }
-        #endregion
+        TriggerKey = new TriggerKey(trigger.Key);
+        Description = trigger.Description;
+        CalendarName = trigger.CalendarName;
+        //CronSchedule = trigger;
+        NextFireTimeUtc = trigger.GetNextFireTimeUtc();
+        PreviousFireTimeUtc = trigger.GetPreviousFireTimeUtc();
+        StartTimeUtc = trigger.StartTimeUtc;
+        EndTimeUtc = trigger.EndTimeUtc;
+        FinalFireTimeUtc = trigger.FinalFireTimeUtc;
+        Priority = trigger.Priority;
+        HasMillisecondPrecision = trigger.HasMillisecondPrecision;
     }
+    #endregion
+
+    #region ToTrigger
+    /// <summary>
+    ///     Returns this object as a Quartz <see cref="ITrigger" />
+    /// </summary>
+    /// <returns></returns>
+    public ITrigger ToTrigger()
+    {
+        var trigger = TriggerBuilder
+            .Create()
+            .ForJob(JobKey.ToJobKey())
+            .WithIdentity(TriggerKey.ToTriggerKey())
+            .WithPriority(Priority)
+            .StartAt(StartTimeUtc);
+
+        if (EndTimeUtc.HasValue)
+            trigger = trigger.EndAt(EndTimeUtc.Value);
+
+        if (!string.IsNullOrWhiteSpace(CronSchedule))
+            trigger = trigger.WithCronSchedule(CronSchedule);
+
+        if (!string.IsNullOrWhiteSpace(CalendarName))
+            trigger = trigger.ModifiedByCalendar(CalendarName);
+
+        if (!string.IsNullOrWhiteSpace(Description))
+            trigger = trigger.WithDescription(Description);
+
+        if (JobDataMap != null)
+            trigger = trigger.UsingJobData(JobDataMap);
+
+        return trigger.Build();
+    }
+    #endregion
+
+    #region ToJsonString
+    /// <summary>
+    ///     Returns this object as a json string
+    /// </summary>
+    /// <returns></returns>
+    public new string ToJsonString()
+    {
+        return JsonConvert.SerializeObject(this, Formatting.Indented);
+    }
+    #endregion
+
+    #region FromJsonString
+    /// <summary>
+    ///     Returns the <see cref="Trigger" /> object from the given <paramref name="json" /> string
+    /// </summary>
+    /// <param name="json">The json string</param>
+    /// <returns>
+    ///     <see cref="Trigger" />
+    /// </returns>
+    public new static Trigger FromJsonString(string json)
+    {
+        return JsonConvert.DeserializeObject<Trigger>(json);
+    }
+    #endregion
 }

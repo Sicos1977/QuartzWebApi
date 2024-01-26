@@ -6,20 +6,19 @@ using Quartz;
 namespace QuartzWebApi.Data;
 
 /// <summary>
-///     Json wrapper to create a <see cref="Quartz.IJob"/> with a list of <see cref="Quartz.ITrigger"/>s
+///     Json wrapper to create a <see cref="Quartz.IJob" /> with a list of <see cref="Quartz.ITrigger" />s
 /// </summary>
-
 public class JobDetailWithTriggers
 {
     #region Properties
     /// <summary>
-    ///     <see cref="JobDetail"/>
+    ///     <see cref="JobDetail" />
     /// </summary>
     [JsonProperty("JobDetail")]
     public JobDetail JobDetail { get; private set; }
 
     /// <summary>
-    ///     A list with related <see cref="Trigger"/>'s
+    ///     A list with related <see cref="Trigger" />'s
     /// </summary>
     [JsonProperty("Triggers")]
     public List<Trigger> Triggers { get; private set; }
@@ -35,8 +34,10 @@ public class JobDetailWithTriggers
     /// <summary>
     ///     Makes this object and sets it's needed properties
     /// </summary>
-    /// <param name="jobDetail"><see cref="JobDetail"/></param>
-    /// <param name="triggers">A list with related <see cref="Trigger"/>'s</param>
+    /// <param name="jobDetail">
+    ///     <see cref="JobDetail" />
+    /// </param>
+    /// <param name="triggers">A list with related <see cref="Trigger" />'s</param>
     public JobDetailWithTriggers(JobDetail jobDetail, List<Trigger> triggers)
     {
         JobDetail = jobDetail;
@@ -46,7 +47,7 @@ public class JobDetailWithTriggers
 
     #region ToReadOnlyTriggerCollection
     /// <summary>
-    ///     Returns the <see cref="Triggers"/> as a <see cref="IReadOnlyCollection{T}"/>
+    ///     Returns the <see cref="Triggers" /> as a <see cref="IReadOnlyCollection{T}" />
     /// </summary>
     /// <returns></returns>
     public IReadOnlyCollection<ITrigger> ToReadOnlyTriggerCollection()
@@ -68,10 +69,12 @@ public class JobDetailWithTriggers
 
     #region FromJsonString
     /// <summary>
-    ///     Returns the <see cref="JobDetailWithTriggers"/> object from the given <paramref name="json"/> string
+    ///     Returns the <see cref="JobDetailWithTriggers" /> object from the given <paramref name="json" /> string
     /// </summary>
     /// <param name="json">The json string</param>
-    /// <returns><see cref="Data.Trigger"/></returns>
+    /// <returns>
+    ///     <see cref="Data.Trigger" />
+    /// </returns>
     public static JobDetailWithTriggers FromJsonString(string json)
     {
         return JsonConvert.DeserializeObject<JobDetailWithTriggers>(json);

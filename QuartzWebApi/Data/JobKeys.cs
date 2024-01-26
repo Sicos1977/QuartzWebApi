@@ -30,6 +30,9 @@ using Newtonsoft.Json;
 
 namespace QuartzWebApi.Data;
 
+/// <summary>
+///     A list of <see cref="Quartz.JobKey" />s
+/// </summary>
 [JsonArray]
 public class JobKeys : List<JobKey>
 {
@@ -37,17 +40,17 @@ public class JobKeys : List<JobKey>
     /// <summary>
     ///     Makes this object and sets all it's needed properties
     /// </summary>
-    /// <param name="jobKeys">A <see cref="ReadOnlyCollection{T}"/> of <see cref="Quartz.JobKey"/>s</param>
+    /// <param name="jobKeys">A <see cref="ReadOnlyCollection{T}" /> of <see cref="Quartz.JobKey" />s</param>
     public JobKeys(IEnumerable<Quartz.JobKey> jobKeys)
     {
-        foreach(var jobKey in jobKeys)
+        foreach (var jobKey in jobKeys)
             Add(new JobKey(jobKey.Name, jobKey.Group));
     }
     #endregion
 
     #region ToJobKeys
     /// <summary>
-    ///     Returns a <see cref="ReadOnlyCollection{T}"/> of <see cref="Quartz.JobKey"/>s
+    ///     Returns a <see cref="ReadOnlyCollection{T}" /> of <see cref="Quartz.JobKey" />s
     /// </summary>
     /// <returns></returns>
     public IReadOnlyCollection<Quartz.JobKey> ToJobKeys()
@@ -70,10 +73,12 @@ public class JobKeys : List<JobKey>
 
     #region FromJsonString
     /// <summary>
-    ///     Returns the <see cref="JobKeys"/> object from the given <paramref name="json"/> string
+    ///     Returns the <see cref="JobKeys" /> object from the given <paramref name="json" /> string
     /// </summary>
     /// <param name="json">The json string</param>
-    /// <returns><see cref="Data.Trigger"/></returns>
+    /// <returns>
+    ///     <see cref="Data.Trigger" />
+    /// </returns>
     public static JobKeys FromJsonString(string json)
     {
         return JsonConvert.DeserializeObject<JobKeys>(json);

@@ -27,125 +27,58 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
-using Quartz;
 
-namespace QuartzWebApi.Data
+namespace QuartzWebApi.Data;
+
+[JsonArray]
+public class TriggerKeys : List<TriggerKey>
 {
-    [JsonArray]
-    public class TriggerKeys : List<TriggerKey>
-    {
-        #region Constructor
-        /// <summary>
-        ///     Makes this object and sets all it's needed properties
-        /// </summary>
-        /// <param name="triggerKeys">A <see cref="ReadOnlyCollection{T}"/> of <see cref="Quartz.TriggerKey"/>s</param>
-        public TriggerKeys(IEnumerable<Quartz.TriggerKey> triggerKeys)
-        {
-            foreach (var triggerKey in triggerKeys)
-                Add(new TriggerKey(triggerKey.Name, triggerKey.Group));
-        }
-        #endregion
-
-        #region ToTriggerKeys
-        /// <summary>
-        ///     Returns a <see cref="ReadOnlyCollection{T}"/> of <see cref="Quartz.TriggerKey"/>s
-        /// </summary>
-        /// <returns></returns>
-        public IReadOnlyCollection<Quartz.TriggerKey> ToTriggerKeys()
-        {
-            var result = this.Select(m => m.ToTriggerKey()).ToList();
-            return new ReadOnlyCollection<Quartz.TriggerKey>(result);
-        }
-        #endregion
-
-        #region ToJsonString
-        /// <summary>
-        ///     Returns this object as a json string
-        /// </summary>
-        /// <returns></returns>
-        public string ToJsonString()
-        {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
-        }
-        #endregion
-
-        #region FromJsonString
-        /// <summary>
-        ///     Returns the <see cref="TriggerKeys"/> object from the given <paramref name="json"/> string
-        /// </summary>
-        /// <param name="json">The json string</param>
-        /// <returns><see cref="Data.Trigger"/></returns>
-        public static TriggerKeys FromJsonString(string json)
-        {
-            return JsonConvert.DeserializeObject<TriggerKeys>(json);
-        }
-        #endregion
-    }
-
+    #region Constructor
     /// <summary>
-    ///  A json wrapper for the <see cref="Quartz.TriggerKey"/>
+    ///     Makes this object and sets all it's needed properties
     /// </summary>
-    public class TriggerKey : Key
+    /// <param name="triggerKeys">A <see cref="ReadOnlyCollection{T}" /> of <see cref="Quartz.TriggerKey" />s</param>
+    public TriggerKeys(IEnumerable<Quartz.TriggerKey> triggerKeys)
     {
-        #region Constructor
-        /// <summary>
-        ///     Makes this object and sets it's needed properties
-        /// </summary>
-        /// <param name="name">The name of the trigger</param>
-        public TriggerKey(string name) : base(name)
-        {
-        }
-
-        /// <summary>
-        ///     Makes this object and sets it's needed properties
-        /// </summary>
-        /// <param name="name">The name of the trigger</param>
-        /// <param name="group">The group of the trigger</param>
-        public TriggerKey(string name, string group) : base (name, group)
-        {
-        }
-
-        /// <summary>
-        ///     Makes this object and sets it's needed properties
-        /// </summary>
-        /// <param name="key">The <see cref="Quartz.TriggerKey"/></param>
-        public TriggerKey(Quartz.TriggerKey key) : base(key.Name, key.Group)
-        {
-        }
-        #endregion
-
-        #region ToTriggerKey
-        /// <summary>
-        ///     Returns this object as a Quartz <see cref="Quartz.TriggerKey"/>
-        /// </summary>
-        /// <returns></returns>
-        public Quartz.TriggerKey ToTriggerKey()
-        {
-            return new Quartz.TriggerKey(Name, Group);
-        }
-        #endregion
-
-        #region ToJsonString
-        /// <summary>
-        ///     Returns this object as a json string
-        /// </summary>
-        /// <returns></returns>
-        public string ToJsonString()
-        {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
-        }
-        #endregion
-
-        #region FromJsonString
-        /// <summary>
-        ///     Returns the <see cref="TriggerKey"/> object from the given <paramref name="json"/> string
-        /// </summary>
-        /// <param name="json">The json string</param>
-        /// <returns><see cref="Data.Trigger"/></returns>
-        public static TriggerKey FromJsonString(string json)
-        {
-            return JsonConvert.DeserializeObject<TriggerKey>(json);
-        }
-        #endregion
+        foreach (var triggerKey in triggerKeys)
+            Add(new TriggerKey(triggerKey.Name, triggerKey.Group));
     }
+    #endregion
+
+    #region ToTriggerKeys
+    /// <summary>
+    ///     Returns a <see cref="ReadOnlyCollection{T}" /> of <see cref="Quartz.TriggerKey" />s
+    /// </summary>
+    /// <returns></returns>
+    public IReadOnlyCollection<Quartz.TriggerKey> ToTriggerKeys()
+    {
+        var result = this.Select(m => m.ToTriggerKey()).ToList();
+        return new ReadOnlyCollection<Quartz.TriggerKey>(result);
+    }
+    #endregion
+
+    #region ToJsonString
+    /// <summary>
+    ///     Returns this object as a json string
+    /// </summary>
+    /// <returns></returns>
+    public string ToJsonString()
+    {
+        return JsonConvert.SerializeObject(this, Formatting.Indented);
+    }
+    #endregion
+
+    #region FromJsonString
+    /// <summary>
+    ///     Returns the <see cref="TriggerKeys" /> object from the given <paramref name="json" /> string
+    /// </summary>
+    /// <param name="json">The json string</param>
+    /// <returns>
+    ///     <see cref="Data.Trigger" />
+    /// </returns>
+    public static TriggerKeys FromJsonString(string json)
+    {
+        return JsonConvert.DeserializeObject<TriggerKeys>(json);
+    }
+    #endregion
 }

@@ -7,7 +7,7 @@ using Quartz.Impl.Calendar;
 namespace QuartzWebApi.Data;
 
 /// <summary>
-///     A json wrapper for the <see cref="Quartz.ICalendar"/>
+///     A json wrapper for the <see cref="Quartz.ICalendar" />
 /// </summary>
 public class Calendar
 {
@@ -37,7 +37,7 @@ public class Calendar
     public string CalendarBase { get; internal set; }
 
     /// <summary>
-    ///    If set to <c>true</c> [replace]. 
+    ///     If set to <c>true</c> [replace].
     /// </summary>
     [JsonProperty("replace")]
     public bool Replace { get; internal set; }
@@ -54,75 +54,75 @@ public class Calendar
     ///     The cron expression
     /// </summary>
     /// <remarks>
-    ///     Only used when the <see cref="Type"/> is <see cref="AddCalendarType.Cron"/>
+    ///     Only used when the <see cref="Type" /> is <see cref="AddCalendarType.Cron" />
     /// </remarks>
     [JsonProperty("cron")]
     public string Cron { get; internal set; }
 
     /// <summary>
-    /// Must be in the format &quot;HH:MM[:SS[:mmm]]&quot; where:
-    /// <ul>
-    ///     <li>
-    ///         HH is the hour of the specified time. The hour should be
-    ///          specified using military (24-hour) time and must be in the range
-    ///          0 to 23.
-    ///     </li>
-    ///     <li>
-    ///         MM is the minute of the specified time and must be in the range
-    ///         0 to 59.
-    ///     </li>
-    ///     <li>
-    ///         SS is the second of the specified time and must be in the range
-    ///         0 to 59.
-    ///     </li>
-    ///     <li>
-    ///         mmm is the millisecond of the specified time and must be in the
-    ///         range 0 to 999.
-    ///     </li>
-    ///     <li>items enclosed in brackets ('[', ']') are optional.</li>
-    ///     <li>
-    ///         The time range starting time must be before the time range ending
-    ///         time. Note this means that a time range may not cross daily
-    ///         boundaries (10PM - 2AM)
-    ///     </li>
-    /// </ul>
+    ///     Must be in the format &quot;HH:MM[:SS[:mmm]]&quot; where:
+    ///     <ul>
+    ///         <li>
+    ///             HH is the hour of the specified time. The hour should be
+    ///             specified using military (24-hour) time and must be in the range
+    ///             0 to 23.
+    ///         </li>
+    ///         <li>
+    ///             MM is the minute of the specified time and must be in the range
+    ///             0 to 59.
+    ///         </li>
+    ///         <li>
+    ///             SS is the second of the specified time and must be in the range
+    ///             0 to 59.
+    ///         </li>
+    ///         <li>
+    ///             mmm is the millisecond of the specified time and must be in the
+    ///             range 0 to 999.
+    ///         </li>
+    ///         <li>items enclosed in brackets ('[', ']') are optional.</li>
+    ///         <li>
+    ///             The time range starting time must be before the time range ending
+    ///             time. Note this means that a time range may not cross daily
+    ///             boundaries (10PM - 2AM)
+    ///         </li>
+    ///     </ul>
     /// </summary>
     /// <remarks>
-    ///     Only used when the <see cref="Type"/> is <see cref="AddCalendarType.Daily"/>
+    ///     Only used when the <see cref="Type" /> is <see cref="AddCalendarType.Daily" />
     /// </remarks>
     [JsonProperty("rangestarttime")]
     public string RangeStartTime { get; internal set; }
 
     /// <summary>
-    /// Must be in the format &quot;HH:MM[:SS[:mmm]]&quot; where:
-    /// <ul>
-    ///     <li>
-    ///         HH is the hour of the specified time. The hour should be
-    ///          specified using military (24-hour) time and must be in the range
-    ///          0 to 23.
-    ///     </li>
-    ///     <li>
-    ///         MM is the minute of the specified time and must be in the range
-    ///         0 to 59.
-    ///     </li>
-    ///     <li>
-    ///         SS is the second of the specified time and must be in the range
-    ///         0 to 59.
-    ///     </li>
-    ///     <li>
-    ///         mmm is the millisecond of the specified time and must be in the
-    ///         range 0 to 999.
-    ///     </li>
-    ///     <li>items enclosed in brackets ('[', ']') are optional.</li>
-    ///     <li>
-    ///         The time range starting time must be before the time range ending
-    ///         time. Note this means that a time range may not cross daily
-    ///         boundaries (10PM - 2AM)
-    ///     </li>
-    /// </ul>
+    ///     Must be in the format &quot;HH:MM[:SS[:mmm]]&quot; where:
+    ///     <ul>
+    ///         <li>
+    ///             HH is the hour of the specified time. The hour should be
+    ///             specified using military (24-hour) time and must be in the range
+    ///             0 to 23.
+    ///         </li>
+    ///         <li>
+    ///             MM is the minute of the specified time and must be in the range
+    ///             0 to 59.
+    ///         </li>
+    ///         <li>
+    ///             SS is the second of the specified time and must be in the range
+    ///             0 to 59.
+    ///         </li>
+    ///         <li>
+    ///             mmm is the millisecond of the specified time and must be in the
+    ///             range 0 to 999.
+    ///         </li>
+    ///         <li>items enclosed in brackets ('[', ']') are optional.</li>
+    ///         <li>
+    ///             The time range starting time must be before the time range ending
+    ///             time. Note this means that a time range may not cross daily
+    ///             boundaries (10PM - 2AM)
+    ///         </li>
+    ///     </ul>
     /// </summary>
     /// <remarks>
-    ///     Only used when the <see cref="Type"/> is <see cref="AddCalendarType.Daily"/>
+    ///     Only used when the <see cref="Type" /> is <see cref="AddCalendarType.Daily" />
     /// </remarks>
     [JsonProperty("rangeendtime")]
     public string RangeEndTime { get; internal set; }
@@ -131,7 +131,7 @@ public class Calendar
     ///     The day of the week
     /// </summary>
     /// <remarks>
-    ///     Only used when the <see cref="Type"/> is <see cref="AddCalendarType.Weekly"/>
+    ///     Only used when the <see cref="Type" /> is <see cref="AddCalendarType.Weekly" />
     /// </remarks>
     [JsonProperty("dayofweeks")]
     public Dictionary<DayOfWeek, bool> DayOfWeeks { get; internal set; }
@@ -140,7 +140,7 @@ public class Calendar
     ///     The days
     /// </summary>
     /// <remarks>
-    ///     Only used when the <see cref="Type"/> is <see cref="AddCalendarType.Monthly"/>
+    ///     Only used when the <see cref="Type" /> is <see cref="AddCalendarType.Monthly" />
     /// </remarks>
     [JsonProperty("daysofmonth")]
     public Dictionary<int, bool> DaysOfMonth { get; internal set; }
@@ -149,7 +149,7 @@ public class Calendar
     ///     The days
     /// </summary>
     /// <remarks>
-    ///     Only used when the <see cref="Type"/> is <see cref="AddCalendarType.Annual"/>
+    ///     Only used when the <see cref="Type" /> is <see cref="AddCalendarType.Annual" />
     /// </remarks>
     [JsonProperty("annualdays")]
     public Dictionary<DateTime, bool> AnnualDays { get; internal set; }
@@ -158,7 +158,7 @@ public class Calendar
     ///     The days
     /// </summary>
     /// <remarks>
-    ///     Only used when the <see cref="Type"/> is <see cref="AddCalendarType.Holiday"/>
+    ///     Only used when the <see cref="Type" /> is <see cref="AddCalendarType.Holiday" />
     /// </remarks>
     [JsonProperty("holidaydays")]
     public List<DateTime> HolidayDays { get; internal set; }
@@ -166,7 +166,7 @@ public class Calendar
 
     #region ToCalendar
     /// <summary>
-    ///     Returns this object as a Quartz <see cref="Quartz.ICalendar"/>
+    ///     Returns this object as a Quartz <see cref="Quartz.ICalendar" />
     /// </summary>
     /// <returns></returns>
     public ICalendar ToCalendar()
@@ -186,12 +186,12 @@ public class Calendar
             case AddCalendarType.Weekly:
                 result = new WeeklyCalendar();
                 foreach (var dayOfWeek in DayOfWeeks)
-                   ((WeeklyCalendar) result).SetDayExcluded(dayOfWeek.Key, dayOfWeek.Value);
+                    ((WeeklyCalendar)result).SetDayExcluded(dayOfWeek.Key, dayOfWeek.Value);
                 break;
 
             case AddCalendarType.Monthly:
                 result = new MonthlyCalendar();
-                foreach(var dayOfMonth in DaysOfMonth)
+                foreach (var dayOfMonth in DaysOfMonth)
                     ((MonthlyCalendar)result).SetDayExcluded(dayOfMonth.Key, dayOfMonth.Value);
                 break;
 

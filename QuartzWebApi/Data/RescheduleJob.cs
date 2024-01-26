@@ -26,50 +26,49 @@
 
 using Newtonsoft.Json;
 
-namespace QuartzWebApi.Data
+namespace QuartzWebApi.Data;
+
+/// <summary>
+///     Class used to read or create json to reschedule a job
+/// </summary>
+public class RescheduleJob
 {
+    #region Properties
     /// <summary>
-    ///     Class used to read or create json to reschedule a job
+    ///     The current trigger key
     /// </summary>
-    public class RescheduleJob
+    [JsonProperty("CurrentTriggerKey")]
+    public TriggerKey CurrentTriggerKey { get; private set; }
+
+    /// <summary>
+    ///     The new trigger
+    /// </summary>
+    [JsonProperty("NewTrigger")]
+    public Trigger Trigger { get; private set; }
+    #endregion
+
+    #region ToJsonString
+    /// <summary>
+    ///     Returns this object as a json string
+    /// </summary>
+    /// <returns></returns>
+    public string ToJsonString()
     {
-        #region Properties
-        /// <summary>
-        ///     The current trigger key
-        /// </summary>
-        [JsonProperty("CurrentTriggerKey")] 
-        public TriggerKey CurrentTriggerKey { get; private set; }
-
-        /// <summary>
-        ///     The new trigger
-        /// </summary>
-        [JsonProperty("NewTrigger")] 
-        public Trigger Trigger { get; private set; }
-        #endregion
-
-        #region ToJsonString
-        /// <summary>
-        ///     Returns this object as a json string
-        /// </summary>
-        /// <returns></returns>
-        public string ToJsonString()
-        {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
-        }
-        #endregion
-
-        #region FromJsonString
-        /// <summary>
-        ///     Returns the <see cref="RescheduleJob" /> object from the given <paramref name="json" /> string
-        /// </summary>
-        /// <param name="json">The json string</param>
-        /// <returns>
-        ///     <see cref="Data.Trigger" />
-        /// </returns>
-        public static RescheduleJob FromJsonString(string json)
-        {
-            return JsonConvert.DeserializeObject<RescheduleJob>(json);
-        }
-        #endregion
+        return JsonConvert.SerializeObject(this, Formatting.Indented);
     }
+    #endregion
+
+    #region FromJsonString
+    /// <summary>
+    ///     Returns the <see cref="RescheduleJob" /> object from the given <paramref name="json" /> string
+    /// </summary>
+    /// <param name="json">The json string</param>
+    /// <returns>
+    ///     <see cref="Data.Trigger" />
+    /// </returns>
+    public static RescheduleJob FromJsonString(string json)
+    {
+        return JsonConvert.DeserializeObject<RescheduleJob>(json);
+    }
+    #endregion
 }

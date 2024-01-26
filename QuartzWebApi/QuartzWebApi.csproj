@@ -151,7 +151,9 @@
     <Compile Include="Data\Trigger.cs" />
     <Compile Include="Data\Key.cs" />
     <Compile Include="Data\JobKeys.cs" />
+    <Compile Include="Data\TriggerKey.cs" />
     <Compile Include="Data\TriggerKeys.cs" />
+    <Compile Include="Data\Triggers.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

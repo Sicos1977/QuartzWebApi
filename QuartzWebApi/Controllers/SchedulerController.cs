@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web.Helpers;
 using System.Web.Http;
-using System.Web.Http.Results;
 using Microsoft.Extensions.Logging;
 using Quartz;
-using Quartz.Impl.Calendar;
 using Quartz.Spi;
 using QuartzWebApi.Data;
 using JobKey = QuartzWebApi.Data.JobKey;
@@ -91,7 +88,7 @@ public class SchedulerController : ApiController
 
     #region Context
     /// <summary>
-    /// Returns the <see cref="SchedulerContext" /> of the <see cref="IScheduler" />.
+    ///     Returns the <see cref="SchedulerContext" /> of the <see cref="IScheduler" />.
     /// </summary>
     [HttpGet]
     [Route("scheduler/schedulercontext")]
@@ -138,12 +135,12 @@ public class SchedulerController : ApiController
 
     #region GetMetaData
     /// <summary>
-    /// Get a <see cref="Quartz.SchedulerMetaData" /> object describing the settings
-    /// and capabilities of the scheduler instance.
+    ///     Get a <see cref="Quartz.SchedulerMetaData" /> object describing the settings
+    ///     and capabilities of the scheduler instance.
     /// </summary>
     /// <remarks>
-    /// Note that the data returned is an 'instantaneous' snapshot, and that as
-    /// soon as it's returned, the meta-data values may be different.
+    ///     Note that the data returned is an 'instantaneous' snapshot, and that as
+    ///     soon as it's returned, the meta-data values may be different.
     /// </remarks>
     [HttpGet]
     [Route("scheduler/getmetadata")]
@@ -158,21 +155,21 @@ public class SchedulerController : ApiController
 
     #region GetCurrentlyExecutingJobs
     /// <summary>
-    /// Return a list of <see cref="IJobExecutionContext" /> objects that
-    /// represent all currently executing Jobs in this Scheduler instance.
+    ///     Return a list of <see cref="IJobExecutionContext" /> objects that
+    ///     represent all currently executing Jobs in this Scheduler instance.
     /// </summary>
     /// <remarks>
-    /// <para>
-    /// This method is not cluster aware.  That is, it will only return Jobs
-    /// currently executing in this Scheduler instance, not across the entire
-    /// cluster.
-    /// </para>
-    /// <para>
-    /// Note that the list returned is an 'instantaneous' snapshot, and that as
-    /// soon as it's returned, the true list of executing jobs may be different.
-    /// Also, please read the doc associated with <see cref="IJobExecutionContext" />-
-    /// especially if you're using remoting.
-    /// </para>
+    ///     <para>
+    ///         This method is not cluster aware.  That is, it will only return Jobs
+    ///         currently executing in this Scheduler instance, not across the entire
+    ///         cluster.
+    ///     </para>
+    ///     <para>
+    ///         Note that the list returned is an 'instantaneous' snapshot, and that as
+    ///         soon as it's returned, the true list of executing jobs may be different.
+    ///         Also, please read the doc associated with <see cref="IJobExecutionContext" />-
+    ///         especially if you're using remoting.
+    ///     </para>
     /// </remarks>
     /// <seealso cref="IJobExecutionContext" />
     [HttpGet]
@@ -180,10 +177,10 @@ public class SchedulerController : ApiController
     public string GetCurrentlyExecutingJobs()
     {
         _logger.LogInformation("Received request to return the currently executing jobs");
-        
+
         var jobExecutionContext = CreateScheduler.Scheduler.GetCurrentlyExecutingJobs().GetAwaiter().GetResult();
         var result = new JobExecutionContexts(jobExecutionContext).ToJsonString();
-        
+
         _logger.LogInformation("Returning currently executing jobs");
         _logger.LogDebug($"JSON '{result}'");
         return result;
@@ -199,9 +196,9 @@ public class SchedulerController : ApiController
     public Task<IReadOnlyCollection<string>> GetJobGroupNames()
     {
         _logger.LogInformation("Received request to return the job group names");
-        
+
         var result = CreateScheduler.Scheduler.GetJobGroupNames();
-        
+
         _logger.LogInformation("Returning job group names");
         _logger.LogDebug($"JSON '{result}'");
         return result;
@@ -217,9 +214,9 @@ public class SchedulerController : ApiController
     public Task<IReadOnlyCollection<string>> GetTriggerGroupNames()
     {
         _logger.LogInformation("Received request to return the trigger group names");
-        
+
         var result = CreateScheduler.Scheduler.GetTriggerGroupNames();
-        
+
         _logger.LogInformation("Returning trigger group names");
         _logger.LogDebug($"JSON '{result}'");
         return result;
@@ -235,9 +232,9 @@ public class SchedulerController : ApiController
     public Task<IReadOnlyCollection<string>> GetPausedTriggerGroups()
     {
         _logger.LogInformation("Received request to return the paused trigger groups");
-        
+
         var result = CreateScheduler.Scheduler.GetPausedTriggerGroups();
-        
+
         _logger.LogInformation("Returning paused trigger groups");
         _logger.LogDebug($"JSON '{result}'");
         return result;
@@ -354,7 +351,7 @@ public class SchedulerController : ApiController
     #region Shutdown
     /// <summary>
     ///     Halts the <see cref="IScheduler" />'s firing of <see cref="ITrigger" />s,
-    ///     and cleans up all resources associated with the Scheduler. Equivalent to <see cref="Shutdown(bool)"/>.
+    ///     and cleans up all resources associated with the Scheduler. Equivalent to <see cref="Shutdown(bool)" />.
     /// </summary>
     /// <remarks>
     ///     The scheduler cannot be re-started.
@@ -393,7 +390,7 @@ public class SchedulerController : ApiController
             : "Received request to shutdown the scheduler and not to wait for the jobs to complete first");
 
         var result = CreateScheduler.Scheduler.Shutdown(waitForJobsToComplete);
-        
+
         _logger.LogInformation("The scheduler is shutdown");
         return result;
     }
@@ -428,7 +425,8 @@ public class SchedulerController : ApiController
 
     #region ScheduleJobIdentifiedWithTrigger
     /// <summary>
-    ///     Schedule the given <see cref="ITrigger" /> with the <see cref="IJob" /> identified by the <see cref="ITrigger" />'s settings.
+    ///     Schedule the given <see cref="ITrigger" /> with the <see cref="IJob" /> identified by the <see cref="ITrigger" />'s
+    ///     settings.
     /// </summary>
     /// <param name="json"></param>
     /// <returns></returns>
@@ -438,7 +436,7 @@ public class SchedulerController : ApiController
     {
         _logger.LogInformation("Received request to schedule a job identified by a trigger");
         _logger.LogDebug($"Received JSON '{json}'");
-        
+
         var trigger = Trigger.FromJsonString(json).ToTrigger();
         var result = CreateScheduler.Scheduler.ScheduleJob(trigger);
 
@@ -470,7 +468,7 @@ public class SchedulerController : ApiController
     /// </summary>
     /// <remarks>
     ///     If any of the given job or triggers already exist (or more
-    ///     specifically, if the keys are not unique) and the replace 
+    ///     specifically, if the keys are not unique) and the replace
     ///     parameter is not set to true then an exception will be thrown.
     /// </remarks>
     [HttpPost]
@@ -507,7 +505,7 @@ public class SchedulerController : ApiController
         _logger.LogDebug($"Received JSON '{json}'");
 
         var result = CreateScheduler.Scheduler.UnscheduleJob(TriggerKey.FromJsonString(json).ToTriggerKey());
-        
+
         _logger.LogInformation($"Job that matches the trigger unscheduled, returning '{result}'");
         return result;
     }
@@ -549,7 +547,7 @@ public class SchedulerController : ApiController
     ///     the same name as the old trigger.
     /// </summary>
     /// <param name="json">The json</param>
-    /// <returns> 
+    /// <returns>
     ///     <see langword="null" /> if a <see cref="ITrigger" /> with the given name and group
     ///     was not found and removed from the store (and the  new trigger is therefore not stored),
     ///     otherwise the first fire time of the newly scheduled trigger.
@@ -562,7 +560,8 @@ public class SchedulerController : ApiController
         _logger.LogDebug($"Received JSON '{json}'");
 
         var rescheduleJob = Data.RescheduleJob.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.RescheduleJob(rescheduleJob.CurrentTriggerKey.ToTriggerKey(), rescheduleJob.Trigger.ToTrigger());
+        var result = CreateScheduler.Scheduler.RescheduleJob(rescheduleJob.CurrentTriggerKey.ToTriggerKey(),
+            rescheduleJob.Trigger.ToTrigger());
 
         _logger.LogInformation($"Job rescheduled that matches the given trigger key, returning '{result}'");
         return result;
@@ -576,7 +575,7 @@ public class SchedulerController : ApiController
     ///     it is scheduled with a <see cref="ITrigger" />, or TriggerJob /> is called for it.
     /// </summary>
     /// <remarks>
-    ///     With the <see cref="Data.JobDetail.StoreNonDurableWhileAwaitingScheduling"/> parameter
+    ///     With the <see cref="Data.JobDetail.StoreNonDurableWhileAwaitingScheduling" /> parameter
     ///     set to <code>true</code>, a non-durable job can be stored.  Once it is
     ///     scheduled, it will resume normal non-durable behavior (i.e. be deleted
     ///     once there are no remaining associated triggers).
@@ -587,9 +586,10 @@ public class SchedulerController : ApiController
     {
         _logger.LogInformation("Received request to add job to the scheduler");
         _logger.LogDebug($"Received JSON '{json}'");
-        
+
         var addJob = JobDetail.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.AddJob(addJob.ToJobDetail(), addJob.Replace, addJob.StoreNonDurableWhileAwaitingScheduling);
+        var result = CreateScheduler.Scheduler.AddJob(addJob.ToJobDetail(), addJob.Replace,
+            addJob.StoreNonDurableWhileAwaitingScheduling);
 
         _logger.LogInformation("Job added to the scheduler");
         return result;
@@ -674,7 +674,8 @@ public class SchedulerController : ApiController
     ///     Trigger the identified <see cref="IJobDetail" /> (Execute it now).
     /// </summary>
     /// <param name="json">
-    /// The <see cref="JobKey"/> with associated <see cref="Quartz.JobDataMap"/> of the <see cref="IJob" /> to be executed.
+    ///     The <see cref="JobKey" /> with associated <see cref="Quartz.JobDataMap" /> of the <see cref="IJob" /> to be
+    ///     executed.
     /// </param>
     [HttpPost]
     [Route("scheduler/triggerjobwithdatamap")]
@@ -684,7 +685,8 @@ public class SchedulerController : ApiController
         _logger.LogDebug($"Received JSON '{json}'");
 
         var jobKeyWithDataMap = JobKeyWithDataMap.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.TriggerJob(jobKeyWithDataMap.JobKey.ToJobKey(), jobKeyWithDataMap.JobDataMap);
+        var result =
+            CreateScheduler.Scheduler.TriggerJob(jobKeyWithDataMap.JobKey.ToJobKey(), jobKeyWithDataMap.JobDataMap);
 
         _logger.LogInformation("Job triggered");
         return result;
@@ -717,23 +719,24 @@ public class SchedulerController : ApiController
     ///     matching groups - by pausing all of their <see cref="ITrigger" />s.
     /// </summary>
     /// <remarks>
-    /// <para>
-    ///     The Scheduler will "remember" that the groups are paused, and impose the
-    ///     pause on any new jobs that are added to any of those groups until it is resumed.
-    /// </para>
-    /// <para>
-    ///     NOTE: There is a limitation that only exactly matched groups
-    ///     can be remembered as paused. For example, if there are pre-existing
-    ///     job in groups "aaa" and "bbb" and a matcher is given to pause
-    ///     groups that start with "a" then the group "aaa" will be remembered
-    ///     as paused and any subsequently added jobs in group "aaa" will be paused,
-    ///     however if a job is added to group "axx" it will not be paused,
-    ///     as "axx" wasn't known at the time the "group starts with a" matcher 
-    ///     was applied.  HOWEVER, if there are pre-existing groups "aaa" and
-    ///     "bbb" and a matcher is given to pause the group "axx" (with a
-    ///     group equals matcher) then no jobs will be paused, but it will be 
-    ///     remembered that group "axx" is paused and later when a job is added 
-    ///     in that group, it will become paused.</para>
+    ///     <para>
+    ///         The Scheduler will "remember" that the groups are paused, and impose the
+    ///         pause on any new jobs that are added to any of those groups until it is resumed.
+    ///     </para>
+    ///     <para>
+    ///         NOTE: There is a limitation that only exactly matched groups
+    ///         can be remembered as paused. For example, if there are pre-existing
+    ///         job in groups "aaa" and "bbb" and a matcher is given to pause
+    ///         groups that start with "a" then the group "aaa" will be remembered
+    ///         as paused and any subsequently added jobs in group "aaa" will be paused,
+    ///         however if a job is added to group "axx" it will not be paused,
+    ///         as "axx" wasn't known at the time the "group starts with a" matcher
+    ///         was applied.  HOWEVER, if there are pre-existing groups "aaa" and
+    ///         "bbb" and a matcher is given to pause the group "axx" (with a
+    ///         group equals matcher) then no jobs will be paused, but it will be
+    ///         remembered that group "axx" is paused and later when a job is added
+    ///         in that group, it will become paused.
+    ///     </para>
     /// </remarks>
     /// <seealso cref="ResumeJobs" />
     [HttpPost]
@@ -752,7 +755,7 @@ public class SchedulerController : ApiController
     #endregion
 
     #region PauseTrigger
-    /// <summary> 
+    /// <summary>
     ///     Pause the <see cref="ITrigger" /> with the given key.
     /// </summary>
     [HttpPost]
@@ -775,23 +778,24 @@ public class SchedulerController : ApiController
     ///     Pause all the <see cref="ITrigger" />s in the groups matching.
     /// </summary>
     /// <remarks>
-    /// <para>
-    ///     The Scheduler will "remember" all the groups paused, and impose the
-    ///     pause on any new triggers that are added to any of those groups until it is resumed.
-    /// </para>
-    /// <para>
-    ///     NOTE: There is a limitation that only exactly matched groups
-    ///     can be remembered as paused.  For example, if there are pre-existing
-    ///     triggers in groups "aaa" and "bbb" and a matcher is given to pause
-    ///     groups that start with "a" then the group "aaa" will be remembered as
-    ///     paused and any subsequently added triggers in that group be paused,
-    ///     however if a trigger is added to group "axx" it will not be paused,
-    ///     as "axx" wasn't known at the time the "group starts with a" matcher 
-    ///     was applied.  HOWEVER, if there are pre-existing groups "aaa" and
-    ///     "bbb" and a matcher is given to pause the group "axx" (with a
-    ///     group equals matcher) then no triggers will be paused, but it will be 
-    ///     remembered that group "axx" is paused and later when a trigger is added
-    ///     in that group, it will become paused.</para>
+    ///     <para>
+    ///         The Scheduler will "remember" all the groups paused, and impose the
+    ///         pause on any new triggers that are added to any of those groups until it is resumed.
+    ///     </para>
+    ///     <para>
+    ///         NOTE: There is a limitation that only exactly matched groups
+    ///         can be remembered as paused.  For example, if there are pre-existing
+    ///         triggers in groups "aaa" and "bbb" and a matcher is given to pause
+    ///         groups that start with "a" then the group "aaa" will be remembered as
+    ///         paused and any subsequently added triggers in that group be paused,
+    ///         however if a trigger is added to group "axx" it will not be paused,
+    ///         as "axx" wasn't known at the time the "group starts with a" matcher
+    ///         was applied.  HOWEVER, if there are pre-existing groups "aaa" and
+    ///         "bbb" and a matcher is given to pause the group "axx" (with a
+    ///         group equals matcher) then no triggers will be paused, but it will be
+    ///         remembered that group "axx" is paused and later when a trigger is added
+    ///         in that group, it will become paused.
+    ///     </para>
     /// </remarks>
     /// <seealso cref="ResumeTriggers" />
     [HttpPost]
@@ -954,7 +958,7 @@ public class SchedulerController : ApiController
 
     #region GetJobKeys
     /// <summary>
-    /// Get the keys of all the <see cref="IJobDetail" />s in the matching groups.
+    ///     Get the keys of all the <see cref="IJobDetail" />s in the matching groups.
     /// </summary>
     [HttpGet]
     [Route("scheduler/getjobkeys")]
@@ -976,7 +980,7 @@ public class SchedulerController : ApiController
     #region GetTriggersOfJob
     /// <summary>
     ///     Get all <see cref="ITrigger" /> s that are associated with the
-    /// identified <see cref="IJobDetail" />.
+    ///     identified <see cref="IJobDetail" />.
     /// </summary>
     /// <remarks>
     ///     The returned Trigger objects will be snapshots of the actual stored
@@ -1002,18 +1006,20 @@ public class SchedulerController : ApiController
 
     #region GetTriggerKeys
     /// <summary>
-    /// Get the names of all the <see cref="ITrigger" />s in the given
-    /// groups.
+    ///     Get the names of all the <see cref="ITrigger" />s in the given
+    ///     groups.
     /// </summary>
     [HttpGet]
     [Route("scheduler/gettriggerkeys")]
     public string GetTriggerKeys([FromBody] string json)
     {
-        _logger.LogInformation("Received request to get all the trigger keys that are matching the given group matcher");
+        _logger.LogInformation(
+            "Received request to get all the trigger keys that are matching the given group matcher");
         _logger.LogDebug($"Received JSON '{json}'");
 
         var groupMatcher = GroupMatcher<Quartz.TriggerKey>.FromJsonString(json);
-        var triggerKeys = CreateScheduler.Scheduler.GetTriggerKeys(groupMatcher.ToGroupMatcher()).GetAwaiter().GetResult();
+        var triggerKeys = CreateScheduler.Scheduler.GetTriggerKeys(groupMatcher.ToGroupMatcher()).GetAwaiter()
+            .GetResult();
         var result = new TriggerKeys(triggerKeys).ToJsonString();
 
         _logger.LogInformation("Returning all trigger keys that are matching the given group matcher");
@@ -1071,7 +1077,6 @@ public class SchedulerController : ApiController
         _logger.LogInformation("Returning trigger for the given trigger key");
         _logger.LogDebug($"JSON '{result}'");
         return result;
-
     }
     #endregion
 
@@ -1093,7 +1098,8 @@ public class SchedulerController : ApiController
         _logger.LogDebug($"Received JSON '{json}'");
 
         var triggerKey = TriggerKey.FromJsonString(json);
-        var triggerState = CreateScheduler.Scheduler.GetTriggerState(triggerKey.ToTriggerKey()).GetAwaiter().GetResult();
+        var triggerState = CreateScheduler.Scheduler.GetTriggerState(triggerKey.ToTriggerKey()).GetAwaiter()
+            .GetResult();
         var result = triggerState.ToString();
 
         _logger.LogInformation($"Returning '{result}'");
@@ -1104,7 +1110,7 @@ public class SchedulerController : ApiController
     /// <summary>
     ///     Add (register) the given <see cref="ICalendar" /> to the Scheduler.
     /// </summary>
-    /// <param name="json">The <see cref="ICalendar"/> information</param>
+    /// <param name="json">The <see cref="ICalendar" /> information</param>
     [HttpPost]
     [Route("scheduler/addcalendar")]
     public Task AddCalendar([FromBody] string json)
@@ -1113,7 +1119,8 @@ public class SchedulerController : ApiController
         _logger.LogDebug($"Received JSON '{json}'");
 
         var calendar = Calendar.FromJsonString(json);
-        return CreateScheduler.Scheduler.AddCalendar(calendar.Name, calendar.ToCalendar(), calendar.Replace, calendar.UpdateTriggers);
+        return CreateScheduler.Scheduler.AddCalendar(calendar.Name, calendar.ToCalendar(), calendar.Replace,
+            calendar.UpdateTriggers);
     }
 
     #region DeleteCalendar
@@ -1141,7 +1148,7 @@ public class SchedulerController : ApiController
     #endregion
 
     /// <summary>
-    /// Get the <see cref="ICalendar" /> instance with the given name.
+    ///     Get the <see cref="ICalendar" /> instance with the given name.
     /// </summary>
     [HttpGet]
     [Route("scheduler/getcalendar/{calName}")]
@@ -1197,7 +1204,8 @@ public class SchedulerController : ApiController
     [Route("scheduler/interruptjobkey")]
     public bool InterruptJobKey([FromBody] string json)
     {
-        _logger.LogInformation("Received request for cancellation, within this Scheduler instance, of all currently executing instances of the identified job");
+        _logger.LogInformation(
+            "Received request for cancellation, within this Scheduler instance, of all currently executing instances of the identified job");
         _logger.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
@@ -1230,7 +1238,8 @@ public class SchedulerController : ApiController
     [Route("scheduler/interruptfireinstanceid/{fireInstanceId}")]
     public bool InterruptFireInstanceId(string fireInstanceId)
     {
-        _logger.LogInformation("Received request for cancellation, within this Scheduler instance, of the identified executing job instance");
+        _logger.LogInformation(
+            "Received request for cancellation, within this Scheduler instance, of the identified executing job instance");
 
         var result = CreateScheduler.Scheduler.Interrupt(fireInstanceId).GetAwaiter().GetResult();
 

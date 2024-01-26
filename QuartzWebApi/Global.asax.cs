@@ -1,17 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Http;
-using System.Web.Routing;
 
-namespace QuartzWebApi
+namespace QuartzWebApi;
+
+public class WebApiApplication : HttpApplication
 {
-    public class WebApiApplication : System.Web.HttpApplication
+    protected void Application_Start()
     {
-        protected void Application_Start()
-        {
-            GlobalConfiguration.Configure(WebApiConfig.Register);
-        }
+        GlobalConfiguration.Configure(WebApiConfig.Register);
     }
 }

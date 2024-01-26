@@ -1,12 +1,11 @@
-﻿namespace QuartzWebApi.Loggers
+﻿namespace QuartzWebApi.Loggers;
+
+/// <summary>
+///     Writes log information to the console
+/// </summary>
+public class Console : Stream
 {
-    /// <summary>
-    ///     Writes log information to the console
-    /// </summary>
-    public class Console: Stream
+    public Console() : base(System.Console.OpenStandardOutput())
     {
-        public Console() : base(System.Console.OpenStandardOutput())
-        {
-        }
     }
 }

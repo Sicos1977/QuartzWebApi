@@ -25,47 +25,46 @@
 
 using Newtonsoft.Json;
 
-namespace QuartzWebApi.Data
+namespace QuartzWebApi.Data;
+
+/// <summary>
+///     A json wrapper for the <see cref="Quartz.TriggerKey" /> or <see cref="Quartz.JobKey" />
+/// </summary>
+public class Key
 {
+    #region Fields
     /// <summary>
-    ///  A json wrapper for the <see cref="Quartz.TriggerKey"/> or <see cref="Quartz.JobKey"/>
+    ///     Returns the name of the trigger
     /// </summary>
-    public class Key
+    [JsonProperty("Name")]
+    public string Name { get; internal set; }
+
+    /// <summary>
+    ///     Returns the group of the trigger
+    /// </summary>
+    [JsonProperty("Group")]
+    public string Group { get; internal set; }
+    #endregion
+
+    #region Constructor
+    /// <summary>
+    ///     Makes this object and sets it's needed properties
+    /// </summary>
+    /// <param name="name">The name</param>
+    public Key(string name)
     {
-        #region Fields
-        /// <summary>
-        ///     Returns the name of the trigger
-        /// </summary>
-        [JsonProperty("Name")]
-        public string Name { get; internal set; }
-
-        /// <summary>
-        ///     Returns the group of the trigger
-        /// </summary>
-        [JsonProperty("Group")]
-        public string Group { get; internal set; }
-        #endregion
-
-        #region Constructor
-        /// <summary>
-        ///     Makes this object and sets it's needed properties
-        /// </summary>
-        /// <param name="name">The name</param>
-        public Key(string name)
-        {
-            Name = name;
-        }
-
-        /// <summary>
-        ///     Makes this object and sets it's needed properties
-        /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="group">The group</param>
-        public Key(string name, string group)
-        {
-            Name = name;
-            Group = group;
-        }
-        #endregion
+        Name = name;
     }
+
+    /// <summary>
+    ///     Makes this object and sets it's needed properties
+    /// </summary>
+    /// <param name="name">The name</param>
+    /// <param name="group">The group</param>
+    public Key(string name, string group)
+    {
+        Name = name;
+        Group = group;
+    }
+    #endregion
 }
