@@ -52,23 +52,23 @@ How to use the API
 
 ### Check if a job group is paused
 
-Do a `POST` request to `scheduler/isjobgrouppaused/{groupName}`, where `{groupName}` is the name of the group this will return `true` or `false`
+Do a `POST` request to `Scheduler/IsJobGroupPaused/{groupName}`, where `{groupName}` is the name of the group this will return `true` or `false`
 
 ### Check if a trigger group is paused
 
-Do a `POST` request to `scheduler/istriggergrouppaused/{groupName}`, where `{groupName}` is the name of the group this will return `true` or `false`
+Do a `POST` request to `Scheduler/IsTriggerGroupPaused/{groupName}`, where `{groupName}` is the name of the group this will return `true` or `false`
 
 ### Get the schedulers name
 
-Do a `GET` request to `scheduler/schedulername`, this will return the name of the scheduler
+Do a `GET` request to `Scheduler/SchedulerName`, this will return the name of the scheduler
 
 ### Get the schedulers instance id
 
-Do a `GET` request to `scheduler/schedulerinstanceid`, this will return the schedulers instance id
+Do a `GET` request to `Scheduler/SchedulerInstanceId`, this will return the schedulers instance id
 
 ### Get the schedulers context
 
-Do a `GET` request to `scheduler/schedulercontext`
+Do a `GET` request to `Scheduler/SchedulerContext`
 
 When the context is;
 
@@ -88,15 +88,15 @@ it will return
 
 ### Check if a scheduler is in standby mode
 
-Do a `GET` request to `scheduler/instandbymode` , this will return `true` or `false`
+Do a `GET` request to `Scheduler/InStandbyMode` , this will return `true` or `false`
 
 ### Check if a scheduler is in shutdown
 
-Do a `GET` request to `scheduler/isshutdown` , this will return `true` or `false`
+Do a `GET` request to `Scheduler/Isshutdown` , this will return `true` or `false`
 
 ### Get the schedulers meta-data
 
-Do a `GET` request to `scheduler/getmetadata` , this will return the meta-data that will look something like this
+Do a `GET` request to `Scheduler/GetMetaData` , this will return the meta-data that will look something like this
 
 ```json
 {
@@ -120,7 +120,7 @@ Do a `GET` request to `scheduler/getmetadata` , this will return the meta-data t
 
 ### Get the currently executing jobs
 
-Do a `GET` request to `scheduler/getcurrentlyexecutingjobs` , this will return the currently executing jobs that will look like this
+Do a `GET` request to `Scheduler/GetCurrentlyExecutingJobs` , this will return the currently executing jobs that will look like this
 
 ```json
 [
@@ -131,7 +131,7 @@ Do a `GET` request to `scheduler/getcurrentlyexecutingjobs` , this will return t
 
 ### Get the job group names
 
-Do a `GET` request to `scheduler/getjobgroupnames` , this will return the job group names that will look like this
+Do a `GET` request to `Scheduler/GetJobGroupNames` , this will return the job group names that will look like this
 
 ```json
 [
@@ -142,7 +142,7 @@ Do a `GET` request to `scheduler/getjobgroupnames` , this will return the job gr
 
 ### Get the trigger group names
 
-Do a `GET` request to `scheduler/gettriggergroupnames` , this will return
+Do a `GET` request to `Scheduler/GetTriggerGroupNames` , this will return
 
 ```json
 [
@@ -153,7 +153,7 @@ Do a `GET` request to `scheduler/gettriggergroupnames` , this will return
 
 ### Get the paused trigger groups
 
-Do a `GET` request to `scheduler/getpausedtriggergroups` , this will return
+Do a `GET` request to `Scheduler/GetPausedTriggerGroups` , this will return
 
 ```json
 [
@@ -164,31 +164,31 @@ Do a `GET` request to `scheduler/getpausedtriggergroups` , this will return
 
 ### Start the scheduler
 
-Do a `POST` request to `scheduler/start`
+Do a `POST` request to `Scheduler/Start`
 
 ### Start the scheduler with a delay
 
-Do a `POST` request to `scheduler/startdelayed/{delay}` where `{delay}` is the amount of *seconds* you want to delay the start
+Do a `POST` request to `Scheduler/StartDelayed/{delay}` where `{delay}` is the amount of *seconds* you want to delay the start
 
 ### Check if the scheduler is started
 
-Do a `GET` request to `scheduler/isstarted`, this will return `true` or `false`
+Do a `GET` request to `Scheduler/IsStarted`, this will return `true` or `false`
 
 ### Check if the scheduler is in standby mode
 
-Do a `GET` request to `scheduler/standby`, this will return `true` or `false`
+Do a `GET` request to `Scheduler/Standby`, this will return `true` or `false`
 
 ### Shutdown the scheduler
 
-Do a `POST` request to `scheduler/shutdown`
+Do a `POST` request to `Scheduler/Shutdown`
 
 ### Shutdown the scheduler but wait for all jobs to complete
 
-Do a `POST` request to `scheduler/shutdown/{waitForJobsToComplete}` where `{waitForJobsToComplete}` is `true`
+Do a `POST` request to `Scheduler/Shutdown/{waitForJobsToComplete}` where `{waitForJobsToComplete}` is `true`
 
 ### Schedule a job with a job detail and a trigger
 
-Do a `POST` request to `scheduler/schedulejobwithjobdetailandtrigger` with in the body the job detail and the trigger
+Do a `POST` request to `Scheduler/ScheduleJobWithJobDetailAndTrigger` with in the body the job detail and the trigger
    
 ```json
 {
@@ -230,7 +230,7 @@ Do a `POST` request to `scheduler/schedulejobwithjobdetailandtrigger` with in th
 
 ### Schedule the give trigger with the job identified by the trigger
 
-Do a `POST` request to `scheduler/schedulejobidentifiedwithtrigger` with in the body
+Do a `POST` request to `Scheduler/ScheduleJobIdentifiedWithTrigger` with in the body
 
 ```json
 {
@@ -553,7 +553,11 @@ The values for `Type` can be: `Contains`, `EndsWith`, `Equals` or `StartsWith`
   "Type": "Contains",
   "Value": "<The trigger keys to match>"
 }   
-```     
+```
+
+### Pause all triggers
+    
+Do a `POST` request to `scheduler/pausealltriggers`
     
 Errors returned
 ===============
