@@ -28,7 +28,7 @@ using System;
 using Newtonsoft.Json;
 using Quartz;
 
-namespace QuartzWebApi.Data;
+namespace QuartzWebApi.Wrappers;
 
 /// <summary>
 ///     Json wrapper for the Quartz <see cref="IJobDetail" />
@@ -183,7 +183,7 @@ public class JobDetail
     /// </summary>
     /// <param name="json">The json string</param>
     /// <returns>
-    ///     <see cref="Data.Trigger" />
+    ///     <see cref="Trigger" />
     /// </returns>
     public static JobDetail FromJsonString(string json)
     {

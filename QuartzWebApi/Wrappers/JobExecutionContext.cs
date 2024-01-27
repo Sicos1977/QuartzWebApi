@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Quartz;
 
-namespace QuartzWebApi.Data;
+namespace QuartzWebApi.Wrappers;
 
 /// <summary>
 ///     Json wrapper for the Quartz <see cref="Quartz.IJobExecutionContext" />

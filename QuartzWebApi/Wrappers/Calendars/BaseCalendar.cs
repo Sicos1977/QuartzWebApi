@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Quartz;
 
-namespace QuartzWebApi.Data.Calendars;
+namespace QuartzWebApi.Wrappers.Calendars;
 
 /// <summary>
 ///     The base calendar for all calendars

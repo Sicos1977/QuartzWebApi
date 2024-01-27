@@ -1,18 +1,18 @@
 ﻿using Newtonsoft.Json;
 
-namespace QuartzWebApi.Data;
+namespace QuartzWebApi.Wrappers;
 
 /// <summary>
-///     A json wrapper for the <see cref="Quartz.JobKey" />
+///     A json wrapper for the <see cref="Quartz.TriggerKey" />
 /// </summary>
-public class JobKey : Key
+public class TriggerKey : Key
 {
     #region Constructor
     /// <summary>
     ///     Makes this object and sets it's needed properties
     /// </summary>
-    /// <param name="name">The name of the job</param>
-    public JobKey(string name) : base(name)
+    /// <param name="name">The name of the trigger</param>
+    public TriggerKey(string name) : base(name)
     {
     }
 
@@ -21,27 +21,27 @@ public class JobKey : Key
     /// </summary>
     /// <param name="name">The name of the trigger</param>
     /// <param name="group">The group of the trigger</param>
-    public JobKey(string name, string group) : base(name, group)
+    public TriggerKey(string name, string group) : base(name, group)
     {
     }
 
     /// <summary>
     ///     Makes this object and sets it's needed properties
     /// </summary>
-    /// <param name="key">The <see cref="Quartz.JobKey" /></param>
-    public JobKey(Quartz.JobKey key) : base(key.Name, key.Group)
+    /// <param name="key">The <see cref="Quartz.TriggerKey" /></param>
+    public TriggerKey(Quartz.TriggerKey key) : base(key.Name, key.Group)
     {
     }
     #endregion
 
-    #region ToJobKey
+    #region ToTriggerKey
     /// <summary>
-    ///     Returns this object as a Quartz <see cref="Quartz.JobKey" />
+    ///     Returns this object as a Quartz <see cref="Quartz.TriggerKey" />
     /// </summary>
     /// <returns></returns>
-    public Quartz.JobKey ToJobKey()
+    public Quartz.TriggerKey ToTriggerKey()
     {
-        return new Quartz.JobKey(Name, Group);
+        return new Quartz.TriggerKey(Name, Group);
     }
     #endregion
 
@@ -58,15 +58,15 @@ public class JobKey : Key
 
     #region FromJsonString
     /// <summary>
-    ///     Returns the <see cref="JobKey" /> object from the given <paramref name="json" /> string
+    ///     Returns the <see cref="TriggerKey" /> object from the given <paramref name="json" /> string
     /// </summary>
     /// <param name="json">The json string</param>
     /// <returns>
-    ///     <see cref="Data.Trigger" />
+    ///     <see cref="Trigger" />
     /// </returns>
-    public static JobKey FromJsonString(string json)
+    public static TriggerKey FromJsonString(string json)
     {
-        return JsonConvert.DeserializeObject<JobKey>(json);
+        return JsonConvert.DeserializeObject<TriggerKey>(json);
     }
     #endregion
 }

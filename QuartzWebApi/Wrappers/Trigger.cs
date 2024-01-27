@@ -28,7 +28,7 @@ using System;
 using Newtonsoft.Json;
 using Quartz;
 
-namespace QuartzWebApi.Data;
+namespace QuartzWebApi.Wrappers;
 
 /// <summary>
 ///     Class used to create or read json to get a trigger with a job key and data map

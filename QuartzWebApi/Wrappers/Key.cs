@@ -25,7 +25,7 @@
 
 using Newtonsoft.Json;
 
-namespace QuartzWebApi.Data;
+namespace QuartzWebApi.Wrappers;
 
 /// <summary>
 ///     A json wrapper for the <see cref="Quartz.TriggerKey" /> or <see cref="Quartz.JobKey" />

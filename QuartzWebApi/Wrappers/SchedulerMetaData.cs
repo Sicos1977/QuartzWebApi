@@ -27,7 +27,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace QuartzWebApi.Data;
+namespace QuartzWebApi.Wrappers;
 
 /// <summary>
 ///     Class used to read or create json to get the schedulers meta-data

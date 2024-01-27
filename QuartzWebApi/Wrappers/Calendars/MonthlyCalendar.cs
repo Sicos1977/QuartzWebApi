@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Quartz;
 
-namespace QuartzWebApi.Data.Calendars;
+namespace QuartzWebApi.Wrappers.Calendars;
 
 /// <summary>
-///     A json wrapper for the <see cref="Quartz.ICalendar" />
+///     A json wrapper for the <see cref="Quartz.Impl.Calendar.MonthlyCalendar" />
 /// </summary>
-public class WeeklyCalendar : BaseCalendar
+public class MonthlyCalendar : BaseCalendar
 {
     #region Properties
     /// <summary>
-    ///     Returns a collection of days of the week that are excluded
+    ///     Returns a collection of days of the month that are excluded
     /// </summary>
     [JsonProperty("DaysExcluded")]
     public List<bool> DaysExcluded { get; internal set; } = [];
@@ -20,17 +19,17 @@ public class WeeklyCalendar : BaseCalendar
 
     #region Constructor
     /// <summary>
-    ///     Takes a <see cref="Quartz.Impl.Calendar.WeeklyCalendar" /> and wraps it in a json object
+    ///     Takes a <see cref="Quartz.Impl.Calendar.MonthlyCalendar" /> and wraps it in a json object
     /// </summary>
-    /// <param name="weeklyCalendar"><see cref="Quartz.Impl.Calendar.WeeklyCalendar" /></param>
-    public WeeklyCalendar(Quartz.Impl.Calendar.WeeklyCalendar weeklyCalendar) : base(weeklyCalendar)
+    /// <param name="monthlyCalendar"><see cref="Quartz.Impl.Calendar.MonthlyCalendar" /></param>
+    public MonthlyCalendar(Quartz.Impl.Calendar.MonthlyCalendar monthlyCalendar) : base(monthlyCalendar)
     {
-        Type = CalendarType.Weekly;
+        Type = CalendarType.Monthly;
 
-        foreach(var day in weeklyCalendar.DaysExcluded)
+        foreach(var day in monthlyCalendar.DaysExcluded)
             DaysExcluded.Add(day);
 
-        TimeZone = weeklyCalendar.TimeZone;
+        TimeZone = monthlyCalendar.TimeZone;
     }
     #endregion
 
@@ -41,14 +40,14 @@ public class WeeklyCalendar : BaseCalendar
     /// <returns></returns>
     public override ICalendar ToCalendar()
     {
-        var result = new Quartz.Impl.Calendar.WeeklyCalendar
+        var result = new Quartz.Impl.Calendar.MonthlyCalendar
         {
             Description = Description,
             TimeZone = TimeZone
         };
 
         for(var i = 0; i < DaysExcluded.Count; i++)
-            result.SetDayExcluded((DayOfWeek) i + 1, DaysExcluded[i]);
+            result.SetDayExcluded(i + 1, DaysExcluded[i]);
 
         if (!string.IsNullOrEmpty(CalendarBase))
             result.CalendarBase = CreateScheduler.Scheduler.GetCalendar(CalendarBase).GetAwaiter().GetResult();
@@ -70,15 +69,15 @@ public class WeeklyCalendar : BaseCalendar
 
     #region FromJsonString
     /// <summary>
-    ///     Returns the <see cref="json" /> object from the given <paramref name="json" /> string
+    ///     Returns the <see cref="MonthlyCalendar" /> object from the given <paramref name="json" /> string
     /// </summary>
     /// <param name="json">The json string</param>
     /// <returns>
-    ///     <see cref="WeeklyCalendar" />
+    ///     <see cref="MonthlyCalendar" />
     /// </returns>
-    public new static WeeklyCalendar FromJsonString(string json)
+    public new static MonthlyCalendar FromJsonString(string json)
     {
-        return JsonConvert.DeserializeObject<WeeklyCalendar>(json);
+        return JsonConvert.DeserializeObject<MonthlyCalendar>(json);
     }
     #endregion
 }

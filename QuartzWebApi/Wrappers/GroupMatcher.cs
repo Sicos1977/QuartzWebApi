@@ -29,7 +29,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Quartz.Util;
 
-namespace QuartzWebApi.Data;
+namespace QuartzWebApi.Wrappers;
 
 /// <summary>
 ///     Json wrapper for the Quartz <see cref="Quartz.Impl.Matchers.GroupMatcher{T}" />
@@ -82,7 +82,7 @@ public class GroupMatcher<T> where T : Key<T>
     /// </summary>
     /// <param name="json">The json string</param>
     /// <returns>
-    ///     <see cref="Data.Trigger" />
+    ///     <see cref="Trigger" />
     /// </returns>
     public static GroupMatcher<T> FromJsonString(string json)
     {

@@ -1,5 +1,5 @@
 ﻿//
-// RescheduleJob.cs
+// TriggerKeys.cs
 //
 // Author: Kees van Spelde <sicos2002@hotmail.com>
 //
@@ -22,29 +22,39 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-//
 
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Newtonsoft.Json;
 
-namespace QuartzWebApi.Data;
+namespace QuartzWebApi.Wrappers;
 
-/// <summary>
-///     Class used to read or create json to reschedule a job
-/// </summary>
-public class RescheduleJob
+[JsonArray]
+public class TriggerKeys : List<TriggerKey>
 {
-    #region Properties
+    #region Constructor
     /// <summary>
-    ///     The current trigger key
+    ///     Makes this object and sets all it's needed properties
     /// </summary>
-    [JsonProperty("CurrentTriggerKey")]
-    public TriggerKey CurrentTriggerKey { get; private set; }
+    /// <param name="triggerKeys">A <see cref="ReadOnlyCollection{T}" /> of <see cref="Quartz.TriggerKey" />s</param>
+    public TriggerKeys(IEnumerable<Quartz.TriggerKey> triggerKeys)
+    {
+        foreach (var triggerKey in triggerKeys)
+            Add(new TriggerKey(triggerKey.Name, triggerKey.Group));
+    }
+    #endregion
 
+    #region ToTriggerKeys
     /// <summary>
-    ///     The new trigger
+    ///     Returns a <see cref="ReadOnlyCollection{T}" /> of <see cref="Quartz.TriggerKey" />s
     /// </summary>
-    [JsonProperty("NewTrigger")]
-    public Trigger Trigger { get; private set; }
+    /// <returns></returns>
+    public IReadOnlyCollection<Quartz.TriggerKey> ToTriggerKeys()
+    {
+        var result = this.Select(m => m.ToTriggerKey()).ToList();
+        return new ReadOnlyCollection<Quartz.TriggerKey>(result);
+    }
     #endregion
 
     #region ToJsonString
@@ -60,15 +70,15 @@ public class RescheduleJob
 
     #region FromJsonString
     /// <summary>
-    ///     Returns the <see cref="RescheduleJob" /> object from the given <paramref name="json" /> string
+    ///     Returns the <see cref="TriggerKeys" /> object from the given <paramref name="json" /> string
     /// </summary>
     /// <param name="json">The json string</param>
     /// <returns>
-    ///     <see cref="Data.Trigger" />
+    ///     <see cref="Trigger" />
     /// </returns>
-    public static RescheduleJob FromJsonString(string json)
+    public static TriggerKeys FromJsonString(string json)
     {
-        return JsonConvert.DeserializeObject<RescheduleJob>(json);
+        return JsonConvert.DeserializeObject<TriggerKeys>(json);
     }
     #endregion
 }

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace QuartzWebApi.Data;
+namespace QuartzWebApi.Wrappers;
 
 /// <summary>
 ///     The matching type

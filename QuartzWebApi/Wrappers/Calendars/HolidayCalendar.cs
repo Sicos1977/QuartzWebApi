@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Quartz;
 
-namespace QuartzWebApi.Data.Calendars;
+namespace QuartzWebApi.Wrappers.Calendars;
 
 /// <summary>
 ///     A json wrapper for the <see cref="Quartz.Impl.Calendar.HolidayCalendar" />

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace QuartzWebApi.Data;
+namespace QuartzWebApi.Wrappers;
 
 public class ScheduleJobs : List<JobDetail>
 {

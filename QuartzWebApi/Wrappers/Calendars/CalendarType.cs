@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace QuartzWebApi.Data.Calendars;
+namespace QuartzWebApi.Wrappers.Calendars;
 
 public enum CalendarType
 {

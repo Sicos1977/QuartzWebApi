@@ -3,7 +3,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Quartz;
 
-namespace QuartzWebApi.Data;
+namespace QuartzWebApi.Wrappers;
 
 /// <summary>
 ///     Json wrapper to create a <see cref="Quartz.IJob" /> with a list of <see cref="Quartz.ITrigger" />s
@@ -73,7 +73,7 @@ public class JobDetailWithTriggers
     /// </summary>
     /// <param name="json">The json string</param>
     /// <returns>
-    ///     <see cref="Data.Trigger" />
+    ///     <see cref="Trigger" />
     /// </returns>
     public static JobDetailWithTriggers FromJsonString(string json)
     {

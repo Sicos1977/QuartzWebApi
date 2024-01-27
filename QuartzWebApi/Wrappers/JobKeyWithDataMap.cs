@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Quartz;
 
-namespace QuartzWebApi.Data;
+namespace QuartzWebApi.Wrappers;
 
 /// <summary>
 ///     Json wrapper to create a <see cref="Quartz.JobKey" /> with a <see cref="Quartz.JobDataMap" />

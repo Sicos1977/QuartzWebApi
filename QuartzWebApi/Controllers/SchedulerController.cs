@@ -5,11 +5,11 @@ using System.Web.Http;
 using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Spi;
-using QuartzWebApi.Data;
-using QuartzWebApi.Data.Calendars;
-using JobKey = QuartzWebApi.Data.JobKey;
-using SchedulerMetaData = QuartzWebApi.Data.SchedulerMetaData;
-using TriggerKey = QuartzWebApi.Data.TriggerKey;
+using QuartzWebApi.Wrappers;
+using QuartzWebApi.Wrappers.Calendars;
+using JobKey = QuartzWebApi.Wrappers.JobKey;
+using SchedulerMetaData = QuartzWebApi.Wrappers.SchedulerMetaData;
+using TriggerKey = QuartzWebApi.Wrappers.TriggerKey;
 
 namespace QuartzWebApi.Controllers;
 
@@ -560,7 +560,7 @@ public class SchedulerController : ApiController
         _logger?.LogInformation("Received request to reschedule the job that match the given trigger key");
         _logger?.LogDebug($"Received JSON '{json}'");
 
-        var rescheduleJob = Data.RescheduleJob.FromJsonString(json);
+        var rescheduleJob = Wrappers.RescheduleJob.FromJsonString(json);
         var result = CreateScheduler.Scheduler.RescheduleJob(rescheduleJob.CurrentTriggerKey.ToTriggerKey(),
             rescheduleJob.Trigger.ToTrigger());
 
@@ -576,7 +576,7 @@ public class SchedulerController : ApiController
     ///     it is scheduled with a <see cref="ITrigger" />, or TriggerJob /> is called for it.
     /// </summary>
     /// <remarks>
-    ///     With the <see cref="Data.JobDetail.StoreNonDurableWhileAwaitingScheduling" /> parameter
+    ///     With the <see cref="JobDetail.StoreNonDurableWhileAwaitingScheduling" /> parameter
     ///     set to <code>true</code>, a non-durable job can be stored.  Once it is
     ///     scheduled, it will resume normal non-durable behavior (i.e. be deleted
     ///     once there are no remaining associated triggers).

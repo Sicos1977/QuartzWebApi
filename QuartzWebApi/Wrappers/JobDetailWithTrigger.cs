@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace QuartzWebApi.Data;
+namespace QuartzWebApi.Wrappers;
 
 /// <summary>
 ///     Json wrapper to create a <see cref="Quartz.IJob" /> with a <see cref="Quartz.ITrigger" />
@@ -53,7 +53,7 @@ public class JobDetailWithTrigger
     /// </summary>
     /// <param name="json">The json string</param>
     /// <returns>
-    ///     <see cref="Data.Trigger" />
+    ///     <see cref="Wrappers.Trigger" />
     /// </returns>
     public static JobDetailWithTrigger FromJsonString(string json)
     {

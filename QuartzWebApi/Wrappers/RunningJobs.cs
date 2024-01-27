@@ -24,7 +24,7 @@
 // THE SOFTWARE.
 //
 
-namespace QuartzWebApi.Data;
+namespace QuartzWebApi.Wrappers;
 //public class RunningJobs : IJobExecutionContext
 //{
 //    public void Put(object key, object objectValue)

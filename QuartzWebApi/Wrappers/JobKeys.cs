@@ -1,5 +1,5 @@
 ﻿//
-// JobExecutionContexts.cs
+// JobKeys.cs
 //
 // Author: Kees van Spelde <sicos2002@hotmail.com>
 //
@@ -22,32 +22,41 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-//
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Newtonsoft.Json;
-using Quartz;
 
-namespace QuartzWebApi.Data;
+namespace QuartzWebApi.Wrappers;
 
 /// <summary>
-///     Json wrapper for a list of Quartz <see cref="Quartz.IJobExecutionContext" />s
+///     A list of <see cref="Quartz.JobKey" />s
 /// </summary>
 [JsonArray]
-public class JobExecutionContexts : List<JobExecutionContext>
+public class JobKeys : List<JobKey>
 {
     #region Constructor
     /// <summary>
-    ///     Makes this object and sets it's needed properties
+    ///     Makes this object and sets all it's needed properties
     /// </summary>
-    /// <param name="jobExecutionContexts">
-    ///     A <see cref="ReadOnlyCollection{T}" /> of <see cref="Quartz.IJobExecutionContext" />
-    /// </param>
-    public JobExecutionContexts(IReadOnlyCollection<IJobExecutionContext> jobExecutionContexts)
+    /// <param name="jobKeys">A <see cref="ReadOnlyCollection{T}" /> of <see cref="Quartz.JobKey" />s</param>
+    public JobKeys(IEnumerable<Quartz.JobKey> jobKeys)
     {
-        foreach (var jobExecutionContext in jobExecutionContexts)
-            Add(new JobExecutionContext(jobExecutionContext));
+        foreach (var jobKey in jobKeys)
+            Add(new JobKey(jobKey.Name, jobKey.Group));
+    }
+    #endregion
+
+    #region ToJobKeys
+    /// <summary>
+    ///     Returns a <see cref="ReadOnlyCollection{T}" /> of <see cref="Quartz.JobKey" />s
+    /// </summary>
+    /// <returns></returns>
+    public IReadOnlyCollection<Quartz.JobKey> ToJobKeys()
+    {
+        var result = this.Select(m => m.ToJobKey()).ToList();
+        return new ReadOnlyCollection<Quartz.JobKey>(result);
     }
     #endregion
 
@@ -64,15 +73,15 @@ public class JobExecutionContexts : List<JobExecutionContext>
 
     #region FromJsonString
     /// <summary>
-    ///     Returns the <see cref="JobExecutionContexts" /> object from the given <paramref name="json" /> string
+    ///     Returns the <see cref="JobKeys" /> object from the given <paramref name="json" /> string
     /// </summary>
     /// <param name="json">The json string</param>
     /// <returns>
-    ///     <see cref="Data.Trigger" />
+    ///     <see cref="Trigger" />
     /// </returns>
-    public static JobExecutionContexts FromJsonString(string json)
+    public static JobKeys FromJsonString(string json)
     {
-        return JsonConvert.DeserializeObject<JobExecutionContexts>(json);
+        return JsonConvert.DeserializeObject<JobKeys>(json);
     }
     #endregion
 }

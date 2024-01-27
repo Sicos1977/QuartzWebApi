@@ -1,32 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using Quartz;
 
-namespace QuartzWebApi.Data.Calendars;
+namespace QuartzWebApi.Wrappers.Calendars;
 
 /// <summary>
-///     A json wrapper for the <see cref="Quartz.Impl.Calendar.AnnualCalendar" />
+///     A json wrapper for the <see cref="Quartz.Impl.Calendar.CronCalendar" />
 /// </summary>
-public class AnnualCalendar : BaseCalendar
+public class CronCalendar : BaseCalendar
 {
     #region Properties
     /// <summary>
-    ///     Returns a collection of days of the year that are excluded
+    ///     The cron expression
     /// </summary>
-    [JsonProperty("DaysExcluded")]
-    public List<DateTime> DaysExcluded { get; internal set; } = [];
+    /// <remarks>
+    ///     Only used when the <see cref="Type" /> is <see cref="CalendarType.Cron" />
+    /// </remarks>
+    [JsonProperty("CronExpression")]
+    public string CronExpression { get; internal set; }
     #endregion
 
     #region Constructor
     /// <summary>
-    ///     Takes a <see cref="Quartz.Impl.Calendar.AnnualCalendar" /> and wraps it in a json object
+    ///     Takes a <see cref="Quartz.Impl.Calendar.CronCalendar" /> and wraps it in a json object
     /// </summary>
-    /// <param name="annualCalendar"><see cref="Quartz.Impl.Calendar.AnnualCalendar" /></param>
-    public AnnualCalendar(Quartz.Impl.Calendar.AnnualCalendar annualCalendar) : base(annualCalendar)
+    /// <param name="cronCalendar"><see cref="Quartz.Impl.Calendar.CronCalendar" /></param>
+    public CronCalendar(Quartz.Impl.Calendar.CronCalendar cronCalendar) : base(cronCalendar)
     {
-        foreach(var day in annualCalendar.DaysExcluded)
-            DaysExcluded.Add(day);
+        Type = CalendarType.Cron;
+        CronExpression = cronCalendar.CronExpression.CronExpressionString;
+        TimeZone = cronCalendar.TimeZone;
     }
     #endregion
 
@@ -37,14 +40,11 @@ public class AnnualCalendar : BaseCalendar
     /// <returns></returns>
     public override ICalendar ToCalendar()
     {
-        var result = new Quartz.Impl.Calendar.AnnualCalendar
+        var result = new Quartz.Impl.Calendar.CronCalendar(CronExpression)
         {
             Description = Description,
             TimeZone = TimeZone
         };
-
-        foreach (var day in DaysExcluded)
-            result.SetDayExcluded(day, true);
 
         if (!string.IsNullOrEmpty(CalendarBase))
             result.CalendarBase = CreateScheduler.Scheduler.GetCalendar(CalendarBase).GetAwaiter().GetResult();
@@ -66,15 +66,15 @@ public class AnnualCalendar : BaseCalendar
 
     #region FromJsonString
     /// <summary>
-    ///     Returns the <see cref="AnnualCalendar" /> object from the given <paramref name="json" /> string
+    ///     Returns the <see cref="CronCalendar" /> object from the given <paramref name="json" /> string
     /// </summary>
     /// <param name="json">The json string</param>
     /// <returns>
-    ///     <see cref="Trigger" />
+    ///     <see cref="CronCalendar" />
     /// </returns>
-    public new static AnnualCalendar FromJsonString(string json)
+    public new static CronCalendar FromJsonString(string json)
     {
-        return JsonConvert.DeserializeObject<AnnualCalendar>(json);
+        return JsonConvert.DeserializeObject<CronCalendar>(json);
     }
     #endregion
 }
