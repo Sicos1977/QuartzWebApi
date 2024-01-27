@@ -3594,6 +3594,34 @@
             <param name="newJobDataMap"></param>
             <returns></returns>
         </member>
+        <member name="M:Quartz.IJobConfigurator.DisallowConcurrentExecution(System.Boolean)">
+            <summary>
+            Instructs the <see cref="T:Quartz.IScheduler" /> whether or not concurrent execution of the job should be disallowed.
+            </summary>
+            <param name="concurrentExecutionDisallowed">Indicates whether or not concurrent execution of the job should be disallowed.</param>
+            <returns>
+            The updated <see cref="T:Quartz.JobBuilder"/>.
+            </returns>
+            <remarks>
+            If not explicitly set, concurrent execution of a job is only disallowed if either the <see cref="P:Quartz.IJobDetail.JobType"/> itself,
+            one of its ancestors or one of the interfaces that it implements, is annotated with <see cref="T:Quartz.DisallowConcurrentExecutionAttribute"/>.
+            </remarks>
+            <seealso cref="T:Quartz.DisallowConcurrentExecutionAttribute"/>
+        </member>
+        <member name="M:Quartz.IJobConfigurator.PersistJobDataAfterExecution(System.Boolean)">
+            <summary>
+            Instructs the <see cref="T:Quartz.IScheduler" /> whether or not job data should be re-stored when execution of the job completes.
+            </summary>
+            <param name="persistJobDataAfterExecution">Indicates whether or not job data should be re-stored when execution of the job completes.</param>
+            <returns>
+            The updated <see cref="T:Quartz.JobBuilder"/>.
+            </returns>
+            <remarks>
+            If not explicitly set, job data is only re-stored if either the <see cref="P:Quartz.IJobDetail.JobType"/> itself, one of
+            its ancestors or one of the interfaces that it implements, is annotated with <see cref="T:Quartz.PersistJobDataAfterExecutionAttribute"/>.
+            </remarks>
+            <seealso cref="T:Quartz.PersistJobDataAfterExecutionAttribute"/>
+        </member>
         <member name="T:Quartz.IJobDetail">
             <summary>
             Conveys the detail properties of a given job instance. 
@@ -5873,6 +5901,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="P:Quartz.Impl.AdoJobStore.JobStoreSupport.PerformSchemaValidation">
+            <summary>
+            Whether to perform a schema check on scheduler startup and try to determine if correct tables are in place.
+            Defaults to true.
+            </summary>
+        </member>
         <member name="M:Quartz.Impl.AdoJobStore.JobStoreSupport.GetConnection">
             <summary>
             Gets the connection and starts a new transaction.
@@ -6535,20 +6569,20 @@
         </member>
         <member name="M:Quartz.Impl.AdoJobStore.JobStoreTX.GetNonManagedTXConnection">
             <summary>
-            For <see cref="T:Quartz.Impl.AdoJobStore.JobStoreTX" />, the non-managed TX connection is just 
+            For <see cref="T:Quartz.Impl.AdoJobStore.JobStoreTX" />, the non-managed TX connection is just
             the normal connection because it is not CMT.
-            </summary> 
+            </summary>
             <seealso cref="M:Quartz.Impl.AdoJobStore.JobStoreSupport.GetConnection" />
         </member>
         <member name="M:Quartz.Impl.AdoJobStore.JobStoreTX.ExecuteInLock``1(System.String,System.Func{Quartz.Impl.AdoJobStore.ConnectionAndTransactionHolder,System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)">
             <summary>
             Execute the given callback having optionally acquired the given lock.
             For <see cref="T:Quartz.Impl.AdoJobStore.JobStoreTX" />, because it manages its own transactions
-            and only has the one datasource, this is the same behavior as 
+            and only has the one datasource, this is the same behavior as
             <see cref="M:Quartz.Impl.AdoJobStore.JobStoreSupport.ExecuteInNonManagedTXLock(System.String,System.Func{Quartz.Impl.AdoJobStore.ConnectionAndTransactionHolder,System.Threading.Tasks.Task},System.Threading.CancellationToken)" />.
             </summary>
             <param name="lockName">
-            The name of the lock to acquire, for example "TRIGGER_ACCESS". 
+            The name of the lock to acquire, for example "TRIGGER_ACCESS".
             If null, then no lock is acquired, but the lockCallback is still
             executed in a transaction.
             </param>
@@ -6913,6 +6947,11 @@
             <param name="colIndex">The column index for the BLOB.</param>
             <param name="cancellationToken">The cancellation instruction.</param>
             <returns>The deserialized object from the DataReader BLOB.</returns>
+        </member>
+        <member name="M:Quartz.Impl.AdoJobStore.StdAdoDelegate.ValidateSchema(Quartz.Impl.AdoJobStore.ConnectionAndTransactionHolder,System.Threading.CancellationToken)">
+            <summary>
+            Validates the persistence schema and returns the number of validates objects.
+            </summary>
         </member>
         <member name="M:Quartz.Impl.AdoJobStore.StdAdoDelegate.UpdateJobDetail(Quartz.Impl.AdoJobStore.ConnectionAndTransactionHolder,Quartz.IJobDetail,System.Threading.CancellationToken)">
             <inheritdoc />
@@ -8304,6 +8343,15 @@
             <seealso cref="T:Quartz.DisallowConcurrentExecutionAttribute"/>
             <seealso cref="T:Quartz.PersistJobDataAfterExecutionAttribute"/>
         </member>
+        <member name="M:Quartz.Impl.JobTypeInformation.GetOrCreate(System.Type)">
+            <summary>
+            Return information about JobType as an instance
+            </summary>
+            <param name="jobType">The type for which information will be searched</param>
+            <returns>
+            An <see cref="T:Quartz.Impl.JobTypeInformation"/> object that describe specified type 
+            </returns>
+        </member>
         <member name="T:Quartz.Impl.JobDetailImpl">
             <summary>
             Conveys the detail properties of a given job instance.
@@ -8373,6 +8421,21 @@
             <exception cref="T:System.ArgumentException">
             ArgumentException if name is null or empty, or the group is an empty string.
             </exception>
+        </member>
+        <member name="M:Quartz.Impl.JobDetailImpl.#ctor(Quartz.JobKey,System.Type,System.String,System.Boolean,System.Boolean,Quartz.JobDataMap,System.Nullable{System.Boolean},System.Nullable{System.Boolean})">
+            <summary>
+            Create a <see cref="T:Quartz.IJobDetail" /> with the given name, and group, and
+            the given settings of all the other properties.
+            </summary>
+            <param name="key">The key of the job.</param>
+            <param name="jobType">Type of the job.</param>
+            <param name="description">The description given to the <see cref="T:Quartz.IJob" /> instance by its creator.</param>
+            <param name="isDurable">if set to <c>true</c>, job will be durable.</param>
+            <param name="requestsRecovery">if set to <c>true</c>, job will request recovery.</param>
+            <param name="jobDataMap">The data that is associated with the <see cref="T:Quartz.IJob" />.</param>
+            <param name="disallowConcurrentExecution">Indicates whether or not concurrent exection of the job should be disallowed.</param>
+            <param name="persistJobDataAfterExecution">Indicates whether or not job data should re-stored when execution of the job completes.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="key"/> is <see langword="null"/>.</exception>
         </member>
         <member name="P:Quartz.Impl.JobDetailImpl.Name">
             <summary>
@@ -8452,13 +8515,22 @@
         </member>
         <member name="P:Quartz.Impl.JobDetailImpl.PersistJobDataAfterExecution">
             <summary>
-            Whether the associated Job class carries the <see cref="T:Quartz.PersistJobDataAfterExecutionAttribute" /> attribute.
+            Gets a value indicating whether job data should be re-stored when execution of the job completes.
             </summary>
+            <value>
+            <see langword="true"/> if job data should be re-stored when execution of the job completes; otherwise,
+            <see langword="false"/>.
+            </value>
+            <seealso cref="T:Quartz.PersistJobDataAfterExecutionAttribute"/>
         </member>
         <member name="P:Quartz.Impl.JobDetailImpl.ConcurrentExecutionDisallowed">
             <summary>
-            Whether the associated Job class carries the <see cref="T:Quartz.DisallowConcurrentExecutionAttribute" /> attribute.
+            Gets a value indicating whether concurrent execution of the job should be disallowed.
             </summary>
+            <value>
+            <see langword="true"/> if concurrent execution is disallowed; otherwise, <see langword="false"/>.
+            </value>
+            <seealso cref="T:Quartz.DisallowConcurrentExecutionAttribute"/>
         </member>
         <member name="M:Quartz.Impl.JobDetailImpl.Validate">
             <summary>
@@ -8513,16 +8585,6 @@
             <returns>
             A hash code for the current <see cref="T:System.Object"/>.
             </returns>
-        </member>
-        <member name="M:Quartz.Impl.JobDetailImpl.GetJobTypeInformation(System.Type)">
-            <summary>
-            Return information about JobType as an instance
-            </summary>
-            <param name="jobType">The type for which information will be searched</param>
-            <returns>
-            An <see cref="T:Quartz.Impl.JobTypeInformation"/> object that describe specified type 
-            </returns>
-            <seealso cref="F:Quartz.Impl.JobDetailImpl.jobType"/>
         </member>
         <member name="T:Quartz.Impl.JobExecutionContextImpl">
              <summary>
@@ -9192,6 +9254,11 @@
             Calls the equivalent method on the 'proxied' <see cref="T:Quartz.Core.QuartzScheduler" />.
             </summary>
         </member>
+        <member name="M:Quartz.Impl.RemoteScheduler.ResetTriggerFromErrorState(Quartz.TriggerKey,System.Threading.CancellationToken)">
+            <summary>
+            Calls the equivalent method on the 'proxied' <see cref="T:Quartz.Core.QuartzScheduler" />.
+            </summary>
+        </member>
         <member name="M:Quartz.Impl.RemoteScheduler.AddCalendar(System.String,Quartz.ICalendar,System.Boolean,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Calls the equivalent method on the 'proxied' <see cref="T:Quartz.Core.QuartzScheduler" />.
@@ -9558,6 +9625,11 @@
             </summary>
         </member>
         <member name="M:Quartz.Impl.StdScheduler.GetTriggerState(Quartz.TriggerKey,System.Threading.CancellationToken)">
+            <summary>
+            Calls the equivalent method on the 'proxied' <see cref="T:Quartz.Core.QuartzScheduler" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.Impl.StdScheduler.ResetTriggerFromErrorState(Quartz.TriggerKey,System.Threading.CancellationToken)">
             <summary>
             Calls the equivalent method on the 'proxied' <see cref="T:Quartz.Core.QuartzScheduler" />.
             </summary>
@@ -12167,6 +12239,23 @@
             <seealso cref="F:Quartz.TriggerState.Error" />
             <seealso cref="F:Quartz.TriggerState.None" />
         </member>
+        <member name="M:Quartz.IScheduler.ResetTriggerFromErrorState(Quartz.TriggerKey,System.Threading.CancellationToken)">
+            <summary>
+            Reset the current state of the identified <see cref="T:Quartz.ITrigger" /> from <see cref="F:Quartz.TriggerState.Error" />
+            to <see cref="F:Quartz.TriggerState.Normal" /> or <see cref="F:Quartz.TriggerState.Paused" /> as appropriate.
+            </summary>
+            <remarks>
+            <para>
+            Only affects triggers that are in <see cref="F:Quartz.TriggerState.Error" /> state - if identified trigger is not
+            in that state then the result is a no-op.
+            </para>
+            <para>
+            The result will be the trigger returning to the normal, waiting to be fired state, unless the trigger's
+            group has been paused, in which case it will go into the <see cref="F:Quartz.TriggerState.Paused" /> state.
+            </para>
+            </remarks>
+            <seealso cref="T:Quartz.TriggerState"/>
+        </member>
         <member name="M:Quartz.IScheduler.AddCalendar(System.String,Quartz.ICalendar,System.Boolean,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Add (register) the given <see cref="T:Quartz.ICalendar" /> to the Scheduler.
@@ -12817,6 +12906,34 @@
             </summary>
             <returns>the defined JobDetail.</returns>
         </member>
+        <member name="M:Quartz.JobBuilder.DisallowConcurrentExecution(System.Boolean)">
+            <summary>
+            Instructs the <see cref="T:Quartz.IScheduler" /> whether or not concurrent execution of the job should be disallowed.
+            </summary>
+            <param name="concurrentExecutionDisallowed">Indicates whether or not concurrent execution of the job should be disallowed.</param>
+            <returns>
+            The updated <see cref="T:Quartz.JobBuilder"/>.
+            </returns>
+            <remarks>
+            If not explicitly set, concurrent execution of a job is only disallowed it either the <see cref="P:Quartz.IJobDetail.JobType"/> itself,
+            one of its ancestors or one of the interfaces that it implements, is annotated with <see cref="T:Quartz.DisallowConcurrentExecutionAttribute"/>.
+            </remarks>
+            <seealso cref="T:Quartz.DisallowConcurrentExecutionAttribute"/>
+        </member>
+        <member name="M:Quartz.JobBuilder.PersistJobDataAfterExecution(System.Boolean)">
+            <summary>
+            Instructs the <see cref="T:Quartz.IScheduler" /> whether or not job data should be re-stored when execution of the job completes.
+            </summary>
+            <param name="persistJobDataAfterExecution">Indicates whether or not job data should be re-stored when execution of the job completes.</param>
+            <returns>
+            The updated <see cref="T:Quartz.JobBuilder"/>.
+            </returns>
+            <remarks>
+            If not explicitly set, job data is only re-stored it either the <see cref="P:Quartz.IJobDetail.JobType"/> itself, one of
+            its ancestors or one of the interfaces that it implements, is annotated with <see cref="T:Quartz.PersistJobDataAfterExecutionAttribute"/>.
+            </remarks>
+            <seealso cref="T:Quartz.PersistJobDataAfterExecutionAttribute"/>
+        </member>
         <member name="M:Quartz.JobBuilder.WithIdentity(System.String)">
             <summary>
             Use a <see cref="T:Quartz.JobKey" /> with the given name and default group to
@@ -13211,6 +13328,101 @@
             Retrieve the identified <see cref="T:System.Guid" /> value from the <see cref="T:Quartz.JobDataMap" />.
             </summary>
         </member>
+        <member name="M:Quartz.JobDataMap.TryGetIntValueFromString(System.String,System.Int32@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Int32" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetBooleanValueFromString(System.String,System.Boolean@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Boolean" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetDoubleValueFromString(System.String,System.Double@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Double" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetFloatValueFromString(System.String,System.Single@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Single" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetLongValueFromString(System.String,System.Int64@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Int64" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetDateTimeValueFromString(System.String,System.DateTime@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.DateTime" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetDateTimeOffsetValueFromString(System.String,System.DateTimeOffset@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.DateTimeOffset" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetTimeSpanValueFromString(System.String,System.TimeSpan@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.TimeSpan" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetGuidValueFromString(System.String,System.Guid@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Guid" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetIntValue(System.String,System.Int32@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Int32" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetBooleanValue(System.String,System.Boolean@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Boolean" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetDoubleValue(System.String,System.Double@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Double" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetFloatValue(System.String,System.Single@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Single" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetLongValue(System.String,System.Int64@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Int64" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetDateTimeValue(System.String,System.DateTime@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.DateTime" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetDateTimeOffsetValue(System.String,System.DateTimeOffset@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.DateTimeOffset" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetTimeSpanValue(System.String,System.TimeSpan@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.TimeSpan" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetGuidValue(System.String,System.Guid@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Guid" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.JobDataMap.TryGetCharFromString(System.String,System.Char@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Char" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
         <member name="T:Quartz.JobExecutionException">
             <summary>
             An exception that can be thrown by a <see cref="T:Quartz.IJob" />
@@ -13598,6 +13810,268 @@
             Get the name of the <see cref="T:Quartz.ITriggerListener"/>.
             </summary>
             <value></value>
+        </member>
+        <member name="P:Quartz.Logging.IJobDiagnosticData.Trigger">
+            <summary>
+            Get a handle to the <see cref="T:Quartz.ITrigger" /> instance that fired the
+            <see cref="T:Quartz.IJob" />.
+            </summary>
+        </member>
+        <member name="P:Quartz.Logging.IJobDiagnosticData.Recovering">
+            <summary>
+            If the <see cref="T:Quartz.IJob" /> is being re-executed because of a 'recovery'
+            situation, this method will return <see langword="true" />.
+            </summary>
+        </member>
+        <member name="P:Quartz.Logging.IJobDiagnosticData.RecoveringTriggerKey">
+            <summary>
+            Returns the <see cref="T:Quartz.TriggerKey" /> of the originally scheduled and now recovering job.
+            </summary>
+            <remarks>
+            When recovering a previously failed job execution this property returns the identity
+            of the originally firing trigger. This recovering job will have been scheduled for
+            the same firing time as the original job, and so is available via the
+            <see cref="P:Quartz.Logging.IJobDiagnosticData.ScheduledFireTimeUtc" /> property. The original firing time of the job can be
+            accessed via the <see cref="F:Quartz.SchedulerConstants.FailedJobOriginalTriggerFiretime" />
+            element of this job's <see cref="T:Quartz.JobDataMap" />.
+            </remarks>
+        </member>
+        <member name="P:Quartz.Logging.IJobDiagnosticData.RefireCount">
+            <summary>
+            Gets the refire count.
+            </summary>
+            <value>The refire count.</value>
+        </member>
+        <member name="P:Quartz.Logging.IJobDiagnosticData.MergedJobDataMap">
+            <summary>
+            Get the convenience <see cref="T:Quartz.JobDataMap" /> of this execution context.
+            </summary>
+            <remarks>
+            <para>
+            The <see cref="T:Quartz.JobDataMap" /> found on this object serves as a convenience -
+            it is a merge of the <see cref="T:Quartz.JobDataMap" /> found on the
+            <see cref="P:Quartz.Logging.IJobDiagnosticData.JobDetail" /> and the one found on the <see cref="T:Quartz.ITrigger" />, with
+            the value in the latter overriding any same-named values in the former.
+            <i>It is thus considered a 'best practice' that the Execute code of a Job
+            retrieve data from the JobDataMap found on this object.</i>
+            </para>
+            <para>
+            NOTE: Do not expect value 'set' into this JobDataMap to somehow be
+            set back onto a job's own JobDataMap.
+            </para>
+            <para>
+            Attempts to change the contents of this map typically result in an
+            illegal state.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Quartz.Logging.IJobDiagnosticData.JobDetail">
+            <summary>
+            Get the <see cref="P:Quartz.Logging.IJobDiagnosticData.JobDetail" /> associated with the <see cref="T:Quartz.IJob" />.
+            </summary>
+        </member>
+        <member name="P:Quartz.Logging.IJobDiagnosticData.FireTimeUtc">
+            <summary>
+            The actual time the trigger fired. For instance the scheduled time may
+            have been 10:00:00 but the actual fire time may have been 10:00:03 if
+            the scheduler was too busy.
+            </summary>
+            <returns> Returns the fireTimeUtc.</returns>
+            <seealso cref="P:Quartz.Logging.IJobDiagnosticData.ScheduledFireTimeUtc" />
+        </member>
+        <member name="P:Quartz.Logging.IJobDiagnosticData.ScheduledFireTimeUtc">
+            <summary>
+            The scheduled time the trigger fired for. For instance the scheduled
+            time may have been 10:00:00 but the actual fire time may have been
+            10:00:03 if the scheduler was too busy.
+            </summary>
+            <returns> Returns the scheduledFireTimeUtc.</returns>
+            <seealso cref="P:Quartz.Logging.IJobDiagnosticData.FireTimeUtc" />
+        </member>
+        <member name="P:Quartz.Logging.IJobDiagnosticData.PreviousFireTimeUtc">
+            <summary>
+            Gets the previous fire time.
+            </summary>
+            <value>The previous fire time.</value>
+        </member>
+        <member name="P:Quartz.Logging.IJobDiagnosticData.NextFireTimeUtc">
+            <summary>
+            Gets the next fire time.
+            </summary>
+            <value>The next fire time.</value>
+        </member>
+        <member name="P:Quartz.Logging.IJobDiagnosticData.FireInstanceId">
+            <summary>
+            Get the unique Id that identifies this particular firing instance of the
+            trigger that triggered this job execution.  It is unique to this
+            JobExecutionContext instance as well.
+            </summary>
+             <returns>the unique fire instance id</returns>
+            <seealso cref="M:Quartz.IScheduler.Interrupt(System.String,System.Threading.CancellationToken)" />
+        </member>
+        <member name="P:Quartz.Logging.IJobDiagnosticData.Result">
+             <summary>
+             Returns the result (if any) that the <see cref="T:Quartz.IJob" /> set before its
+             execution completed (the type of object set as the result is entirely up
+             to the particular job).
+             </summary>
+             <remarks>
+             <para>
+             The result itself is meaningless to Quartz, but may be informative
+             to <see cref="T:Quartz.IJobListener" />s or
+             <see cref="T:Quartz.ITriggerListener" />s that are watching the job's
+             execution.
+             </para>
+            
+             Set the result (if any) of the <see cref="T:Quartz.IJob" />'s execution (the type of
+             object set as the result is entirely up to the particular job).
+            
+             <para>
+             The result itself is meaningless to Quartz, but may be informative
+             to <see cref="T:Quartz.IJobListener" />s or
+             <see cref="T:Quartz.ITriggerListener" />s that are watching the job's
+             execution.
+             </para>
+             </remarks>
+        </member>
+        <member name="P:Quartz.Logging.IJobDiagnosticData.JobRunTime">
+            <summary>
+            The amount of time the job ran for.  The returned
+            value will be <see cref="F:System.TimeSpan.MinValue" /> until the job has actually completed (or thrown an
+            exception), and is therefore generally only useful to
+            <see cref="T:Quartz.IJobListener" />s and <see cref="T:Quartz.ITriggerListener" />s.
+            </summary>
+        </member>
+        <member name="P:Quartz.Logging.JobDiagnosticData.Trigger">
+            <summary>
+            Get a handle to the <see cref="T:Quartz.ITrigger" /> instance that fired the
+            <see cref="T:Quartz.IJob" />.
+            </summary>
+        </member>
+        <member name="P:Quartz.Logging.JobDiagnosticData.Recovering">
+            <summary>
+            If the <see cref="T:Quartz.IJob" /> is being re-executed because of a 'recovery'
+            situation, this method will return <see langword="true" />.
+            </summary>
+        </member>
+        <member name="P:Quartz.Logging.JobDiagnosticData.RecoveringTriggerKey">
+            <summary>
+            Returns the <see cref="T:Quartz.TriggerKey" /> of the originally scheduled and now recovering job.
+            </summary>
+            <remarks>
+            When recovering a previously failed job execution this property returns the identity
+            of the originally firing trigger. This recovering job will have been scheduled for
+            the same firing time as the original job, and so is available via the
+            <see cref="P:Quartz.Logging.JobDiagnosticData.ScheduledFireTimeUtc" /> property. The original firing time of the job can be
+            accessed via the <see cref="F:Quartz.SchedulerConstants.FailedJobOriginalTriggerFiretime" />
+            element of this job's <see cref="T:Quartz.JobDataMap" />.
+            </remarks>
+        </member>
+        <member name="P:Quartz.Logging.JobDiagnosticData.RefireCount">
+            <summary>
+            Gets the refire count.
+            </summary>
+            <value>The refire count.</value>
+        </member>
+        <member name="P:Quartz.Logging.JobDiagnosticData.MergedJobDataMap">
+            <summary>
+            Get the convenience <see cref="T:Quartz.JobDataMap" /> of this execution context.
+            </summary>
+            <remarks>
+            <para>
+            The <see cref="T:Quartz.JobDataMap" /> found on this object serves as a convenience -
+            it is a merge of the <see cref="T:Quartz.JobDataMap" /> found on the
+            <see cref="P:Quartz.Logging.JobDiagnosticData.JobDetail" /> and the one found on the <see cref="T:Quartz.ITrigger" />, with
+            the value in the latter overriding any same-named values in the former.
+            <i>It is thus considered a 'best practice' that the Execute code of a Job
+            retrieve data from the JobDataMap found on this object.</i>
+            </para>
+            <para>
+            NOTE: Do not expect value 'set' into this JobDataMap to somehow be
+            set back onto a job's own JobDataMap.
+            </para>
+            <para>
+            Attempts to change the contents of this map typically result in an
+            illegal state.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Quartz.Logging.JobDiagnosticData.JobDetail">
+            <summary>
+            Get the <see cref="P:Quartz.Logging.JobDiagnosticData.JobDetail" /> associated with the <see cref="T:Quartz.IJob" />.
+            </summary>
+        </member>
+        <member name="P:Quartz.Logging.JobDiagnosticData.FireTimeUtc">
+            <summary>
+            The actual time the trigger fired. For instance the scheduled time may
+            have been 10:00:00 but the actual fire time may have been 10:00:03 if
+            the scheduler was too busy.
+            </summary>
+            <returns> Returns the fireTimeUtc.</returns>
+            <seealso cref="P:Quartz.Logging.JobDiagnosticData.ScheduledFireTimeUtc" />
+        </member>
+        <member name="P:Quartz.Logging.JobDiagnosticData.ScheduledFireTimeUtc">
+            <summary>
+            The scheduled time the trigger fired for. For instance the scheduled
+            time may have been 10:00:00 but the actual fire time may have been
+            10:00:03 if the scheduler was too busy.
+            </summary>
+            <returns> Returns the scheduledFireTimeUtc.</returns>
+            <seealso cref="P:Quartz.Logging.JobDiagnosticData.FireTimeUtc" />
+        </member>
+        <member name="P:Quartz.Logging.JobDiagnosticData.PreviousFireTimeUtc">
+            <summary>
+            Gets the previous fire time.
+            </summary>
+            <value>The previous fire time.</value>
+        </member>
+        <member name="P:Quartz.Logging.JobDiagnosticData.NextFireTimeUtc">
+            <summary>
+            Gets the next fire time.
+            </summary>
+            <value>The next fire time.</value>
+        </member>
+        <member name="P:Quartz.Logging.JobDiagnosticData.FireInstanceId">
+            <summary>
+            Get the unique Id that identifies this particular firing instance of the
+            trigger that triggered this job execution.  It is unique to this
+            JobExecutionContext instance as well.
+            </summary>
+             <returns>the unique fire instance id</returns>
+            <seealso cref="M:Quartz.IScheduler.Interrupt(System.String,System.Threading.CancellationToken)" />
+        </member>
+        <member name="P:Quartz.Logging.JobDiagnosticData.Result">
+             <summary>
+             Returns the result (if any) that the <see cref="T:Quartz.IJob" /> set before its
+             execution completed (the type of object set as the result is entirely up
+             to the particular job).
+             </summary>
+             <remarks>
+             <para>
+             The result itself is meaningless to Quartz, but may be informative
+             to <see cref="T:Quartz.IJobListener" />s or
+             <see cref="T:Quartz.ITriggerListener" />s that are watching the job's
+             execution.
+             </para>
+            
+             Set the result (if any) of the <see cref="T:Quartz.IJob" />'s execution (the type of
+             object set as the result is entirely up to the particular job).
+            
+             <para>
+             The result itself is meaningless to Quartz, but may be informative
+             to <see cref="T:Quartz.IJobListener" />s or
+             <see cref="T:Quartz.ITriggerListener" />s that are watching the job's
+             execution.
+             </para>
+             </remarks>
+        </member>
+        <member name="P:Quartz.Logging.JobDiagnosticData.JobRunTime">
+            <summary>
+            The amount of time the job ran for.  The returned
+            value will be <see cref="F:System.TimeSpan.MinValue" /> until the job has actually completed (or thrown an
+            exception), and is therefore generally only useful to
+            <see cref="T:Quartz.IJobListener" />s and <see cref="T:Quartz.ITriggerListener" />s.
+            </summary>
         </member>
         <member name="M:Quartz.Logging.LogContext.SetCurrentLogProvider(Microsoft.Extensions.Logging.ILoggerFactory)">
             <summary>
@@ -14633,6 +15107,11 @@
             This may be useful (for performance’s sake) in situations where the scheduler has very large numbers of triggers that need to be fired at or near the same time.
             </summary>
         </member>
+        <member name="P:Quartz.SchedulerBuilder.CheckConfiguration">
+            <summary>
+            Whether Quartz should try to validate provided configuration keys. Validation is done by default and can help with typos in configuration keys.
+            </summary>
+        </member>
         <member name="M:Quartz.SchedulerBuilder.WithInterruptJobsOnShutdown(System.Boolean)">
             <inheritdoc cref="P:Quartz.SchedulerBuilder.InterruptJobsOnShutdown"/>
         </member>
@@ -14665,9 +15144,17 @@
             Set whether string-only properties will be handled in JobDataMaps.
             </summary>
         </member>
+        <member name="P:Quartz.SchedulerBuilder.PersistentStoreOptions.PerformSchemaValidation">
+            <summary>
+            Set whether database schema validated will be tried during scheduler initialization.
+            </summary>
+            <remarks>
+            Optional feature and all providers do no support it.
+            </remarks>
+        </member>
         <member name="P:Quartz.SchedulerBuilder.PersistentStoreOptions.RetryInterval">
             <summary>
-            Gets or sets the database retry interval.
+            Sets the database retry interval.
             </summary>
             <remarks>
             Defaults to 15 seconds.
@@ -14678,12 +15165,13 @@
             Make this instance is part of a cluster.
             </summary>
         </member>
-        <member name="M:Quartz.SchedulerBuilder.PersistentStoreOptions.UseGenericDatabase(System.String,System.Action{Quartz.SchedulerBuilder.AdoProviderOptions})">
+        <member name="M:Quartz.SchedulerBuilder.PersistentStoreOptions.UseGenericDatabase(System.String,System.Action{Quartz.SchedulerBuilder.AdoProviderOptions},System.String)">
             <summary>
             Configures persistence to use generic <see cref="T:Quartz.Impl.AdoJobStore.StdAdoDelegate" />.
             </summary>
             <param name="provider">Valid provider name to configure driver details.</param>
             <param name="configurer">Callback to refine configuration.</param>
+            <param name="dataSourceName">Name of the database. Defaults to '<see cref="F:Quartz.SchedulerBuilder.AdoProviderOptions.DefaultDataSourceName"/>'.</param>
             <returns></returns>
         </member>
         <member name="M:Quartz.SchedulerBuilder.PersistentStoreOptions.UseBinarySerializer">
@@ -14695,6 +15183,15 @@
             <summary>
             Use custom serializer.
             </summary>
+        </member>
+        <member name="M:Quartz.SchedulerBuilder.PersistentStoreOptions.UseGenericDatabase``1(System.String,System.Action{Quartz.SchedulerBuilder.AdoProviderOptions},System.String)">
+            <summary>
+            Configures persistence to use custom ADO provider.
+            </summary>
+            <typeparam name="TAdoDelegate">Type of the <see cref="T:Quartz.Impl.AdoJobStore.StdAdoDelegate"/> inheritor.</typeparam>
+            <param name="provider">Valid provider name to configure driver details.</param>
+            <param name="configurer">Callback to refine configuration.</param>
+            <param name="dataSourceName">Name of the database. Defaults to '<see cref="F:Quartz.SchedulerBuilder.AdoProviderOptions.DefaultDataSourceName"/>'.</param>
         </member>
         <member name="P:Quartz.SchedulerBuilder.ClusterOptions.CheckinInterval">
             <summary>
@@ -14747,7 +15244,7 @@
             Configures the scheduler to use System.Data.Sqlite data source provider.
             </summary>
         </member>
-        <member name="M:Quartz.AdoProviderExtensions.UseSQLite(Quartz.SchedulerBuilder.PersistentStoreOptions,System.Action{Quartz.SchedulerBuilder.AdoProviderOptions})">
+        <member name="M:Quartz.AdoProviderExtensions.UseSQLite(Quartz.SchedulerBuilder.PersistentStoreOptions,System.Action{Quartz.SchedulerBuilder.AdoProviderOptions},System.String)">
             <summary>
             Configures the scheduler to use System.Data.Sqlite data source provider.
             </summary>
@@ -14757,7 +15254,7 @@
             Configures the scheduler to use Microsoft.Data.Sqlite data source provider.
             </summary>
         </member>
-        <member name="M:Quartz.AdoProviderExtensions.UseMicrosoftSQLite(Quartz.SchedulerBuilder.PersistentStoreOptions,System.Action{Quartz.SchedulerBuilder.AdoProviderOptions})">
+        <member name="M:Quartz.AdoProviderExtensions.UseMicrosoftSQLite(Quartz.SchedulerBuilder.PersistentStoreOptions,System.Action{Quartz.SchedulerBuilder.AdoProviderOptions},System.String)">
             <summary>
             Configures the scheduler to use System.Data.Sqlite data source provider.
             </summary>
@@ -16992,6 +17489,23 @@
             </summary>
             <seealso cref="T:Quartz.TriggerState" />
         </member>
+        <member name="M:Quartz.Spi.IJobStore.ResetTriggerFromErrorState(Quartz.TriggerKey,System.Threading.CancellationToken)">
+            <summary>
+            Reset the current state of the identified <see cref="T:Quartz.ITrigger" /> from <see cref="F:Quartz.TriggerState.Error" />
+            to <see cref="F:Quartz.TriggerState.Normal" /> or <see cref="F:Quartz.TriggerState.Paused" /> as appropriate.
+            </summary>
+            <remarks>
+            <para>
+            Only affects triggers that are in <see cref="F:Quartz.TriggerState.Error" /> state - if identified trigger is not
+            in that state then the result is a no-op.
+            </para>
+            <para>
+            The result will be the trigger returning to the normal, waiting to be fired state, unless the trigger's
+            group has been paused, in which case it will go into the <see cref="F:Quartz.TriggerState.Paused" /> state.
+            </para>
+            </remarks>
+            <seealso cref="T:Quartz.TriggerState"/>
+        </member>
         <member name="M:Quartz.Spi.IJobStore.PauseTrigger(Quartz.TriggerKey,System.Threading.CancellationToken)">
             <summary>
             Pause the <see cref="T:Quartz.ITrigger" /> with the given key.
@@ -19148,19 +19662,6 @@
         <member name="M:Quartz.Util.QueuedTaskScheduler.Dispose">
             <summary>Initiates shutdown of the scheduler.</summary>
         </member>
-        <member name="M:Quartz.Util.SortedSetExtensions.FirstOrDefault``1(System.Collections.Generic.SortedSet{``0})">
-            <summary>
-            Returns the first element of the specified <see cref="T:System.Collections.Generic.SortedSet`1"/>, or a default
-            value if no element is found.
-            </summary>
-            <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
-            <param name="source">The <see cref="T:System.Collections.Generic.SortedSet`1"/> to return the first element of.</param>
-            <returns>
-            The default value for <typeparamref name="TSource"/> if <paramref name="source"/> is empty;
-            otherwise, the first element in <paramref name="source"/>.
-            </returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
-        </member>
         <member name="T:Quartz.Util.StringExtensions">
             <summary>
             Extension methods for <see cref="T:System.String" />.
@@ -19345,6 +19846,66 @@
         <member name="M:Quartz.Util.StringKeyDirtyFlagMap.GetNullableGuid(System.String)">
             <summary>
             Retrieve the identified <see cref="T:System.Guid" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.Util.StringKeyDirtyFlagMap.TryGetInt(System.String,System.Int32@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Int32" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.Util.StringKeyDirtyFlagMap.TryGetBoolean(System.String,System.Boolean@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Boolean" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.Util.StringKeyDirtyFlagMap.TryGetDouble(System.String,System.Double@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Double" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.Util.StringKeyDirtyFlagMap.TryGetFloat(System.String,System.Single@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Single" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.Util.StringKeyDirtyFlagMap.TryGetLong(System.String,System.Int64@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Int64" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.Util.StringKeyDirtyFlagMap.TryGetDateTime(System.String,System.DateTime@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.DateTime" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.Util.StringKeyDirtyFlagMap.TryGetDateTimeOffset(System.String,System.DateTimeOffset@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.DateTimeOffset" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.Util.StringKeyDirtyFlagMap.TryGetTimeSpan(System.String,System.TimeSpan@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.TimeSpan" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.Util.StringKeyDirtyFlagMap.TryGetGuid(System.String,System.Guid@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Guid" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.Util.StringKeyDirtyFlagMap.TryGetNullableGuid(System.String,System.Nullable{System.Guid}@)">
+            <summary>
+            Try to retrieve the identified Nullable <see cref="T:System.Guid" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.Util.StringKeyDirtyFlagMap.TryGetString(System.String,System.String@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.String" /> value from the <see cref="T:Quartz.JobDataMap" />.
+            </summary>
+        </member>
+        <member name="M:Quartz.Util.StringKeyDirtyFlagMap.TryGetChar(System.String,System.Char@)">
+            <summary>
+            Try to retrieve the identified <see cref="T:System.Char" /> value from the <see cref="T:Quartz.JobDataMap" />.
             </summary>
         </member>
         <member name="M:Quartz.Util.TimeZoneUtil.ConvertTime(System.DateTimeOffset,System.TimeZoneInfo)">
@@ -19774,68 +20335,506 @@
             </summary>
         </member>
         <member name="T:System.Diagnostics.CodeAnalysis.AllowNullAttribute">
-            <summary>Specifies that null is allowed as an input even if the corresponding type disallows it.</summary>
+            <summary>
+            Specifies that null is allowed as an input even if the corresponding type disallows it.
+            </summary>
         </member>
         <member name="T:System.Diagnostics.CodeAnalysis.DisallowNullAttribute">
-            <summary>Specifies that null is disallowed as an input even if the corresponding type allows it.</summary>
+            <summary>
+            Specifies that null is disallowed as an input even if the corresponding type allows it.
+            </summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.DoesNotReturnAttribute">
+            <summary>
+            Applied to a method that will never return under any circumstance.
+            </summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute">
+            <summary>
+            Specifies that the method will not return if the associated Boolean parameter is passed the specified value.
+            </summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute.#ctor(System.Boolean)">
+            <summary>
+            Initializes the attribute with the specified parameter value.
+            </summary>
+            <param name="parameterValue">
+            The condition parameter value. Code after the method will be considered unreachable
+            by diagnostics if the argument to the associated parameter matches this value.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute.ParameterValue">
+            <summary>
+            Gets the condition parameter value.
+            </summary>
         </member>
         <member name="T:System.Diagnostics.CodeAnalysis.MaybeNullAttribute">
-            <summary>Specifies that an output may be null even if the corresponding type disallows it.</summary>
-        </member>
-        <member name="T:System.Diagnostics.CodeAnalysis.NotNullAttribute">
-            <summary>Specifies that an output will not be null even if the corresponding type allows it.</summary>
+            <summary>
+            Specifies that an output may be null even if the corresponding type disallows it.
+            </summary>
         </member>
         <member name="T:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute">
-            <summary>Specifies that when a method returns <see cref="P:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute.ReturnValue"/>, the parameter may be null even if the corresponding type disallows it.</summary>
+            <summary>
+            Specifies that when a method returns <see cref="P:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute.ReturnValue"/>, the parameter may be null even if the corresponding type disallows it.
+            </summary>
         </member>
         <member name="M:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute.#ctor(System.Boolean)">
-            <summary>Initializes the attribute with the specified return value condition.</summary>
-            <param name="returnValue">
-            The return value condition. If the method returns this value, the associated parameter may be null.
-            </param>
+            <summary>
+            Initializes the attribute with the specified return value condition.
+            </summary>
+            <param name="returnValue">The return value condition. If the method returns this value, the associated parameter may be null.</param>
         </member>
         <member name="P:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute.ReturnValue">
-            <summary>Gets the return value condition.</summary>
+            <summary>
+            Gets the return value condition.
+            </summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute">
+            <summary>
+            Specifies that the method or property will ensure that the listed field and property members have not-null values.
+            </summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute.#ctor(System.String)">
+            <summary>
+            Initializes the attribute with a field or property member.
+            </summary>
+            <param name="member">The field or property member that is promised to be not-null.</param>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute.#ctor(System.String[])">
+            <summary>
+            Initializes the attribute with the list of field and property members.
+            </summary>
+            <param name="members">The list of field and property members that are promised to be not-null.</param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute.Members">
+            <summary>
+            Gets field or property member names.
+            </summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute">
+            <summary>
+            Specifies that the method or property will ensure that the listed field and property
+            members have not-null values when returning with the specified return value condition.
+            </summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+            <summary>
+            Initializes the attribute with the specified return value condition and a field or property member.
+            </summary>
+            <param name="returnValue">The return value condition. If the method returns this value, the associated parameter will not be null.</param>
+            <param name="member">The field or property member that is promised to be not-null.</param>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String[])">
+            <summary>
+            Initializes the attribute with the specified return value condition and list of field and property members.
+            </summary>
+            <param name="returnValue">The return value condition. If the method returns this value, the associated parameter will not be null.</param>
+            <param name="members">The list of field and property members that are promised to be not-null.</param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.ReturnValue">
+            <summary>
+            Gets the return value condition.
+            </summary>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.Members">
+            <summary>
+            Gets field or property member names.
+            </summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.NotNullAttribute">
+            <summary>
+            Specifies that an output will not be null even if the corresponding type allows it.
+            Specifies that an input argument was not null when the call returns.
+            </summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute">
+            <summary>
+            Specifies that the output will be non-null if the named parameter is non-null.
+            </summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute.#ctor(System.String)">
+            <summary>
+            Initializes the attribute with the associated parameter name.
+            </summary>
+            <param name="parameterName">The associated parameter name. The output will be non-null if the argument to the parameter specified is non-null.</param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute.ParameterName">
+            <summary>
+            Gets the associated parameter name.
+            </summary>
         </member>
         <member name="T:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute">
-            <summary>Specifies that when a method returns <see cref="P:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.ReturnValue"/>, the parameter will not be null even if the corresponding type allows it.</summary>
+            <summary>
+            Specifies that when a method returns <see cref="P:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.ReturnValue"/>, the parameter will not be null even if the corresponding type allows it.
+            </summary>
         </member>
         <member name="M:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.#ctor(System.Boolean)">
-            <summary>Initializes the attribute with the specified return value condition.</summary>
-            <param name="returnValue">
-            The return value condition. If the method returns this value, the associated parameter will not be null.
-            </param>
+            <summary>
+            Initializes the attribute with the specified return value condition.
+            </summary>
+            <param name="returnValue">The return value condition. If the method returns this value, the associated parameter will not be null.</param>
         </member>
         <member name="P:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.ReturnValue">
             <summary>Gets the return value condition.</summary>
         </member>
-        <member name="T:System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute">
-            <summary>Specifies that the output will be non-null if the named parameter is non-null.</summary>
+        <member name="T:System.Diagnostics.CodeAnalysis.SetsRequiredMembersAttribute">
+            <summary>
+            Specifies that this constructor sets all required members for the current type,
+            and callers do not need to set any required members themselves.
+            </summary>
         </member>
-        <member name="M:System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute.#ctor(System.String)">
-            <summary>Initializes the attribute with the associated parameter name.</summary>
-            <param name="parameterName">
-            The associated parameter name.  The output will be non-null if the argument to the parameter specified is non-null.
-            </param>
+        <member name="T:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute">
+            <summary>
+            Specifies the syntax used in a string.
+            </summary>
         </member>
-        <member name="P:System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute.ParameterName">
-            <summary>Gets the associated parameter name.</summary>
+        <member name="M:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.#ctor(System.String)">
+            <summary>
+            Initializes the <see cref="T:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute"/> with the identifier of the syntax used.
+            </summary>
+            <param name="syntax">The syntax identifier.</param>
         </member>
-        <member name="T:System.Diagnostics.CodeAnalysis.DoesNotReturnAttribute">
-            <summary>Applied to a method that will never return under any circumstance.</summary>
+        <member name="M:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.#ctor(System.String,System.Object[])">
+            <summary>Initializes the <see cref="T:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute"/> with the identifier of the syntax used.</summary>
+            <param name="syntax">The syntax identifier.</param>
+            <param name="arguments">Optional arguments associated with the specific syntax employed.</param>
         </member>
-        <member name="T:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute">
-            <summary>Specifies that the method will not return if the associated Boolean parameter is passed the specified value.</summary>
+        <member name="P:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.Syntax">
+            <summary>Gets the identifier of the syntax used.</summary>
         </member>
-        <member name="M:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute.#ctor(System.Boolean)">
-            <summary>Initializes the attribute with the specified parameter value.</summary>
-            <param name="parameterValue">
-            The condition parameter value. Code after the method will be considered unreachable by diagnostics if the argument to
-            the associated parameter matches this value.
-            </param>
+        <member name="P:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.Arguments">
+            <summary>Optional arguments associated with the specific syntax employed.</summary>
         </member>
-        <member name="P:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute.ParameterValue">
-            <summary>Gets the condition parameter value.</summary>
+        <member name="F:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.CompositeFormat">
+            <summary>The syntax identifier for strings containing composite formats for string formatting.</summary>
+        </member>
+        <member name="F:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.DateOnlyFormat">
+            <summary>The syntax identifier for strings containing date format specifiers.</summary>
+        </member>
+        <member name="F:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.DateTimeFormat">
+            <summary>The syntax identifier for strings containing date and time format specifiers.</summary>
+        </member>
+        <member name="F:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.EnumFormat">
+            <summary>The syntax identifier for strings containing <see cref="T:System.Enum"/> format specifiers.</summary>
+        </member>
+        <member name="F:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.GuidFormat">
+            <summary>The syntax identifier for strings containing <see cref="T:System.Guid"/> format specifiers.</summary>
+        </member>
+        <member name="F:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.Json">
+            <summary>The syntax identifier for strings containing JavaScript Object Notation (JSON).</summary>
+        </member>
+        <member name="F:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.NumericFormat">
+            <summary>The syntax identifier for strings containing numeric format specifiers.</summary>
+        </member>
+        <member name="F:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.Regex">
+            <summary>The syntax identifier for strings containing regular expressions.</summary>
+        </member>
+        <member name="F:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.TimeOnlyFormat">
+            <summary>The syntax identifier for strings containing time format specifiers.</summary>
+        </member>
+        <member name="F:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.TimeSpanFormat">
+            <summary>The syntax identifier for strings containing <see cref="T:System.TimeSpan"/> format specifiers.</summary>
+        </member>
+        <member name="F:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.Uri">
+            <summary>The syntax identifier for strings containing URIs.</summary>
+        </member>
+        <member name="F:System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.Xml">
+            <summary>The syntax identifier for strings containing XML.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.UnscopedRefAttribute">
+            <summary>
+            Used to indicate a byref escapes and is not scoped.
+            </summary>
+            <remarks>
+            <para>
+            There are several cases where the C# compiler treats a <see langword="ref"/> as implicitly
+            <see langword="scoped"/> - where the compiler does not allow the <see langword="ref"/> to escape the method.
+            </para>
+            <para>
+            For example:
+            <list type="number">
+                <item><see langword="this"/> for <see langword="struct"/> instance methods.</item>
+                <item><see langword="ref"/> parameters that refer to <see langword="ref"/> <see langword="struct"/> types.</item>
+                <item><see langword="out"/> parameters.</item>
+            </list>
+            </para>
+            <para>
+            This attribute is used in those instances where the <see langword="ref"/> should be allowed to escape.
+            </para>
+            <para>
+            Applying this attribute, in any form, has impact on consumers of the applicable API. It is necessary for
+            API authors to understand the lifetime implications of applying this attribute and how it may impact their users.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:System.Index">
+            <summary>Represent a type can be used to index a collection either from the start or the end.</summary>
+            <remarks>
+            Index is used by the C# compiler to support the new index syntax
+            <code>
+            int[] someArray = new int[5] { 1, 2, 3, 4, 5 } ;
+            int lastElement = someArray[^1]; // lastElement = 5
+            </code>
+            </remarks>
+        </member>
+        <member name="M:System.Index.#ctor(System.Int32,System.Boolean)">
+            <summary>Construct an Index using a value and indicating if the index is from the start or from the end.</summary>
+            <param name="value">The index value. it has to be zero or positive number.</param>
+            <param name="fromEnd">Indicating if the index is from the start or from the end.</param>
+            <remarks>
+            If the Index constructed from the end, index value 1 means pointing at the last element and index value 0 means pointing at beyond last element.
+            </remarks>
+        </member>
+        <member name="P:System.Index.Start">
+            <summary>Create an Index pointing at first element.</summary>
+        </member>
+        <member name="P:System.Index.End">
+            <summary>Create an Index pointing at beyond last element.</summary>
+        </member>
+        <member name="M:System.Index.FromStart(System.Int32)">
+            <summary>Create an Index from the start at the position indicated by the value.</summary>
+            <param name="value">The index value from the start.</param>
+        </member>
+        <member name="M:System.Index.FromEnd(System.Int32)">
+            <summary>Create an Index from the end at the position indicated by the value.</summary>
+            <param name="value">The index value from the end.</param>
+        </member>
+        <member name="P:System.Index.Value">
+            <summary>Returns the index value.</summary>
+        </member>
+        <member name="P:System.Index.IsFromEnd">
+            <summary>Indicates whether the index is from the start or the end.</summary>
+        </member>
+        <member name="M:System.Index.GetOffset(System.Int32)">
+            <summary>Calculate the offset from the start using the giving collection length.</summary>
+            <param name="length">The length of the collection that the Index will be used with. length has to be a positive value</param>
+            <remarks>
+            For performance reason, we don't validate the input length parameter and the returned offset value against negative values.
+            we don't validate either the returned offset is greater than the input length.
+            It is expected Index will be used with collections which always have non negative length/count. If the returned offset is negative and
+            then used to index a collection will get out of range exception which will be same affect as the validation.
+            </remarks>
+        </member>
+        <member name="M:System.Index.Equals(System.Object)">
+            <summary>Indicates whether the current Index object is equal to another object of the same type.</summary>
+            <param name="value">An object to compare with this object</param>
+        </member>
+        <member name="M:System.Index.Equals(System.Index)">
+            <summary>Indicates whether the current Index object is equal to another Index object.</summary>
+            <param name="other">An object to compare with this object</param>
+        </member>
+        <member name="M:System.Index.GetHashCode">
+            <summary>Returns the hash code for this instance.</summary>
+        </member>
+        <member name="M:System.Index.op_Implicit(System.Int32)~System.Index">
+            <summary>Converts integer number to an Index.</summary>
+        </member>
+        <member name="M:System.Index.ToString">
+            <summary>Converts the value of the current Index object to its equivalent string representation.</summary>
+        </member>
+        <member name="T:System.Range">
+            <summary>Represent a range has start and end indexes.</summary>
+            <remarks>
+            Range is used by the C# compiler to support the range syntax.
+            <code>
+            int[] someArray = new int[5] { 1, 2, 3, 4, 5 };
+            int[] subArray1 = someArray[0..2]; // { 1, 2 }
+            int[] subArray2 = someArray[1..^0]; // { 2, 3, 4, 5 }
+            </code>
+            </remarks>
+        </member>
+        <member name="P:System.Range.Start">
+            <summary>Represent the inclusive start index of the Range.</summary>
+        </member>
+        <member name="P:System.Range.End">
+            <summary>Represent the exclusive end index of the Range.</summary>
+        </member>
+        <member name="M:System.Range.#ctor(System.Index,System.Index)">
+            <summary>Construct a Range object using the start and end indexes.</summary>
+            <param name="start">Represent the inclusive start index of the range.</param>
+            <param name="end">Represent the exclusive end index of the range.</param>
+        </member>
+        <member name="M:System.Range.Equals(System.Object)">
+            <summary>Indicates whether the current Range object is equal to another object of the same type.</summary>
+            <param name="value">An object to compare with this object</param>
+        </member>
+        <member name="M:System.Range.Equals(System.Range)">
+            <summary>Indicates whether the current Range object is equal to another Range object.</summary>
+            <param name="other">An object to compare with this object</param>
+        </member>
+        <member name="M:System.Range.GetHashCode">
+            <summary>Returns the hash code for this instance.</summary>
+        </member>
+        <member name="M:System.Range.ToString">
+            <summary>Converts the value of the current Range object to its equivalent string representation.</summary>
+        </member>
+        <member name="M:System.Range.StartAt(System.Index)">
+            <summary>Create a Range object starting from start index to the end of the collection.</summary>
+        </member>
+        <member name="M:System.Range.EndAt(System.Index)">
+            <summary>Create a Range object starting from first element in the collection to the end Index.</summary>
+        </member>
+        <member name="P:System.Range.All">
+            <summary>Create a Range object starting from first element to the end.</summary>
+        </member>
+        <member name="M:System.Range.GetOffsetAndLength(System.Int32)">
+            <summary>Calculate the start offset and length of range object using a collection length.</summary>
+            <param name="length">The length of the collection that the range will be used with. length has to be a positive value.</param>
+            <remarks>
+            For performance reason, we don't validate the input length parameter against negative values.
+            It is expected Range will be used with collections which always have non negative length/count.
+            We validate the range is inside the length scope though.
+            </remarks>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.AsyncMethodBuilderAttribute">
+            <summary>
+            Indicates the type of the async method builder that should be used by a language compiler to
+            build the attributed async method or to build the attributed type when used as the return type
+            of an async method.
+            </summary>
+        </member>
+        <member name="M:System.Runtime.CompilerServices.AsyncMethodBuilderAttribute.#ctor(System.Type)">
+            <summary>Initializes the <see cref="T:System.Runtime.CompilerServices.AsyncMethodBuilderAttribute"/>.</summary>
+            <param name="builderType">The <see cref="T:System.Type"/> of the associated builder.</param>
+        </member>
+        <member name="P:System.Runtime.CompilerServices.AsyncMethodBuilderAttribute.BuilderType">
+            <summary>Gets the <see cref="T:System.Type"/> of the associated builder.</summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.CallerArgumentExpressionAttribute">
+            <summary>
+            An attribute that allows parameters to receive the expression of other parameters.
+            </summary>
+        </member>
+        <member name="M:System.Runtime.CompilerServices.CallerArgumentExpressionAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Runtime.CompilerServices.CallerArgumentExpressionAttribute"/> class.
+            </summary>
+            <param name="parameterName">The condition parameter value.</param>
+        </member>
+        <member name="P:System.Runtime.CompilerServices.CallerArgumentExpressionAttribute.ParameterName">
+            <summary>
+            Gets the parameter name the expression is retrieved from.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.CompilerFeatureRequiredAttribute">
+            <summary>
+            Indicates that compiler support for a particular feature is required for the location where this attribute is applied.
+            </summary>
+        </member>
+        <member name="M:System.Runtime.CompilerServices.CompilerFeatureRequiredAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new instance of the <see cref="T:System.Runtime.CompilerServices.CompilerFeatureRequiredAttribute"/> type.
+            </summary>
+            <param name="featureName">The name of the feature to indicate.</param>
+        </member>
+        <member name="P:System.Runtime.CompilerServices.CompilerFeatureRequiredAttribute.FeatureName">
+            <summary>
+            The name of the compiler feature.
+            </summary>
+        </member>
+        <member name="P:System.Runtime.CompilerServices.CompilerFeatureRequiredAttribute.IsOptional">
+            <summary>
+            If true, the compiler can choose to allow access to the location where this attribute is applied if it does not understand <see cref="P:System.Runtime.CompilerServices.CompilerFeatureRequiredAttribute.FeatureName"/>.
+            </summary>
+        </member>
+        <member name="F:System.Runtime.CompilerServices.CompilerFeatureRequiredAttribute.RefStructs">
+            <summary>
+            The <see cref="P:System.Runtime.CompilerServices.CompilerFeatureRequiredAttribute.FeatureName"/> used for the ref structs C# feature.
+            </summary>
+        </member>
+        <member name="F:System.Runtime.CompilerServices.CompilerFeatureRequiredAttribute.RequiredMembers">
+            <summary>
+            The <see cref="P:System.Runtime.CompilerServices.CompilerFeatureRequiredAttribute.FeatureName"/> used for the required members C# feature.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute">
+            <summary>
+            Indicates which arguments to a method involving an interpolated string handler should be passed to that handler.
+            </summary>
+        </member>
+        <member name="M:System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute"/> class.
+            </summary>
+            <param name="argument">The name of the argument that should be passed to the handler.</param>
+            <remarks><see langword="null"/> may be used as the name of the receiver in an instance method.</remarks>
+        </member>
+        <member name="M:System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute.#ctor(System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute"/> class.
+            </summary>
+            <param name="arguments">The names of the arguments that should be passed to the handler.</param>
+            <remarks><see langword="null"/> may be used as the name of the receiver in an instance method.</remarks>
+        </member>
+        <member name="P:System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute.Arguments">
+            <summary>
+            Gets the names of the arguments that should be passed to the handler.
+            </summary>
+            <remarks><see langword="null"/> may be used as the name of the receiver in an instance method.</remarks>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.InterpolatedStringHandlerAttribute">
+            <summary>
+            Indicates the attributed type is to be used as an interpolated string handler.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.IsExternalInit">
+            <summary>
+            Reserved to be used by the compiler for tracking metadata.
+            This class should not be used by developers in source code.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.ModuleInitializerAttribute">
+             <summary>
+             Used to indicate to the compiler that a method should be called
+             in its containing module's initializer.
+             </summary>
+             <remarks>
+             When one or more valid methods
+             with this attribute are found in a compilation, the compiler will
+             emit a module initializer which calls each of the attributed methods.
+            
+             Certain requirements are imposed on any method targeted with this attribute:
+             - The method must be `static`.
+             - The method must be an ordinary member method, as opposed to a property accessor, constructor, local function, etc.
+             - The method must be parameterless.
+             - The method must return `void`.
+             - The method must not be generic or be contained in a generic type.
+             - The method's effective accessibility must be `internal` or `public`.
+            
+             The specification for module initializers in the .NET runtime can be found here:
+             https://github.com/dotnet/runtime/blob/main/docs/design/specs/Ecma-335-Augments.md#module-initializer
+             </remarks>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.RequiredMemberAttribute">
+            <summary>
+            Specifies that a type has required members or that a member is required.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.SkipLocalsInitAttribute">
+            <summary>
+            Used to indicate to the compiler that the <c>.locals init</c> flag should not be set in method headers.
+            </summary>
+        </member>
+        <member name="M:System.Runtime.Versioning.RequiresPreviewFeaturesAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Runtime.Versioning.RequiresPreviewFeaturesAttribute"/> class.
+            </summary>
+        </member>
+        <member name="M:System.Runtime.Versioning.RequiresPreviewFeaturesAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Runtime.Versioning.RequiresPreviewFeaturesAttribute"/> class with the specified message.
+            </summary>
+            <param name="message">An optional message associated with this attribute instance.</param>
+        </member>
+        <member name="P:System.Runtime.Versioning.RequiresPreviewFeaturesAttribute.Message">
+            <summary>
+            Returns the optional message associated with this attribute instance.
+            </summary>
+        </member>
+        <member name="P:System.Runtime.Versioning.RequiresPreviewFeaturesAttribute.Url">
+            <summary>
+            Returns the optional URL associated with this attribute instance.
+            </summary>
         </member>
     </members>
 </doc>

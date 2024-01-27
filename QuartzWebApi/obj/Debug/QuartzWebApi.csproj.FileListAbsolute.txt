@@ -148,3 +148,13 @@ C:\Kees\QuartzWebApi\QuartzWebApi\obj\Debug\QuartzWebApi.csproj.CoreCompileInput
 C:\Kees\QuartzWebApi\QuartzWebApi\obj\Debug\QuartzWebApi.csproj.CopyComplete
 C:\Kees\QuartzWebApi\QuartzWebApi\obj\Debug\QuartzWebApi.dll
 C:\Kees\QuartzWebApi\QuartzWebApi\obj\Debug\QuartzWebApi.pdb
+D:\Progsoft\_GitHub_\QuartzWebApi\QuartzWebApi\bin\roslyn\Microsoft.Managed.Core.CurrentVersions.targets
+D:\Progsoft\_GitHub_\QuartzWebApi\QuartzWebApi\bin\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Progsoft\_GitHub_\QuartzWebApi\QuartzWebApi\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\Progsoft\_GitHub_\QuartzWebApi\QuartzWebApi\bin\Newtonsoft.Json.Bson.dll
+D:\Progsoft\_GitHub_\QuartzWebApi\QuartzWebApi\bin\System.Threading.Tasks.Extensions.dll
+D:\Progsoft\_GitHub_\QuartzWebApi\QuartzWebApi\bin\Microsoft.Bcl.AsyncInterfaces.xml
+D:\Progsoft\_GitHub_\QuartzWebApi\QuartzWebApi\bin\Microsoft.Extensions.DependencyInjection.Abstractions.xml
+D:\Progsoft\_GitHub_\QuartzWebApi\QuartzWebApi\bin\Newtonsoft.Json.Bson.pdb
+D:\Progsoft\_GitHub_\QuartzWebApi\QuartzWebApi\bin\Newtonsoft.Json.Bson.xml
+D:\Progsoft\_GitHub_\QuartzWebApi\QuartzWebApi\bin\System.Threading.Tasks.Extensions.xml

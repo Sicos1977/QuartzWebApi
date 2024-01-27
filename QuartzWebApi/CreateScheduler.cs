@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Http;
 using Quartz;
 using Quartz.Impl;
+using Quartz.Impl.Calendar;
 
 namespace QuartzWebApi;
 
@@ -54,6 +55,11 @@ public static class CreateScheduler
             .WithDescription("TestTrigger")
             .StartAt(DateTime.Now)
             .Build();
+
+        var mc = new MonthlyCalendar();
+        mc.SetDayExcluded(1, true);
+        mc.SetDayExcluded(12, true);
+        Scheduler.AddCalendar("monthlyCalendar", mc, true, true);
 
         Scheduler.ScheduleJob(schedulerJob, schedulerTrigger);
     }

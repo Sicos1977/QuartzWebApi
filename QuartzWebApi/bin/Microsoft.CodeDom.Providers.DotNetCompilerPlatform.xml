@@ -26,6 +26,12 @@
             </summary>
             <param name="providerOptions"></param>
         </member>
+        <member name="M:Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider.#ctor(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Creates an instance using the given IDictionary to create IProviderOptions
+            </summary>
+            <param name="providerOptions"></param>
+        </member>
         <member name="M:Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider.CreateCompiler">
             <summary>
             Gets an instance of the .NET Compiler Platform C# code compiler.
@@ -145,6 +151,12 @@
         <member name="M:Microsoft.CodeDom.Providers.DotNetCompilerPlatform.VBCodeProvider.#ctor(Microsoft.CodeDom.Providers.DotNetCompilerPlatform.IProviderOptions)">
             <summary>
             Creates an instance using the given ICompilerSettings
+            </summary>
+            <param name="providerOptions"></param>
+        </member>
+        <member name="M:Microsoft.CodeDom.Providers.DotNetCompilerPlatform.VBCodeProvider.#ctor(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Creates an instance using the given IDictionary to create IProviderOptions
             </summary>
             <param name="providerOptions"></param>
         </member>

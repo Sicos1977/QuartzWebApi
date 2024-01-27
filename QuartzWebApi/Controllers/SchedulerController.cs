@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Spi;
 using QuartzWebApi.Data;
+using QuartzWebApi.Data.Calendars;
 using JobKey = QuartzWebApi.Data.JobKey;
 using SchedulerMetaData = QuartzWebApi.Data.SchedulerMetaData;
 using TriggerKey = QuartzWebApi.Data.TriggerKey;
@@ -19,7 +20,7 @@ public class SchedulerController : ApiController
     /// <summary>
     ///     When set then logging is written to this ILogger instance
     /// </summary>
-    private ILogger _logger;
+    private readonly ILogger _logger;
     #endregion
 
     #region IsJobGroupPaused
@@ -32,9 +33,9 @@ public class SchedulerController : ApiController
     [Route("scheduler/isjobgrouppaused/{groupName}")]
     public Task<bool> IsJobGroupPaused(string groupName)
     {
-        _logger.LogInformation($"Received request to check if the job group '{groupName}' is paused");
+        _logger?.LogInformation($"Received request to check if the job group '{groupName}' is paused");
         var result = CreateScheduler.Scheduler.IsJobGroupPaused(groupName);
-        _logger.LogInformation($"Returning '{result}'");
+        _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
     #endregion
@@ -49,9 +50,9 @@ public class SchedulerController : ApiController
     [Route("scheduler/istriggergrouppaused/{groupName}")]
     public Task<bool> IsTriggerGroupPaused(string groupName)
     {
-        _logger.LogInformation($"Received request to check if the trigger group '{groupName}' is paused");
+        _logger?.LogInformation($"Received request to check if the trigger group '{groupName}' is paused");
         var result = CreateScheduler.Scheduler.IsTriggerGroupPaused(groupName);
-        _logger.LogInformation($"Returning '{result}'");
+        _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
     #endregion
@@ -64,9 +65,9 @@ public class SchedulerController : ApiController
     [Route("scheduler/schedulername")]
     public string SchedulerName()
     {
-        _logger.LogInformation("Received request to return the scheduler name");
+        _logger?.LogInformation("Received request to return the scheduler name");
         var result = CreateScheduler.Scheduler.SchedulerName;
-        _logger.LogInformation($"Returning '{result}'");
+        _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
     #endregion
@@ -79,9 +80,9 @@ public class SchedulerController : ApiController
     [Route("scheduler/schedulerinstanceid")]
     public string SchedulerInstanceId()
     {
-        _logger.LogInformation("Received request to return the scheduler instance id");
+        _logger?.LogInformation("Received request to return the scheduler instance id");
         var result = CreateScheduler.Scheduler.SchedulerInstanceId;
-        _logger.LogInformation($"Returning '{result}'");
+        _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
     #endregion
@@ -94,9 +95,9 @@ public class SchedulerController : ApiController
     [Route("scheduler/schedulercontext")]
     public SchedulerContext Context()
     {
-        _logger.LogInformation("Received request to return the scheduler context");
+        _logger?.LogInformation("Received request to return the scheduler context");
         var result = CreateScheduler.Scheduler.Context;
-        _logger.LogDebug($"Returning '{result}'");
+        _logger?.LogDebug($"Returning '{result}'");
         return result;
     }
     #endregion
@@ -111,9 +112,9 @@ public class SchedulerController : ApiController
     [Route("scheduler/instandbymode")]
     public bool InStandbyMode()
     {
-        _logger.LogInformation("Received request to check if the scheduler is in standby mode");
+        _logger?.LogInformation("Received request to check if the scheduler is in standby mode");
         var result = CreateScheduler.Scheduler.InStandbyMode;
-        _logger.LogInformation($"Returning '{result}'");
+        _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
     #endregion
@@ -126,9 +127,9 @@ public class SchedulerController : ApiController
     [Route("scheduler/isshutdown")]
     public bool IsShutdown()
     {
-        _logger.LogInformation("Received request to check if the scheduler is shutdown");
+        _logger?.LogInformation("Received request to check if the scheduler is shutdown");
         var result = CreateScheduler.Scheduler.IsShutdown;
-        _logger.LogInformation($"Returning '{result}'");
+        _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
     #endregion
@@ -146,9 +147,9 @@ public class SchedulerController : ApiController
     [Route("scheduler/getmetadata")]
     public string GetMetaData()
     {
-        _logger.LogInformation("Received request to return the meta-data");
+        _logger?.LogInformation("Received request to return the meta-data");
         var result = new SchedulerMetaData(CreateScheduler.Scheduler.GetMetaData().Result).ToJsonString();
-        _logger.LogInformation($"Returning '{result}'");
+        _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
     #endregion
@@ -176,13 +177,13 @@ public class SchedulerController : ApiController
     [Route("scheduler/getcurrentlyexecutingjobs")]
     public string GetCurrentlyExecutingJobs()
     {
-        _logger.LogInformation("Received request to return the currently executing jobs");
+        _logger?.LogInformation("Received request to return the currently executing jobs");
 
         var jobExecutionContext = CreateScheduler.Scheduler.GetCurrentlyExecutingJobs().GetAwaiter().GetResult();
         var result = new JobExecutionContexts(jobExecutionContext).ToJsonString();
 
-        _logger.LogInformation("Returning currently executing jobs");
-        _logger.LogDebug($"JSON '{result}'");
+        _logger?.LogInformation("Returning currently executing jobs");
+        _logger?.LogDebug($"JSON '{result}'");
         return result;
     }
     #endregion
@@ -195,12 +196,12 @@ public class SchedulerController : ApiController
     [Route("scheduler/getjobgroupnames")]
     public Task<IReadOnlyCollection<string>> GetJobGroupNames()
     {
-        _logger.LogInformation("Received request to return the job group names");
+        _logger?.LogInformation("Received request to return the job group names");
 
         var result = CreateScheduler.Scheduler.GetJobGroupNames();
 
-        _logger.LogInformation("Returning job group names");
-        _logger.LogDebug($"JSON '{result}'");
+        _logger?.LogInformation("Returning job group names");
+        _logger?.LogDebug($"JSON '{result}'");
         return result;
     }
     #endregion
@@ -213,12 +214,12 @@ public class SchedulerController : ApiController
     [Route("scheduler/gettriggergroupnames")]
     public Task<IReadOnlyCollection<string>> GetTriggerGroupNames()
     {
-        _logger.LogInformation("Received request to return the trigger group names");
+        _logger?.LogInformation("Received request to return the trigger group names");
 
         var result = CreateScheduler.Scheduler.GetTriggerGroupNames();
 
-        _logger.LogInformation("Returning trigger group names");
-        _logger.LogDebug($"JSON '{result}'");
+        _logger?.LogInformation("Returning trigger group names");
+        _logger?.LogDebug($"JSON '{result}'");
         return result;
     }
     #endregion
@@ -231,12 +232,12 @@ public class SchedulerController : ApiController
     [Route("scheduler/getpausedtriggergroups")]
     public Task<IReadOnlyCollection<string>> GetPausedTriggerGroups()
     {
-        _logger.LogInformation("Received request to return the paused trigger groups");
+        _logger?.LogInformation("Received request to return the paused trigger groups");
 
         var result = CreateScheduler.Scheduler.GetPausedTriggerGroups();
 
-        _logger.LogInformation("Returning paused trigger groups");
-        _logger.LogDebug($"JSON '{result}'");
+        _logger?.LogInformation("Returning paused trigger groups");
+        _logger?.LogDebug($"JSON '{result}'");
         return result;
     }
     #endregion
@@ -259,11 +260,11 @@ public class SchedulerController : ApiController
     [Route("scheduler/start")]
     public Task Start()
     {
-        _logger.LogInformation("Received request to start the scheduler");
+        _logger?.LogInformation("Received request to start the scheduler");
 
         var result = CreateScheduler.Scheduler.Start();
 
-        _logger.LogInformation("The scheduler is started");
+        _logger?.LogInformation("The scheduler is started");
         return result;
     }
     #endregion
@@ -282,11 +283,11 @@ public class SchedulerController : ApiController
     [Route("scheduler/startdelayed/{delay}")]
     public Task StartDelayed(int delay)
     {
-        _logger.LogInformation($"Received request to start the scheduler with a delay of '{delay}' minutes");
+        _logger?.LogInformation($"Received request to start the scheduler with a delay of '{delay}' minutes");
 
         var result = CreateScheduler.Scheduler.StartDelayed(new TimeSpan(0, 0, delay));
 
-        _logger.LogInformation("The scheduler is started");
+        _logger?.LogInformation("The scheduler is started");
         return result;
     }
     #endregion
@@ -308,11 +309,11 @@ public class SchedulerController : ApiController
     [Route("scheduler/isstarted")]
     public bool IsStarted()
     {
-        _logger.LogInformation("Received request to check if the scheduler is started");
+        _logger?.LogInformation("Received request to check if the scheduler is started");
 
         var result = CreateScheduler.Scheduler.IsStarted;
 
-        _logger.LogInformation($"Returning '{result}'");
+        _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
     #endregion
@@ -339,11 +340,11 @@ public class SchedulerController : ApiController
     [Route("scheduler/standby")]
     public Task Standby()
     {
-        _logger.LogInformation("Received request to put the scheduler in standby mode");
+        _logger?.LogInformation("Received request to put the scheduler in standby mode");
 
         var result = CreateScheduler.Scheduler.Standby();
 
-        _logger.LogInformation("The scheduler is in standby mode");
+        _logger?.LogInformation("The scheduler is in standby mode");
         return result;
     }
     #endregion
@@ -361,11 +362,11 @@ public class SchedulerController : ApiController
     [Route("scheduler/shutdown")]
     public Task Shutdown()
     {
-        _logger.LogInformation("Received request to shutdown the scheduler");
+        _logger?.LogInformation("Received request to shutdown the scheduler");
 
         var result = CreateScheduler.Scheduler.Shutdown();
 
-        _logger.LogInformation("The scheduler is shutdown");
+        _logger?.LogInformation("The scheduler is shutdown");
         return result;
     }
 
@@ -385,13 +386,13 @@ public class SchedulerController : ApiController
     [Route("scheduler/shutdown/{waitForJobsToComplete}")]
     public Task Shutdown(bool waitForJobsToComplete)
     {
-        _logger.LogInformation(waitForJobsToComplete
+        _logger?.LogInformation(waitForJobsToComplete
             ? "Received request to shutdown the scheduler but wait the the jobs to complete first"
             : "Received request to shutdown the scheduler and not to wait for the jobs to complete first");
 
         var result = CreateScheduler.Scheduler.Shutdown(waitForJobsToComplete);
 
-        _logger.LogInformation("The scheduler is shutdown");
+        _logger?.LogInformation("The scheduler is shutdown");
         return result;
     }
     #endregion
@@ -410,15 +411,15 @@ public class SchedulerController : ApiController
     [Route("scheduler/schedulejobwithjobdetailandtrigger")]
     public Task<DateTimeOffset> ScheduleJob([FromBody] string json)
     {
-        _logger.LogInformation("Received request to schedule a job with details and a trigger");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to schedule a job with details and a trigger");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobDetailWithTrigger = JobDetailWithTrigger.FromJsonString(json);
         var result = CreateScheduler.Scheduler.ScheduleJob(
             jobDetailWithTrigger.JobDetail.ToJobDetail(),
             jobDetailWithTrigger.Trigger.ToTrigger());
 
-        _logger.LogDebug($"Job scheduled, returning '{result}'");
+        _logger?.LogDebug($"Job scheduled, returning '{result}'");
         return result;
     }
     #endregion
@@ -434,13 +435,13 @@ public class SchedulerController : ApiController
     [Route("scheduler/schedulejobidentifiedwithtrigger")]
     public Task<DateTimeOffset> ScheduleJobIdentifiedWithTrigger([FromBody] string json)
     {
-        _logger.LogInformation("Received request to schedule a job identified by a trigger");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to schedule a job identified by a trigger");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var trigger = Trigger.FromJsonString(json).ToTrigger();
         var result = CreateScheduler.Scheduler.ScheduleJob(trigger);
 
-        _logger.LogDebug($"Job scheduled, returning '{result}'");
+        _logger?.LogDebug($"Job scheduled, returning '{result}'");
         return result;
     }
     #endregion
@@ -475,8 +476,8 @@ public class SchedulerController : ApiController
     [Route("scheduler/schedulejobwithtriggers")]
     public Task ScheduleJobWithTriggers([FromBody] string json)
     {
-        _logger.LogInformation("Received request to schedule a job with triggers");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to schedule a job with triggers");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobDetailWithTriggers = JobDetailWithTriggers.FromJsonString(json);
         var result = CreateScheduler.Scheduler.ScheduleJob(
@@ -484,7 +485,7 @@ public class SchedulerController : ApiController
             jobDetailWithTriggers.ToReadOnlyTriggerCollection(),
             jobDetailWithTriggers.Replace);
 
-        _logger.LogDebug("Job scheduled");
+        _logger?.LogDebug("Job scheduled");
         return result;
     }
     #endregion
@@ -501,12 +502,12 @@ public class SchedulerController : ApiController
     [Route("scheduler/unschedulejob")]
     public Task<bool> UnscheduleJob([FromBody] string json)
     {
-        _logger.LogInformation("Received request to unschedule a job that matches the trigger");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to unschedule a job that matches the trigger");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var result = CreateScheduler.Scheduler.UnscheduleJob(TriggerKey.FromJsonString(json).ToTriggerKey());
 
-        _logger.LogInformation($"Job that matches the trigger unscheduled, returning '{result}'");
+        _logger?.LogInformation($"Job that matches the trigger unscheduled, returning '{result}'");
         return result;
     }
     #endregion
@@ -529,12 +530,12 @@ public class SchedulerController : ApiController
     [Route("scheduler/unschedulejobs")]
     public Task<bool> UnscheduleJobs([FromBody] string json)
     {
-        _logger.LogInformation("Received request to unschedule all the jobs that match the given triggers");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to unschedule all the jobs that match the given triggers");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var result = CreateScheduler.Scheduler.UnscheduleJobs(TriggerKeys.FromJsonString(json).ToTriggerKeys());
 
-        _logger.LogInformation($"Jobs unscheduled that are matching the given triggers, returning '{result}'");
+        _logger?.LogInformation($"Jobs unscheduled that are matching the given triggers, returning '{result}'");
         return result;
     }
     #endregion
@@ -556,14 +557,14 @@ public class SchedulerController : ApiController
     [Route("scheduler/reschedulejob")]
     public Task<DateTimeOffset?> RescheduleJob([FromBody] string json)
     {
-        _logger.LogInformation("Received request to reschedule the job that match the given trigger key");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to reschedule the job that match the given trigger key");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var rescheduleJob = Data.RescheduleJob.FromJsonString(json);
         var result = CreateScheduler.Scheduler.RescheduleJob(rescheduleJob.CurrentTriggerKey.ToTriggerKey(),
             rescheduleJob.Trigger.ToTrigger());
 
-        _logger.LogInformation($"Job rescheduled that matches the given trigger key, returning '{result}'");
+        _logger?.LogInformation($"Job rescheduled that matches the given trigger key, returning '{result}'");
         return result;
     }
     #endregion
@@ -584,14 +585,14 @@ public class SchedulerController : ApiController
     [Route("scheduler/addjob")]
     public Task AddJob([FromBody] string json)
     {
-        _logger.LogInformation("Received request to add job to the scheduler");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to add job to the scheduler");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var addJob = JobDetail.FromJsonString(json);
         var result = CreateScheduler.Scheduler.AddJob(addJob.ToJobDetail(), addJob.Replace,
             addJob.StoreNonDurableWhileAwaitingScheduling);
 
-        _logger.LogInformation("Job added to the scheduler");
+        _logger?.LogInformation("Job added to the scheduler");
         return result;
     }
     #endregion
@@ -606,13 +607,13 @@ public class SchedulerController : ApiController
     [Route("scheduler/deletejob")]
     public Task<bool> DeleteJob([FromBody] string json)
     {
-        _logger.LogInformation("Received request to delete a job that matches the given job key");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to delete a job that matches the given job key");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
         var result = CreateScheduler.Scheduler.DeleteJob(jobKey.ToJobKey());
 
-        _logger.LogInformation($"Removed job from the scheduler, result '{result}'");
+        _logger?.LogInformation($"Removed job from the scheduler, result '{result}'");
         return result;
     }
     #endregion
@@ -639,13 +640,13 @@ public class SchedulerController : ApiController
     [Route("scheduler/deletejobs")]
     public Task<bool> DeleteJobs([FromBody] string json)
     {
-        _logger.LogInformation("Received request to delete jobs that are matching the given job keys");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to delete jobs that are matching the given job keys");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKeys = JobKeys.FromJsonString(json).ToJobKeys();
         var result = CreateScheduler.Scheduler.DeleteJobs(jobKeys);
 
-        _logger.LogInformation($"Removed jobs from the scheduler, result '{result}'");
+        _logger?.LogInformation($"Removed jobs from the scheduler, result '{result}'");
         return result;
     }
     #endregion
@@ -658,13 +659,13 @@ public class SchedulerController : ApiController
     [Route("scheduler/triggerjobwithjobkey")]
     public Task TriggerJobWithJobKey([FromBody] string json)
     {
-        _logger.LogInformation("Received request to trigger a job that matches the given job key");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to trigger a job that matches the given job key");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
         var result = CreateScheduler.Scheduler.TriggerJob(jobKey.ToJobKey());
 
-        _logger.LogInformation("Job triggered");
+        _logger?.LogInformation("Job triggered");
         return result;
     }
     #endregion
@@ -681,14 +682,14 @@ public class SchedulerController : ApiController
     [Route("scheduler/triggerjobwithdatamap")]
     public Task TriggerJobWithDataMap([FromBody] string json)
     {
-        _logger.LogInformation("Received request to trigger a job with data map that matches the given job key");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to trigger a job with data map that matches the given job key");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKeyWithDataMap = JobKeyWithDataMap.FromJsonString(json);
         var result =
             CreateScheduler.Scheduler.TriggerJob(jobKeyWithDataMap.JobKey.ToJobKey(), jobKeyWithDataMap.JobDataMap);
 
-        _logger.LogInformation("Job triggered");
+        _logger?.LogInformation("Job triggered");
         return result;
     }
     #endregion
@@ -702,13 +703,13 @@ public class SchedulerController : ApiController
     [Route("scheduler/pausejob")]
     public Task PauseJob([FromBody] string json)
     {
-        _logger.LogInformation("Received request to pause a job that matches the given job key");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to pause a job that matches the given job key");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
         var result = CreateScheduler.Scheduler.PauseJob(jobKey.ToJobKey());
 
-        _logger.LogInformation("Job paused");
+        _logger?.LogInformation("Job paused");
         return result;
     }
     #endregion
@@ -743,13 +744,13 @@ public class SchedulerController : ApiController
     [Route("scheduler/pausejobs")]
     public Task PauseJobs([FromBody] string json)
     {
-        _logger.LogInformation("Received request to pause all jobs that are matching the given group matcher");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to pause all jobs that are matching the given group matcher");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var groupMatcher = GroupMatcher<Quartz.JobKey>.FromJsonString(json);
         var result = CreateScheduler.Scheduler.PauseJobs(groupMatcher.ToGroupMatcher());
 
-        _logger.LogInformation("Jobs paused");
+        _logger?.LogInformation("Jobs paused");
         return result;
     }
     #endregion
@@ -762,13 +763,13 @@ public class SchedulerController : ApiController
     [Route("scheduler/pausetrigger")]
     public Task PauseTrigger([FromBody] string json)
     {
-        _logger.LogInformation("Received request to pause a trigger that matches the given trigger key");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to pause a trigger that matches the given trigger key");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var triggerKey = TriggerKey.FromJsonString(json);
         var result = CreateScheduler.Scheduler.PauseTrigger(triggerKey.ToTriggerKey());
 
-        _logger.LogInformation("Trigger paused");
+        _logger?.LogInformation("Trigger paused");
         return result;
     }
     #endregion
@@ -802,13 +803,13 @@ public class SchedulerController : ApiController
     [Route("scheduler/pausetriggers")]
     public Task PauseTriggers([FromBody] string json)
     {
-        _logger.LogInformation("Received request to pause all triggers that are matching the given group matcher");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to pause all triggers that are matching the given group matcher");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var groupMatcher = GroupMatcher<Quartz.TriggerKey>.FromJsonString(json);
         var result = CreateScheduler.Scheduler.PauseTriggers(groupMatcher.ToGroupMatcher());
 
-        _logger.LogInformation("Triggers paused");
+        _logger?.LogInformation("Triggers paused");
         return result;
     }
     #endregion
@@ -827,13 +828,13 @@ public class SchedulerController : ApiController
     [Route("scheduler/resumejob")]
     public Task ResumeJob([FromBody] string json)
     {
-        _logger.LogInformation("Received request to resume a job that matches the given job key");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to resume a job that matches the given job key");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
         var result = CreateScheduler.Scheduler.ResumeJob(jobKey.ToJobKey());
 
-        _logger.LogInformation("Job resumed");
+        _logger?.LogInformation("Job resumed");
         return result;
     }
     #endregion
@@ -853,13 +854,13 @@ public class SchedulerController : ApiController
     [Route("scheduler/resumejobs")]
     public Task ResumeJobs([FromBody] string json)
     {
-        _logger.LogInformation("Received request to resume all jobs that are matching the given group matcher");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to resume all jobs that are matching the given group matcher");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var groupMatcher = GroupMatcher<Quartz.JobKey>.FromJsonString(json);
         var result = CreateScheduler.Scheduler.ResumeJobs(groupMatcher.ToGroupMatcher());
 
-        _logger.LogInformation("Jobs resumed");
+        _logger?.LogInformation("Jobs resumed");
         return result;
     }
     #endregion
@@ -877,13 +878,13 @@ public class SchedulerController : ApiController
     [Route("scheduler/resumetrigger")]
     public Task ResumeTrigger([FromBody] string json)
     {
-        _logger.LogInformation("Received request to resume the trigger that matches the given trigger key");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to resume the trigger that matches the given trigger key");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var triggerKey = TriggerKey.FromJsonString(json);
         var result = CreateScheduler.Scheduler.ResumeTrigger(triggerKey.ToTriggerKey());
 
-        _logger.LogInformation("Trigger resumed");
+        _logger?.LogInformation("Trigger resumed");
         return result;
     }
     #endregion
@@ -901,13 +902,13 @@ public class SchedulerController : ApiController
     [Route("scheduler/resumetriggers")]
     public Task ResumeTriggers([FromBody] string json)
     {
-        _logger.LogInformation("Received request to resume all triggers that are matching the given group matcher");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to resume all triggers that are matching the given group matcher");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var groupMatcher = GroupMatcher<Quartz.TriggerKey>.FromJsonString(json);
         var result = CreateScheduler.Scheduler.ResumeTriggers(groupMatcher.ToGroupMatcher());
 
-        _logger.LogInformation("Triggers resumed");
+        _logger?.LogInformation("Triggers resumed");
         return result;
     }
     #endregion
@@ -930,9 +931,9 @@ public class SchedulerController : ApiController
     [Route("scheduler/pauseall")]
     public void PauseAll()
     {
-        _logger.LogInformation("Received request to pause all trigger");
+        _logger?.LogInformation("Received request to pause all trigger");
         CreateScheduler.Scheduler.PauseAll();
-        _logger.LogInformation("All triggers paused");
+        _logger?.LogInformation("All triggers paused");
     }
     #endregion
 
@@ -950,9 +951,9 @@ public class SchedulerController : ApiController
     [Route("scheduler/resumeall")]
     public void ResumeAll()
     {
-        _logger.LogInformation("Received request to resume all trigger");
+        _logger?.LogInformation("Received request to resume all trigger");
         CreateScheduler.Scheduler.ResumeAll();
-        _logger.LogInformation("All triggers resumed");
+        _logger?.LogInformation("All triggers resumed");
     }
     #endregion
 
@@ -964,15 +965,15 @@ public class SchedulerController : ApiController
     [Route("scheduler/getjobkeys")]
     public string GetJobKeys([FromBody] string json)
     {
-        _logger.LogInformation("Received request to get all the job keys that are matching the given group matcher");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to get all the job keys that are matching the given group matcher");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var groupMatcher = GroupMatcher<Quartz.JobKey>.FromJsonString(json);
         var jobKeys = CreateScheduler.Scheduler.GetJobKeys(groupMatcher.ToGroupMatcher()).GetAwaiter().GetResult();
         var result = new JobKeys(jobKeys).ToJsonString();
 
-        _logger.LogInformation("Returning all job keys that are matching the given group matcher");
-        _logger.LogDebug($"JSON '{result}'");
+        _logger?.LogInformation("Returning all job keys that are matching the given group matcher");
+        _logger?.LogDebug($"JSON '{result}'");
         return result;
     }
     #endregion
@@ -991,15 +992,15 @@ public class SchedulerController : ApiController
     [Route("scheduler/gettriggersofjob")]
     public string GetTriggersOfJob([FromBody] string json)
     {
-        _logger.LogInformation("Received request to get all the triggers for the given job key");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to get all the triggers for the given job key");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
         var triggers = CreateScheduler.Scheduler.GetTriggersOfJob(jobKey.ToJobKey()).GetAwaiter().GetResult();
         var result = new Triggers(triggers).ToJsonString();
 
-        _logger.LogInformation("Returning triggers for the given job key");
-        _logger.LogDebug($"JSON '{result}'");
+        _logger?.LogInformation("Returning triggers for the given job key");
+        _logger?.LogDebug($"JSON '{result}'");
         return result;
     }
     #endregion
@@ -1013,17 +1014,17 @@ public class SchedulerController : ApiController
     [Route("scheduler/gettriggerkeys")]
     public string GetTriggerKeys([FromBody] string json)
     {
-        _logger.LogInformation(
+        _logger?.LogInformation(
             "Received request to get all the trigger keys that are matching the given group matcher");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var groupMatcher = GroupMatcher<Quartz.TriggerKey>.FromJsonString(json);
         var triggerKeys = CreateScheduler.Scheduler.GetTriggerKeys(groupMatcher.ToGroupMatcher()).GetAwaiter()
             .GetResult();
         var result = new TriggerKeys(triggerKeys).ToJsonString();
 
-        _logger.LogInformation("Returning all trigger keys that are matching the given group matcher");
-        _logger.LogDebug($"JSON '{result}'");
+        _logger?.LogInformation("Returning all trigger keys that are matching the given group matcher");
+        _logger?.LogDebug($"JSON '{result}'");
         return result;
     }
     #endregion
@@ -1041,15 +1042,15 @@ public class SchedulerController : ApiController
     [Route("scheduler/getjobdetail")]
     public string GetJobDetail([FromBody] string json)
     {
-        _logger.LogInformation("Received request to get the job detail for the given job key");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to get the job detail for the given job key");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
         var jobDetail = CreateScheduler.Scheduler.GetJobDetail(jobKey.ToJobKey()).GetAwaiter().GetResult();
         var result = new JobDetail(jobDetail).ToJsonString();
 
-        _logger.LogInformation("Returning job detail for the give job key");
-        _logger.LogDebug($"JSON '{result}'");
+        _logger?.LogInformation("Returning job detail for the give job key");
+        _logger?.LogDebug($"JSON '{result}'");
         return result;
     }
     #endregion
@@ -1067,15 +1068,15 @@ public class SchedulerController : ApiController
     [Route("scheduler/gettrigger")]
     public string GetTrigger([FromBody] string json)
     {
-        _logger.LogInformation("Received request to get the trigger for the given trigger key");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to get the trigger for the given trigger key");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var triggerKey = TriggerKey.FromJsonString(json);
         var trigger = CreateScheduler.Scheduler.GetTrigger(triggerKey.ToTriggerKey()).GetAwaiter().GetResult();
         var result = new Trigger(trigger).ToJsonString();
 
-        _logger.LogInformation("Returning trigger for the given trigger key");
-        _logger.LogDebug($"JSON '{result}'");
+        _logger?.LogInformation("Returning trigger for the given trigger key");
+        _logger?.LogDebug($"JSON '{result}'");
         return result;
     }
     #endregion
@@ -1094,15 +1095,14 @@ public class SchedulerController : ApiController
     [Route("scheduler/gettriggerstate")]
     public string GetTriggerState([FromBody] string json)
     {
-        _logger.LogInformation("Received request to get the trigger state for the given trigger key");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to get the trigger state for the given trigger key");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var triggerKey = TriggerKey.FromJsonString(json);
-        var triggerState = CreateScheduler.Scheduler.GetTriggerState(triggerKey.ToTriggerKey()).GetAwaiter()
-            .GetResult();
+        var triggerState = CreateScheduler.Scheduler.GetTriggerState(triggerKey.ToTriggerKey()).GetAwaiter().GetResult();
         var result = triggerState.ToString();
 
-        _logger.LogInformation($"Returning '{result}'");
+        _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
     #endregion
@@ -1115,10 +1115,41 @@ public class SchedulerController : ApiController
     [Route("scheduler/addcalendar")]
     public Task AddCalendar([FromBody] string json)
     {
-        _logger.LogInformation("Received request to add a calendar to the scheduler");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to add a calendar to the scheduler");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
-        var calendar = Calendar.FromJsonString(json);
+        var calendar = BaseCalendar.FromJsonString(json);
+
+        switch (calendar.Type)
+        {
+            case CalendarType.Cron:
+                calendar = CronCalendar.FromJsonString(json);
+                break;
+            
+            case CalendarType.Daily:
+                calendar = DailyCalendar.FromJsonString(json);
+                break;
+            
+            case CalendarType.Weekly:
+                calendar = WeeklyCalendar.FromJsonString(json);
+                break;
+            
+            case CalendarType.Monthly:
+                calendar = MonthlyCalendar.FromJsonString(json);
+                break;
+            
+            case CalendarType.Annual:
+                calendar = AnnualCalendar.FromJsonString(json);
+                break;
+            
+            case CalendarType.Holiday:
+                calendar = HolidayCalendar.FromJsonString(json);
+                break;
+            
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
         return CreateScheduler.Scheduler.AddCalendar(calendar.Name, calendar.ToCalendar(), calendar.Replace,
             calendar.UpdateTriggers);
     }
@@ -1138,11 +1169,11 @@ public class SchedulerController : ApiController
     [Route("scheduler/deletecalendar/{calName}")]
     public bool DeleteCalendar(string calName)
     {
-        _logger.LogInformation($"Received request to delete the calendar '{calName}' from the scheduler");
+        _logger?.LogInformation($"Received request to delete the calendar '{calName}' from the scheduler");
 
         var result = CreateScheduler.Scheduler.DeleteCalendar(calName).GetAwaiter().GetResult();
 
-        _logger.LogInformation($"Returning '{result}'");
+        _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
     #endregion
@@ -1152,12 +1183,52 @@ public class SchedulerController : ApiController
     /// </summary>
     [HttpGet]
     [Route("scheduler/getcalendar/{calName}")]
-    public Task<ICalendar> GetCalendar(string calName)
+    public string GetCalendar(string calName)
     {
-        _logger.LogInformation($"Received request to get the calendar with the name '{calName}' from the scheduler");
+        _logger?.LogInformation($"Received request to get the calendar with the name '{calName}' from the scheduler");
 
-        var result = CreateScheduler.Scheduler.GetCalendar(calName).GetAwaiter().GetResult();
-        return null;
+        var calendar = CreateScheduler.Scheduler.GetCalendar(calName).GetAwaiter().GetResult();
+        if (calendar == null)
+        {
+            _logger?.LogInformation($"Calendar with the name '{calName}' not found");
+            return null;
+        }
+
+        string result;
+
+        switch (calendar)
+        {
+            case Quartz.Impl.Calendar.CronCalendar cronCalendar:
+                result = new CronCalendar(cronCalendar).ToJsonString();
+                break;
+            
+            case Quartz.Impl.Calendar.DailyCalendar dailyCalendar:
+                result = new DailyCalendar(dailyCalendar).ToJsonString();
+                break;
+            
+            case Quartz.Impl.Calendar.WeeklyCalendar weeklyCalendar:
+                result = new WeeklyCalendar(weeklyCalendar).ToJsonString();
+                break;
+            
+            case Quartz.Impl.Calendar.MonthlyCalendar monthlyCalendar:
+                result = new MonthlyCalendar(monthlyCalendar).ToJsonString();
+                break;
+            
+            case Quartz.Impl.Calendar.AnnualCalendar annualCalendar:
+                result = new AnnualCalendar(annualCalendar).ToJsonString();
+                break;
+            
+            case Quartz.Impl.Calendar.HolidayCalendar holidayCalendar:
+                result = new HolidayCalendar(holidayCalendar).ToJsonString();
+                break;
+            
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        _logger?.LogInformation($"Returning '{result}'");
+
+        return result;
     }
 
     /// <summary>
@@ -1204,14 +1275,14 @@ public class SchedulerController : ApiController
     [Route("scheduler/interruptjobkey")]
     public bool InterruptJobKey([FromBody] string json)
     {
-        _logger.LogInformation(
+        _logger?.LogInformation(
             "Received request for cancellation, within this Scheduler instance, of all currently executing instances of the identified job");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
         var result = CreateScheduler.Scheduler.Interrupt(jobKey.ToJobKey()).GetAwaiter().GetResult();
 
-        _logger.LogInformation($"Returning '{result}'");
+        _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
     #endregion
@@ -1238,12 +1309,12 @@ public class SchedulerController : ApiController
     [Route("scheduler/interruptfireinstanceid/{fireInstanceId}")]
     public bool InterruptFireInstanceId(string fireInstanceId)
     {
-        _logger.LogInformation(
+        _logger?.LogInformation(
             "Received request for cancellation, within this Scheduler instance, of the identified executing job instance");
 
         var result = CreateScheduler.Scheduler.Interrupt(fireInstanceId).GetAwaiter().GetResult();
 
-        _logger.LogInformation($"Returning '{result}'");
+        _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
     #endregion
@@ -1259,13 +1330,13 @@ public class SchedulerController : ApiController
     [Route("scheduler/checkexistsjobkey")]
     public bool CheckExistsJobKey([FromBody] string json)
     {
-        _logger.LogInformation("Received request to check if the given job key exists");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to check if the given job key exists");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
         var result = CreateScheduler.Scheduler.CheckExists(jobKey.ToJobKey()).GetAwaiter().GetResult();
 
-        _logger.LogInformation($"Returning '{result}'");
+        _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
     #endregion
@@ -1281,13 +1352,13 @@ public class SchedulerController : ApiController
     [Route("scheduler/checkexiststriggerkey")]
     public bool CheckExistsTriggerKey([FromBody] string json)
     {
-        _logger.LogInformation("Received request to check if the given job key exists");
-        _logger.LogDebug($"Received JSON '{json}'");
+        _logger?.LogInformation("Received request to check if the given job key exists");
+        _logger?.LogDebug($"Received JSON '{json}'");
 
         var triggerKey = TriggerKey.FromJsonString(json);
         var result = CreateScheduler.Scheduler.CheckExists(triggerKey.ToTriggerKey()).GetAwaiter().GetResult();
 
-        _logger.LogInformation($"Returning '{result}'");
+        _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
     #endregion
@@ -1301,9 +1372,9 @@ public class SchedulerController : ApiController
     [Route("scheduler/clear")]
     public void Clear()
     {
-        _logger.LogInformation("Received request to clear the whole scheduler");
+        _logger?.LogInformation("Received request to clear the whole scheduler");
         CreateScheduler.Scheduler.Clear();
-        _logger.LogInformation("Scheduler cleared");
+        _logger?.LogInformation("Scheduler cleared");
     }
     #endregion
 }

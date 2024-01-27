@@ -1,36 +1,42 @@
 ﻿using System.Runtime.Serialization;
 
-namespace QuartzWebApi.Data;
+namespace QuartzWebApi.Data.Calendars;
 
-public enum AddCalendarType
+public enum CalendarType
 {
     /// <summary>
     ///     It is a cron calendar
     /// </summary>
-    [DataMember(Name = "cron")] Cron,
+    [DataMember(Name = "Cron")] 
+    Cron,
 
     /// <summary>
     ///     It is a daily calendar
     /// </summary>
-    [DataMember(Name = "daily")] Daily,
+    [DataMember(Name = "Daily")] 
+    Daily,
 
     /// <summary>
     ///     It is a week calendar
     /// </summary>
-    [DataMember(Name = "weekly")] Weekly,
+    [DataMember(Name = "Weekly")] 
+    Weekly,
 
     /// <summary>
     ///     It is a monthly calendar
     /// </summary>
-    [DataMember(Name = "monthly")] Monthly,
+    [DataMember(Name = "Monthly")] 
+    Monthly,
 
     /// <summary>
     ///     It is an annual calendar
     /// </summary>
-    [DataMember(Name = "annual")] Annual,
+    [DataMember(Name = "Annual")] 
+    Annual,
 
     /// <summary>
     ///     It is a holiday calendar
     /// </summary>
-    [DataMember(Name = "holiday")] Holiday
+    [DataMember(Name = "Holiday")] 
+    Holiday
 }

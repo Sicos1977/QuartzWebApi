@@ -145,7 +145,13 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\SchedulerController.cs" />
     <Compile Include="CreateScheduler.cs" />
-    <Compile Include="Data\AddCalendarType.cs" />
+    <Compile Include="Data\Calendars\BaseCalendar.cs" />
+    <Compile Include="Data\Calendars\CalendarType.cs" />
+    <Compile Include="Data\Calendars\HolidayCalendar.cs" />
+    <Compile Include="Data\Calendars\MonthlyCalendar.cs" />
+    <Compile Include="Data\Calendars\CronCalendar.cs" />
+    <Compile Include="Data\Calendars\DailyCalendar.cs" />
+    <Compile Include="Data\Calendars\WeeklyCalendar.cs" />
     <Compile Include="Data\GroupMatcherType.cs" />
     <Compile Include="Data\JobDetail.cs" />
     <Compile Include="Data\JobDetailWithTrigger.cs" />
@@ -153,7 +159,7 @@
     <Compile Include="Data\JobExecutionContext.cs" />
     <Compile Include="Data\JobKey.cs" />
     <Compile Include="Data\ScheduleJobs.cs" />
-    <Compile Include="Data\Calendar.cs" />
+    <Compile Include="Data\Calendars\AnnualCalendar.cs" />
     <Compile Include="Data\GroupMatcher.cs" />
     <Compile Include="Data\RescheduleJob.cs" />
     <Compile Include="Data\JobExecutionContexts.cs" />
