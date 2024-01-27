@@ -30,7 +30,7 @@ public class SchedulerController : ApiController
     /// <param name="groupName">The group name</param>
     /// <returns></returns>
     [HttpGet]
-    [Route("scheduler/isjobgrouppaused/{groupName}")]
+    [Route("Scheduler/IsJobGroupPaused/{groupName}")]
     public Task<bool> IsJobGroupPaused(string groupName)
     {
         _logger?.LogInformation($"Received request to check if the job group '{groupName}' is paused");
@@ -47,7 +47,7 @@ public class SchedulerController : ApiController
     /// <param name="groupName">The group name</param>
     /// <returns></returns>
     [HttpGet]
-    [Route("scheduler/istriggergrouppaused/{groupName}")]
+    [Route("Scheduler/IsTriggerGroupPaused/{groupName}")]
     public Task<bool> IsTriggerGroupPaused(string groupName)
     {
         _logger?.LogInformation($"Received request to check if the trigger group '{groupName}' is paused");
@@ -62,7 +62,7 @@ public class SchedulerController : ApiController
     ///     Returns the name of the scheduler
     /// </summary>
     [HttpGet]
-    [Route("scheduler/schedulername")]
+    [Route("Scheduler/SchedulerName")]
     public string SchedulerName()
     {
         _logger?.LogInformation("Received request to return the scheduler name");
@@ -77,7 +77,7 @@ public class SchedulerController : ApiController
     ///     Returns the instance id of the scheduler
     /// </summary>
     [HttpGet]
-    [Route("scheduler/schedulerinstanceid")]
+    [Route("Scheduler/SchedulerInstanceId")]
     public string SchedulerInstanceId()
     {
         _logger?.LogInformation("Received request to return the scheduler instance id");
@@ -92,7 +92,7 @@ public class SchedulerController : ApiController
     ///     Returns the <see cref="SchedulerContext" /> of the <see cref="IScheduler" />.
     /// </summary>
     [HttpGet]
-    [Route("scheduler/schedulercontext")]
+    [Route("Scheduler/SchedulerContext")]
     public SchedulerContext Context()
     {
         _logger?.LogInformation("Received request to return the scheduler context");
@@ -109,7 +109,7 @@ public class SchedulerController : ApiController
     /// <seealso cref="Standby" />
     /// <seealso cref="Start" />
     [HttpGet]
-    [Route("scheduler/instandbymode")]
+    [Route("Scheduler/InStandbyMode")]
     public bool InStandbyMode()
     {
         _logger?.LogInformation("Received request to check if the scheduler is in standby mode");
@@ -124,7 +124,7 @@ public class SchedulerController : ApiController
     ///     Reports whether the <see cref="IScheduler" /> has been Shutdown.
     /// </summary>
     [HttpGet]
-    [Route("scheduler/isshutdown")]
+    [Route("Scheduler/Isshutdown")]
     public bool IsShutdown()
     {
         _logger?.LogInformation("Received request to check if the scheduler is shutdown");
@@ -144,7 +144,7 @@ public class SchedulerController : ApiController
     ///     soon as it's returned, the meta-data values may be different.
     /// </remarks>
     [HttpGet]
-    [Route("scheduler/getmetadata")]
+    [Route("Scheduler/GetMetaData")]
     public string GetMetaData()
     {
         _logger?.LogInformation("Received request to return the meta-data");
@@ -174,7 +174,7 @@ public class SchedulerController : ApiController
     /// </remarks>
     /// <seealso cref="IJobExecutionContext" />
     [HttpGet]
-    [Route("scheduler/getcurrentlyexecutingjobs")]
+    [Route("Scheduler/GetCurrentlyExecutingJobs")]
     public string GetCurrentlyExecutingJobs()
     {
         _logger?.LogInformation("Received request to return the currently executing jobs");
@@ -193,7 +193,7 @@ public class SchedulerController : ApiController
     ///     Get the names of all known <see cref="IJobDetail" /> groups.
     /// </summary>
     [HttpGet]
-    [Route("scheduler/getjobgroupnames")]
+    [Route("Scheduler/GetJobGroupNames")]
     public Task<IReadOnlyCollection<string>> GetJobGroupNames()
     {
         _logger?.LogInformation("Received request to return the job group names");
@@ -211,7 +211,7 @@ public class SchedulerController : ApiController
     ///     Get the names of all known <see cref="ITrigger" /> groups.
     /// </summary>
     [HttpGet]
-    [Route("scheduler/gettriggergroupnames")]
+    [Route("Scheduler/GetTriggerGroupNames")]
     public Task<IReadOnlyCollection<string>> GetTriggerGroupNames()
     {
         _logger?.LogInformation("Received request to return the trigger group names");
@@ -229,7 +229,7 @@ public class SchedulerController : ApiController
     ///     Get the names of all <see cref="ITrigger" /> groups that are paused.
     /// </summary>
     [HttpGet]
-    [Route("scheduler/getpausedtriggergroups")]
+    [Route("Scheduler/GetPausedTriggerGroups")]
     public Task<IReadOnlyCollection<string>> GetPausedTriggerGroups()
     {
         _logger?.LogInformation("Received request to return the paused trigger groups");
@@ -257,7 +257,7 @@ public class SchedulerController : ApiController
     /// <seealso cref="Standby" />
     /// <seealso cref="Shutdown(bool)" />
     [HttpPost]
-    [Route("scheduler/start")]
+    [Route("Scheduler/Start")]
     public Task Start()
     {
         _logger?.LogInformation("Received request to start the scheduler");
@@ -280,10 +280,10 @@ public class SchedulerController : ApiController
     /// <seealso cref="Standby" />
     /// <seealso cref="Shutdown(bool)" />
     [HttpPost]
-    [Route("scheduler/startdelayed/{delay}")]
+    [Route("Scheduler/StartDelayed/{delay}")]
     public Task StartDelayed(int delay)
     {
-        _logger?.LogInformation($"Received request to start the scheduler with a delay of '{delay}' minutes");
+        _logger?.LogInformation($"Received request to start the scheduler with a delay of '{delay}' seconds");
 
         var result = CreateScheduler.Scheduler.StartDelayed(new TimeSpan(0, 0, delay));
 
@@ -306,7 +306,7 @@ public class SchedulerController : ApiController
     /// <seealso cref="IsShutdown" />
     /// <seealso cref="InStandbyMode" />
     [HttpGet]
-    [Route("scheduler/isstarted")]
+    [Route("Scheduler/IsStarted")]
     public bool IsStarted()
     {
         _logger?.LogInformation("Received request to check if the scheduler is started");
@@ -337,7 +337,7 @@ public class SchedulerController : ApiController
     /// <seealso cref="Start" />
     /// <seealso cref="PauseAll" />
     [HttpPost]
-    [Route("scheduler/standby")]
+    [Route("Scheduler/Standby")]
     public Task Standby()
     {
         _logger?.LogInformation("Received request to put the scheduler in standby mode");
@@ -359,7 +359,7 @@ public class SchedulerController : ApiController
     /// </remarks>
     /// <seealso cref="Shutdown(bool)" />
     [HttpPost]
-    [Route("scheduler/shutdown")]
+    [Route("Scheduler/Shutdown")]
     public Task Shutdown()
     {
         _logger?.LogInformation("Received request to shutdown the scheduler");
@@ -383,7 +383,7 @@ public class SchedulerController : ApiController
     /// </param>
     /// <seealso cref="Shutdown()" />
     [HttpPost]
-    [Route("scheduler/shutdown/{waitForJobsToComplete}")]
+    [Route("Scheduler/Shutdown/{waitForJobsToComplete}")]
     public Task Shutdown(bool waitForJobsToComplete)
     {
         _logger?.LogInformation(waitForJobsToComplete
@@ -408,7 +408,7 @@ public class SchedulerController : ApiController
     ///     will be set to reference the Job passed with it into this method.
     /// </remarks>
     [HttpPost]
-    [Route("scheduler/schedulejobwithjobdetailandtrigger")]
+    [Route("Scheduler/ScheduleJobWithJobDetailAndTrigger")]
     public Task<DateTimeOffset> ScheduleJob([FromBody] string json)
     {
         _logger?.LogInformation("Received request to schedule a job with details and a trigger");
@@ -432,7 +432,7 @@ public class SchedulerController : ApiController
     /// <param name="json"></param>
     /// <returns></returns>
     [HttpPost]
-    [Route("scheduler/schedulejobidentifiedwithtrigger")]
+    [Route("Scheduler/ScheduleJobIdentifiedWithTrigger")]
     public Task<DateTimeOffset> ScheduleJobIdentifiedWithTrigger([FromBody] string json)
     {
         _logger?.LogInformation("Received request to schedule a job identified by a trigger");
@@ -455,7 +455,7 @@ public class SchedulerController : ApiController
     ///// parameter is not set to true then an exception will be thrown.</para>
     ///// </remarks>
     //[HttpPost]
-    //[Route("scheduler/schedulejobs")]
+    //[Route("Scheduler/schedulejobs")]
     //public Task ScheduleJobs([FromBody] string json)
     //{
     //    // IReadOnlyDictionary<IJobDetail, IReadOnlyCollection<ITrigger>> triggersAndJobs, bool replace
@@ -473,7 +473,7 @@ public class SchedulerController : ApiController
     ///     parameter is not set to true then an exception will be thrown.
     /// </remarks>
     [HttpPost]
-    [Route("scheduler/schedulejobwithtriggers")]
+    [Route("Scheduler/schedulejobwithtriggers")]
     public Task ScheduleJobWithTriggers([FromBody] string json)
     {
         _logger?.LogInformation("Received request to schedule a job with triggers");
@@ -499,7 +499,7 @@ public class SchedulerController : ApiController
     ///     </para>
     /// </summary>
     [HttpPost]
-    [Route("scheduler/unschedulejob")]
+    [Route("Scheduler/unschedulejob")]
     public Task<bool> UnscheduleJob([FromBody] string json)
     {
         _logger?.LogInformation("Received request to unschedule a job that matches the trigger");
@@ -527,7 +527,7 @@ public class SchedulerController : ApiController
     ///     (rather than lots of small durations of time).
     /// </remarks>
     [HttpPost]
-    [Route("scheduler/unschedulejobs")]
+    [Route("Scheduler/unschedulejobs")]
     public Task<bool> UnscheduleJobs([FromBody] string json)
     {
         _logger?.LogInformation("Received request to unschedule all the jobs that match the given triggers");
@@ -554,7 +554,7 @@ public class SchedulerController : ApiController
     ///     otherwise the first fire time of the newly scheduled trigger.
     /// </returns>
     [HttpPost]
-    [Route("scheduler/reschedulejob")]
+    [Route("Scheduler/reschedulejob")]
     public Task<DateTimeOffset?> RescheduleJob([FromBody] string json)
     {
         _logger?.LogInformation("Received request to reschedule the job that match the given trigger key");
@@ -582,7 +582,7 @@ public class SchedulerController : ApiController
     ///     once there are no remaining associated triggers).
     /// </remarks>
     [HttpPost]
-    [Route("scheduler/addjob")]
+    [Route("Scheduler/addjob")]
     public Task AddJob([FromBody] string json)
     {
         _logger?.LogInformation("Received request to add job to the scheduler");
@@ -604,7 +604,7 @@ public class SchedulerController : ApiController
     /// </summary>
     /// <returns> true if the Job was found and deleted.</returns>
     [HttpPost]
-    [Route("scheduler/deletejob")]
+    [Route("Scheduler/deletejob")]
     public Task<bool> DeleteJob([FromBody] string json)
     {
         _logger?.LogInformation("Received request to delete a job that matches the given job key");
@@ -637,7 +637,7 @@ public class SchedulerController : ApiController
     ///     one or more were not deleted.
     /// </returns>
     [HttpPost]
-    [Route("scheduler/deletejobs")]
+    [Route("Scheduler/deletejobs")]
     public Task<bool> DeleteJobs([FromBody] string json)
     {
         _logger?.LogInformation("Received request to delete jobs that are matching the given job keys");
@@ -656,7 +656,7 @@ public class SchedulerController : ApiController
     ///     Trigger the identified <see cref="IJobDetail" /> (Execute it now).
     /// </summary>
     [HttpPost]
-    [Route("scheduler/triggerjobwithjobkey")]
+    [Route("Scheduler/triggerjobwithjobkey")]
     public Task TriggerJobWithJobKey([FromBody] string json)
     {
         _logger?.LogInformation("Received request to trigger a job that matches the given job key");
@@ -679,7 +679,7 @@ public class SchedulerController : ApiController
     ///     executed.
     /// </param>
     [HttpPost]
-    [Route("scheduler/triggerjobwithdatamap")]
+    [Route("Scheduler/triggerjobwithdatamap")]
     public Task TriggerJobWithDataMap([FromBody] string json)
     {
         _logger?.LogInformation("Received request to trigger a job with data map that matches the given job key");
@@ -700,7 +700,7 @@ public class SchedulerController : ApiController
     ///     key - by pausing all of its current <see cref="ITrigger" />s.
     /// </summary>
     [HttpPost]
-    [Route("scheduler/pausejob")]
+    [Route("Scheduler/pausejob")]
     public Task PauseJob([FromBody] string json)
     {
         _logger?.LogInformation("Received request to pause a job that matches the given job key");
@@ -741,7 +741,7 @@ public class SchedulerController : ApiController
     /// </remarks>
     /// <seealso cref="ResumeJobs" />
     [HttpPost]
-    [Route("scheduler/pausejobs")]
+    [Route("Scheduler/pausejobs")]
     public Task PauseJobs([FromBody] string json)
     {
         _logger?.LogInformation("Received request to pause all jobs that are matching the given group matcher");
@@ -760,7 +760,7 @@ public class SchedulerController : ApiController
     ///     Pause the <see cref="ITrigger" /> with the given key.
     /// </summary>
     [HttpPost]
-    [Route("scheduler/pausetrigger")]
+    [Route("Scheduler/pausetrigger")]
     public Task PauseTrigger([FromBody] string json)
     {
         _logger?.LogInformation("Received request to pause a trigger that matches the given trigger key");
@@ -800,7 +800,7 @@ public class SchedulerController : ApiController
     /// </remarks>
     /// <seealso cref="ResumeTriggers" />
     [HttpPost]
-    [Route("scheduler/pausetriggers")]
+    [Route("Scheduler/pausetriggers")]
     public Task PauseTriggers([FromBody] string json)
     {
         _logger?.LogInformation("Received request to pause all triggers that are matching the given group matcher");
@@ -825,7 +825,7 @@ public class SchedulerController : ApiController
     ///     instruction will be applied.
     /// </remarks>
     [HttpPost]
-    [Route("scheduler/resumejob")]
+    [Route("Scheduler/resumejob")]
     public Task ResumeJob([FromBody] string json)
     {
         _logger?.LogInformation("Received request to resume a job that matches the given job key");
@@ -851,7 +851,7 @@ public class SchedulerController : ApiController
     /// </remarks>
     /// <seealso cref="PauseJobs" />
     [HttpPost]
-    [Route("scheduler/resumejobs")]
+    [Route("Scheduler/resumejobs")]
     public Task ResumeJobs([FromBody] string json)
     {
         _logger?.LogInformation("Received request to resume all jobs that are matching the given group matcher");
@@ -875,7 +875,7 @@ public class SchedulerController : ApiController
     ///     <see cref="ITrigger" />'s misfire instruction will be applied.
     /// </remarks>
     [HttpPost]
-    [Route("scheduler/resumetrigger")]
+    [Route("Scheduler/resumetrigger")]
     public Task ResumeTrigger([FromBody] string json)
     {
         _logger?.LogInformation("Received request to resume the trigger that matches the given trigger key");
@@ -899,7 +899,7 @@ public class SchedulerController : ApiController
     /// </remarks>
     /// <seealso cref="PauseTriggers" />
     [HttpPost]
-    [Route("scheduler/resumetriggers")]
+    [Route("Scheduler/resumetriggers")]
     public Task ResumeTriggers([FromBody] string json)
     {
         _logger?.LogInformation("Received request to resume all triggers that are matching the given group matcher");
@@ -928,7 +928,7 @@ public class SchedulerController : ApiController
     /// <seealso cref="PauseTriggers" />
     /// <seealso cref="Standby" />
     [HttpPost]
-    [Route("scheduler/pauseall")]
+    [Route("Scheduler/pausealltriggers")]
     public void PauseAll()
     {
         _logger?.LogInformation("Received request to pause all trigger");
@@ -948,7 +948,7 @@ public class SchedulerController : ApiController
     /// </remarks>
     /// <seealso cref="PauseAll" />
     [HttpPost]
-    [Route("scheduler/resumeall")]
+    [Route("Scheduler/resumealltriggers")]
     public void ResumeAll()
     {
         _logger?.LogInformation("Received request to resume all trigger");
@@ -962,7 +962,7 @@ public class SchedulerController : ApiController
     ///     Get the keys of all the <see cref="IJobDetail" />s in the matching groups.
     /// </summary>
     [HttpGet]
-    [Route("scheduler/getjobkeys")]
+    [Route("Scheduler/getjobkeys")]
     public string GetJobKeys([FromBody] string json)
     {
         _logger?.LogInformation("Received request to get all the job keys that are matching the given group matcher");
@@ -989,7 +989,7 @@ public class SchedulerController : ApiController
     ///     trigger afterward (e.g. see <see cref="RescheduleJob(string)" />).
     /// </remarks>
     [HttpGet]
-    [Route("scheduler/gettriggersofjob")]
+    [Route("Scheduler/gettriggersofjob")]
     public string GetTriggersOfJob([FromBody] string json)
     {
         _logger?.LogInformation("Received request to get all the triggers for the given job key");
@@ -1011,7 +1011,7 @@ public class SchedulerController : ApiController
     ///     groups.
     /// </summary>
     [HttpGet]
-    [Route("scheduler/gettriggerkeys")]
+    [Route("Scheduler/gettriggerkeys")]
     public string GetTriggerKeys([FromBody] string json)
     {
         _logger?.LogInformation(
@@ -1039,7 +1039,7 @@ public class SchedulerController : ApiController
     ///     JobDetail afterward (e.g. see <see cref="AddJob(string)" />).
     /// </remarks>
     [HttpGet]
-    [Route("scheduler/getjobdetail")]
+    [Route("Scheduler/getjobdetail")]
     public string GetJobDetail([FromBody] string json)
     {
         _logger?.LogInformation("Received request to get the job detail for the given job key");
@@ -1065,7 +1065,7 @@ public class SchedulerController : ApiController
     ///     trigger afterward (e.g. see <see cref="RescheduleJob(string)" />).
     /// </remarks>
     [HttpGet]
-    [Route("scheduler/gettrigger")]
+    [Route("Scheduler/gettrigger")]
     public string GetTrigger([FromBody] string json)
     {
         _logger?.LogInformation("Received request to get the trigger for the given trigger key");
@@ -1092,7 +1092,7 @@ public class SchedulerController : ApiController
     /// <seealso cref="TriggerState.Error" />
     /// <seealso cref="TriggerState.None" />
     [HttpGet]
-    [Route("scheduler/gettriggerstate")]
+    [Route("Scheduler/gettriggerstate")]
     public string GetTriggerState([FromBody] string json)
     {
         _logger?.LogInformation("Received request to get the trigger state for the given trigger key");
@@ -1112,7 +1112,7 @@ public class SchedulerController : ApiController
     /// </summary>
     /// <param name="json">The <see cref="ICalendar" /> information</param>
     [HttpPost]
-    [Route("scheduler/addcalendar")]
+    [Route("Scheduler/addcalendar")]
     public Task AddCalendar([FromBody] string json)
     {
         _logger?.LogInformation("Received request to add a calendar to the scheduler");
@@ -1166,7 +1166,7 @@ public class SchedulerController : ApiController
     /// <param name="calName">Name of the calendar.</param>
     /// <returns>true if the Calendar was found and deleted.</returns>
     [HttpPost]
-    [Route("scheduler/deletecalendar/{calName}")]
+    [Route("Scheduler/deletecalendar/{calName}")]
     public bool DeleteCalendar(string calName)
     {
         _logger?.LogInformation($"Received request to delete the calendar '{calName}' from the scheduler");
@@ -1182,7 +1182,7 @@ public class SchedulerController : ApiController
     ///     Get the <see cref="ICalendar" /> instance with the given name.
     /// </summary>
     [HttpGet]
-    [Route("scheduler/getcalendar/{calName}")]
+    [Route("Scheduler/getcalendar/{calName}")]
     public string GetCalendar(string calName)
     {
         _logger?.LogInformation($"Received request to get the calendar with the name '{calName}' from the scheduler");
@@ -1235,7 +1235,7 @@ public class SchedulerController : ApiController
     ///     Get the names of all registered <see cref="ICalendar" />.
     /// </summary>
     [HttpGet]
-    [Route("scheduler/getcalendarnames")]
+    [Route("Scheduler/getcalendarnames")]
     public Task<IReadOnlyCollection<string>> GetCalendarNames()
     {
         return CreateScheduler.Scheduler.GetCalendarNames();
@@ -1272,7 +1272,7 @@ public class SchedulerController : ApiController
     /// </returns>
     /// <seealso cref="GetCurrentlyExecutingJobs" />
     [HttpGet]
-    [Route("scheduler/interruptjobkey")]
+    [Route("Scheduler/interruptjobkey")]
     public bool InterruptJobKey([FromBody] string json)
     {
         _logger?.LogInformation(
@@ -1306,7 +1306,7 @@ public class SchedulerController : ApiController
     /// </param>
     /// <returns>true if the identified job instance was found and interrupted.</returns>
     [HttpGet]
-    [Route("scheduler/interruptfireinstanceid/{fireInstanceId}")]
+    [Route("Scheduler/interruptfireinstanceid/{fireInstanceId}")]
     public bool InterruptFireInstanceId(string fireInstanceId)
     {
         _logger?.LogInformation(
@@ -1327,7 +1327,7 @@ public class SchedulerController : ApiController
     /// <param name="json">the identifier to check for</param>
     /// <returns>true if a Job exists with the given identifier</returns>
     [HttpGet]
-    [Route("scheduler/checkexistsjobkey")]
+    [Route("Scheduler/checkexistsjobkey")]
     public bool CheckExistsJobKey([FromBody] string json)
     {
         _logger?.LogInformation("Received request to check if the given job key exists");
@@ -1349,7 +1349,7 @@ public class SchedulerController : ApiController
     /// <param name="json">the identifier to check for</param>
     /// <returns>true if a Trigger exists with the given identifier</returns>
     [HttpGet]
-    [Route("scheduler/checkexiststriggerkey")]
+    [Route("Scheduler/checkexiststriggerkey")]
     public bool CheckExistsTriggerKey([FromBody] string json)
     {
         _logger?.LogInformation("Received request to check if the given job key exists");
@@ -1369,7 +1369,7 @@ public class SchedulerController : ApiController
     ///     <see cref="ICalendar" />s.
     /// </summary>
     [HttpPost]
-    [Route("scheduler/clear")]
+    [Route("Scheduler/clear")]
     public void Clear()
     {
         _logger?.LogInformation("Received request to clear the whole scheduler");

@@ -15,7 +15,13 @@ public abstract class BaseCalendar(ICalendar calendar)
 {
     #region Properties
     /// <summary>
-    ///     The type of the calendar
+    ///     The name of the calendar
+    /// </summary>
+    [JsonProperty("Type")]
+    public string Name { get; internal set; }
+
+    /// <summary>
+    ///     The <see cref="CalendarType"/> of the calendar
     /// </summary>
     [JsonProperty("Type")]
     public CalendarType Type { get; internal set; }
