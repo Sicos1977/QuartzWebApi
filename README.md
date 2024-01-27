@@ -52,23 +52,23 @@ How to use the API
 
 ### Check if a job group is paused
 
-Do a `POST` request to `scheduler/isjobgrouppaused/{groupName}`, where `{groupName}` is the name of the group this will return `true` or `false`
+Do a `POST` request to `Scheduler/IsJobGroupPaused/{groupName}`, where `{groupName}` is the name of the group this will return `true` or `false`
 
 ### Check if a trigger group is paused
 
-Do a `POST` request to `scheduler/istriggergrouppaused/{groupName}`, where `{groupName}` is the name of the group this will return `true` or `false`
+Do a `POST` request to `Scheduler/IsTriggerGroupPaused/{groupName}`, where `{groupName}` is the name of the group this will return `true` or `false`
 
 ### Get the schedulers name
 
-Do a `GET` request to `scheduler/schedulername`, this will return the name of the scheduler
+Do a `GET` request to `Scheduler/SchedulerName`, this will return the name of the scheduler
 
 ### Get the schedulers instance id
 
-Do a `GET` request to `scheduler/schedulerinstanceid`, this will return the schedulers instance id
+Do a `GET` request to `Scheduler/SchedulerInstanceId`, this will return the schedulers instance id
 
 ### Get the schedulers context
 
-Do a `GET` request to `scheduler/schedulercontext`
+Do a `GET` request to `Scheduler/SchedulerContext`
 
 When the context is;
 
@@ -88,15 +88,15 @@ it will return
 
 ### Check if a scheduler is in standby mode
 
-Do a `GET` request to `scheduler/instandbymode` , this will return `true` or `false`
+Do a `GET` request to `Scheduler/InStandbyMode` , this will return `true` or `false`
 
 ### Check if a scheduler is in shutdown
 
-Do a `GET` request to `scheduler/isshutdown` , this will return `true` or `false`
+Do a `GET` request to `Scheduler/Isshutdown` , this will return `true` or `false`
 
 ### Get the schedulers meta-data
 
-Do a `GET` request to `scheduler/getmetadata` , this will return the meta-data that will look something like this
+Do a `GET` request to `Scheduler/GetMetaData` , this will return the meta-data that will look something like this
 
 ```json
 {
@@ -120,7 +120,7 @@ Do a `GET` request to `scheduler/getmetadata` , this will return the meta-data t
 
 ### Get the currently executing jobs
 
-Do a `GET` request to `scheduler/getcurrentlyexecutingjobs` , this will return the currently executing jobs that will look like this
+Do a `GET` request to `Scheduler/GetCurrentlyExecutingJobs` , this will return the currently executing jobs that will look like this
 
 ```json
 [
@@ -131,7 +131,7 @@ Do a `GET` request to `scheduler/getcurrentlyexecutingjobs` , this will return t
 
 ### Get the job group names
 
-Do a `GET` request to `scheduler/getjobgroupnames` , this will return the job group names that will look like this
+Do a `GET` request to `Scheduler/GetJobGroupNames` , this will return the job group names that will look like this
 
 ```json
 [
@@ -142,7 +142,7 @@ Do a `GET` request to `scheduler/getjobgroupnames` , this will return the job gr
 
 ### Get the trigger group names
 
-Do a `GET` request to `scheduler/gettriggergroupnames` , this will return
+Do a `GET` request to `Scheduler/GetTriggerGroupNames` , this will return
 
 ```json
 [
@@ -153,7 +153,7 @@ Do a `GET` request to `scheduler/gettriggergroupnames` , this will return
 
 ### Get the paused trigger groups
 
-Do a `GET` request to `scheduler/getpausedtriggergroups` , this will return
+Do a `GET` request to `Scheduler/GetPausedTriggerGroups` , this will return
 
 ```json
 [
@@ -164,31 +164,31 @@ Do a `GET` request to `scheduler/getpausedtriggergroups` , this will return
 
 ### Start the scheduler
 
-Do a `POST` request to `scheduler/start`
+Do a `POST` request to `Scheduler/Start`
 
 ### Start the scheduler with a delay
 
-Do a `POST` request to `scheduler/startdelayed/{delay}` where `{delay}` is the amount of *seconds* you want to delay the start
+Do a `POST` request to `Scheduler/StartDelayed/{delay}` where `{delay}` is the amount of *seconds* you want to delay the start
 
 ### Check if the scheduler is started
 
-Do a `GET` request to `scheduler/isstarted`, this will return `true` or `false`
+Do a `GET` request to `Scheduler/IsStarted`, this will return `true` or `false`
 
 ### Check if the scheduler is in standby mode
 
-Do a `GET` request to `scheduler/standby`, this will return `true` or `false`
+Do a `GET` request to `Scheduler/Standby`, this will return `true` or `false`
 
 ### Shutdown the scheduler
 
-Do a `POST` request to `scheduler/shutdown`
+Do a `POST` request to `Scheduler/Shutdown`
 
 ### Shutdown the scheduler but wait for all jobs to complete
 
-Do a `POST` request to `scheduler/shutdown/{waitForJobsToComplete}` where `{waitForJobsToComplete}` is `true`
+Do a `POST` request to `Scheduler/Shutdown/{waitForJobsToComplete}` where `{waitForJobsToComplete}` is `true`
 
 ### Schedule a job with a job detail and a trigger
 
-Do a `POST` request to `scheduler/schedulejobwithjobdetailandtrigger` with in the body the job detail and the trigger
+Do a `POST` request to `Scheduler/ScheduleJobWithJobDetailAndTrigger` with in the body the job detail and the trigger
    
 ```json
 {
@@ -230,7 +230,7 @@ Do a `POST` request to `scheduler/schedulejobwithjobdetailandtrigger` with in th
 
 ### Schedule the give trigger with the job identified by the trigger
 
-Do a `POST` request to `scheduler/schedulejobidentifiedwithtrigger` with in the body
+Do a `POST` request to `Scheduler/ScheduleJobIdentifiedWithTrigger` with in the body
 
 ```json
 {
@@ -268,7 +268,7 @@ TODO: Task ScheduleJobs(IReadOnlyDictionary<IJobDetail, IReadOnlyCollection<ITri
 
 ### Schedule a job with a job detail and a related set of triggers
 
-Do a `POST` request to `scheduler/schedulejobwithjobdetailandtriggers` with in the body the job detail and a related set of triggers
+Do a `POST` request to `Scheduler/ScheduleJobWithJobDetailAndTriggers` with in the body the job detail and a related set of triggers
    
 ```json
 {
@@ -313,7 +313,7 @@ When you get an error like `Could not find an IJob class with the type '<the job
    
 ### Unschedule a job
 
-Do a `POST` request to `scheduler/unschedulejob` with in the body the trigger of the job
+Do a `POST` request to `Scheduler/UnscheduleJob` with in the body the trigger of the job
    
 ```json    
 {
@@ -326,7 +326,7 @@ this will return `true` when the job is unscheduled or `false` when not
  
 ### Unschedule multiple jobs
 
-Do a `POST` request to `scheduler/unschedulejobs` with in the body the triggers of the jobs to unschedule
+Do a `POST` request to `Scheduler/UnscheduleJobs` with in the body the triggers of the jobs to unschedule
    
 ```json    
 [
@@ -345,7 +345,7 @@ this will return `true` when the jobs are unscheduled or `false` when not
     
 ### Reschedule job
 
-Do a `POST` request to `scheduler/reschedulejob` with in the body the reschedulejob object
+Do a `POST` request to `Scheduler/RescheduleJob` with in the body the reschedulejob object
 
 ```json    
 {
@@ -381,7 +381,7 @@ Returns 'null' if a trigger with the given name and group was not found and remo
     
 ### Add a job with no associated trigger
 
-Do a `POST` request to `scheduler/addjob` with in the body the addjob object    
+Do a `POST` request to `Scheduler/AddJob` with in the body the addjob object    
     
 ```json    
 {
@@ -403,7 +403,7 @@ Do a `POST` request to `scheduler/addjob` with in the body the addjob object
     
 ### Delete a job
 
-Do a `POST` request to `scheduler/deletejob` with in the body the key of the job
+Do a `POST` request to `Scheduler/DeleteJob` with in the body the key of the job
    
 ```json    
 {
@@ -416,7 +416,7 @@ this will return `true` when the job is deleted or `false` when not
     
 ### Delete multiple jobs
 
-Do a `POST` request to `scheduler/deletejobs` with in the body the keys of the jobs
+Do a `POST` request to `Scheduler/DeleteJobs` with in the body the keys of the jobs
    
 ```json    
 [
@@ -433,7 +433,7 @@ Do a `POST` request to `scheduler/deletejobs` with in the body the keys of the j
     
 ### Trigger a job to execute NOW
 
-Do a `POST` request to `scheduler/triggerjob` with in the body the key of the job
+Do a `POST` request to `Scheduler/TriggerJobWithJobkey` with in the body the key of the job
    
 ```json    
 {
@@ -444,7 +444,7 @@ Do a `POST` request to `scheduler/triggerjob` with in the body the key of the jo
     
 ### Trigger a job to execute NOW and associated a JobDataMap
 
-Do a `POST` request to `scheduler/triggerjobwithdatamap` with in the body
+Do a `POST` request to `Scheduler/TriggerJobWithDataMap` with in the body
    
 ```json    
 {    
@@ -461,7 +461,7 @@ Do a `POST` request to `scheduler/triggerjobwithdatamap` with in the body
 
 ### Pause a job
     
-Do a `POST` request to `scheduler/pausejob` with in the body the key of the job
+Do a `POST` request to `Scheduler/PauseJob` with in the body the key of the job
    
 ```json    
 {
@@ -472,7 +472,7 @@ Do a `POST` request to `scheduler/pausejob` with in the body the key of the job
     
 ### Pause multiple jobs
     
-Do a `POST` request to `scheduler/pausejobs` with in the body the group matching object that defined what jobs to pause
+Do a `POST` request to `Scheduler/PauseJobs` with in the body the group matching object that defined what jobs to pause
 
 The values for `Type` can be: `Contains`, `EndsWith`, `Equals` or `StartsWith`
     
@@ -485,7 +485,7 @@ The values for `Type` can be: `Contains`, `EndsWith`, `Equals` or `StartsWith`
     
 ### Pause a trigger
     
-Do a `POST` request to `scheduler/pausetrigger` with in the body the triggerkey
+Do a `POST` request to `Scheduler/PauseTrigger` with in the body the triggerkey
    
 ```json    
 {
@@ -496,7 +496,7 @@ Do a `POST` request to `scheduler/pausetrigger` with in the body the triggerkey
     
 ### Pause multiple triggers
     
-Do a `POST` request to `scheduler/pausetriggers` with in the body the group matching object that defined what triggers to pause
+Do a `POST` request to `Scheduler/PauseTriggers` with in the body the group matching object that defined what triggers to pause
     
 The values for `Type` can be: `Contains`, `EndsWith`, `Equals` or `StartsWith`
     
@@ -509,7 +509,7 @@ The values for `Type` can be: `Contains`, `EndsWith`, `Equals` or `StartsWith`
     
 ### Resume a job
     
-Do a `POST` request to `scheduler/resumejob` with in the body the key of the job
+Do a `POST` request to `Scheduler/ResumeJob` with in the body the key of the job
     
 ```json    
 {
@@ -520,7 +520,7 @@ Do a `POST` request to `scheduler/resumejob` with in the body the key of the job
     
 ### Resume multiple jobs
     
-Do a `POST` request to `scheduler/resumejobs` with in the body the group matching object that defined what jobs to resume
+Do a `POST` request to `Scheduler/ResumeJobs` with in the body the group matching object that defined what jobs to resume
     
 The values for `Type` can be: `Contains`, `EndsWith`, `Equals` or `StartsWith`
     
@@ -533,7 +533,7 @@ The values for `Type` can be: `Contains`, `EndsWith`, `Equals` or `StartsWith`
     
 ### Resume a trigger
     
-Do a `POST` request to `scheduler/resumetrigger` with in the body the key of the trigger
+Do a `POST` request to `Scheduler/ResumeTrigger` with in the body the key of the trigger
     
 ```json    
 {
@@ -544,7 +544,7 @@ Do a `POST` request to `scheduler/resumetrigger` with in the body the key of the
     
 ### Resume multiple triggers
     
-Do a `POST` request to `scheduler/resumetriggers` with in the body the group matching object that defined what triggers to resume
+Do a `POST` request to `Scheduler/ResumeTriggers` with in the body the group matching object that defined what triggers to resume
     
 The values for `Type` can be: `Contains`, `EndsWith`, `Equals` or `StartsWith`
     
@@ -553,7 +553,41 @@ The values for `Type` can be: `Contains`, `EndsWith`, `Equals` or `StartsWith`
   "Type": "Contains",
   "Value": "<The trigger keys to match>"
 }   
-```     
+```
+
+### Pause all triggers
+    
+Do a `POST` request to `Scheduler/PauseAllTriggers`
+
+### Resume all triggers
+    
+Do a `POST` request to `Scheduler/ResumeAllTriggers`
+
+### Get job keys
+    
+Do a `GET` request to `Scheduler/GetJobKeys` , this will return the all job keys that will look something like this
+
+// TODO: Continue from here
+
+```json
+{
+    "InStandbyMode": false,
+    "JobStoreType": "Quartz.Simpl.RAMJobStore, Quartz, Version=3.4.0.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4",
+    "JobStoreClustered": false,
+    "JobsStoreSupportsPersistence": false,
+    "NumbersOfJobsExecuted": 0,
+    "RunningSince": "2022-05-11T16:30:06.5957565+00:00",
+    "SchedulerInstanceId": "NON_CLUSTERED",
+    "SchedulerName": "The name of the scheduler",
+    "SchedulerRemote": false,
+    "SchedulerType": "Quartz.Impl.StdScheduler, Quartz, Version=3.4.0.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4",
+    "Shutdown": false,
+    "Started": true,
+    "ThreadPoolSize": 10,
+    "ThreadPoolType": "Quartz.Simpl.DefaultThreadPool, Quartz, Version=3.4.0.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4",
+    "Version": "3.4.0.0"
+}
+```
     
 Errors returned
 ===============
