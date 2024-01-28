@@ -46,9 +46,6 @@ public class AnnualCalendar : BaseCalendar
         foreach (var day in DaysExcluded)
             result.SetDayExcluded(day, true);
 
-        if (!string.IsNullOrEmpty(CalendarBase))
-            result.CalendarBase = CreateScheduler.Scheduler.GetCalendar(CalendarBase).GetAwaiter().GetResult();
-
         return result;
     }
     #endregion

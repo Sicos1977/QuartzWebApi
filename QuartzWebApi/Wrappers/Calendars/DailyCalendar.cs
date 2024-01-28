@@ -113,9 +113,6 @@ public class DailyCalendar : BaseCalendar
             InvertTimeRange = InvertTimeRange
         };
 
-        if (!string.IsNullOrEmpty(CalendarBase))
-            result.CalendarBase = CreateScheduler.Scheduler.GetCalendar(CalendarBase).GetAwaiter().GetResult();
-
         return result;
     }
     #endregion

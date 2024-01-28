@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Results;
 using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Spi;
@@ -18,9 +19,27 @@ public class Scheduler : ApiController
 {
     #region Fields
     /// <summary>
+    ///     <see cref="IScheduler" />
+    /// </summary>
+    private readonly IScheduler _scheduler;
+
+    /// <summary>
     ///     When set then logging is written to this ILogger instance
     /// </summary>
     private readonly ILogger _logger;
+    #endregion
+
+    #region Constructor
+    /// <summary>
+    ///     Makes a new instance of the <see cref="Scheduler" /> class.
+    /// </summary>
+    /// <param name="scheduler"><see cref="IScheduler"/></param>
+    /// <param name="logger"><see cref="ILogger"/></param>
+    public Scheduler(IScheduler scheduler, ILogger logger)
+    {
+        _scheduler = scheduler;
+        _logger = logger;
+    }
     #endregion
 
     #region IsJobGroupPaused
@@ -34,7 +53,7 @@ public class Scheduler : ApiController
     public Task<bool> IsJobGroupPaused(string groupName)
     {
         _logger?.LogInformation($"Received request to check if the job group '{groupName}' is paused");
-        var result = CreateScheduler.Scheduler.IsJobGroupPaused(groupName);
+        var result = _scheduler.IsJobGroupPaused(groupName);
         _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
@@ -51,7 +70,7 @@ public class Scheduler : ApiController
     public Task<bool> IsTriggerGroupPaused(string groupName)
     {
         _logger?.LogInformation($"Received request to check if the trigger group '{groupName}' is paused");
-        var result = CreateScheduler.Scheduler.IsTriggerGroupPaused(groupName);
+        var result = _scheduler.IsTriggerGroupPaused(groupName);
         _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
@@ -66,7 +85,7 @@ public class Scheduler : ApiController
     public string SchedulerName()
     {
         _logger?.LogInformation("Received request to return the scheduler name");
-        var result = CreateScheduler.Scheduler.SchedulerName;
+        var result = _scheduler.SchedulerName;
         _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
@@ -81,7 +100,7 @@ public class Scheduler : ApiController
     public string SchedulerInstanceId()
     {
         _logger?.LogInformation("Received request to return the scheduler instance id");
-        var result = CreateScheduler.Scheduler.SchedulerInstanceId;
+        var result = _scheduler.SchedulerInstanceId;
         _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
@@ -96,7 +115,7 @@ public class Scheduler : ApiController
     public SchedulerContext Context()
     {
         _logger?.LogInformation("Received request to return the scheduler context");
-        var result = CreateScheduler.Scheduler.Context;
+        var result = _scheduler.Context;
         _logger?.LogDebug($"Returning '{result}'");
         return result;
     }
@@ -113,7 +132,7 @@ public class Scheduler : ApiController
     public bool InStandbyMode()
     {
         _logger?.LogInformation("Received request to check if the scheduler is in standby mode");
-        var result = CreateScheduler.Scheduler.InStandbyMode;
+        var result = _scheduler.InStandbyMode;
         _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
@@ -128,7 +147,7 @@ public class Scheduler : ApiController
     public bool IsShutdown()
     {
         _logger?.LogInformation("Received request to check if the scheduler is shutdown");
-        var result = CreateScheduler.Scheduler.IsShutdown;
+        var result = _scheduler.IsShutdown;
         _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
@@ -148,7 +167,7 @@ public class Scheduler : ApiController
     public string GetMetaData()
     {
         _logger?.LogInformation("Received request to return the meta-data");
-        var result = new SchedulerMetaData(CreateScheduler.Scheduler.GetMetaData().Result).ToJsonString();
+        var result = new SchedulerMetaData(_scheduler.GetMetaData().Result).ToJsonString();
         _logger?.LogInformation($"Returning '{result}'");
         return result;
     }
@@ -179,7 +198,7 @@ public class Scheduler : ApiController
     {
         _logger?.LogInformation("Received request to return the currently executing jobs");
 
-        var jobExecutionContext = CreateScheduler.Scheduler.GetCurrentlyExecutingJobs().GetAwaiter().GetResult();
+        var jobExecutionContext = _scheduler.GetCurrentlyExecutingJobs().GetAwaiter().GetResult();
         var result = new JobExecutionContexts(jobExecutionContext).ToJsonString();
 
         _logger?.LogInformation("Returning currently executing jobs");
@@ -198,7 +217,7 @@ public class Scheduler : ApiController
     {
         _logger?.LogInformation("Received request to return the job group names");
 
-        var result = CreateScheduler.Scheduler.GetJobGroupNames();
+        var result = _scheduler.GetJobGroupNames();
 
         _logger?.LogInformation("Returning job group names");
         _logger?.LogDebug($"JSON '{result}'");
@@ -216,7 +235,7 @@ public class Scheduler : ApiController
     {
         _logger?.LogInformation("Received request to return the trigger group names");
 
-        var result = CreateScheduler.Scheduler.GetTriggerGroupNames();
+        var result = _scheduler.GetTriggerGroupNames();
 
         _logger?.LogInformation("Returning trigger group names");
         _logger?.LogDebug($"JSON '{result}'");
@@ -234,7 +253,7 @@ public class Scheduler : ApiController
     {
         _logger?.LogInformation("Received request to return the paused trigger groups");
 
-        var result = CreateScheduler.Scheduler.GetPausedTriggerGroups();
+        var result = _scheduler.GetPausedTriggerGroups();
 
         _logger?.LogInformation("Returning paused trigger groups");
         _logger?.LogDebug($"JSON '{result}'");
@@ -262,7 +281,7 @@ public class Scheduler : ApiController
     {
         _logger?.LogInformation("Received request to start the scheduler");
 
-        var result = CreateScheduler.Scheduler.Start();
+        var result = _scheduler.Start();
 
         _logger?.LogInformation("The scheduler is started");
         return result;
@@ -285,7 +304,7 @@ public class Scheduler : ApiController
     {
         _logger?.LogInformation($"Received request to start the scheduler with a delay of '{delay}' seconds");
 
-        var result = CreateScheduler.Scheduler.StartDelayed(new TimeSpan(0, 0, delay));
+        var result = _scheduler.StartDelayed(new TimeSpan(0, 0, delay));
 
         _logger?.LogInformation("The scheduler is started");
         return result;
@@ -311,7 +330,7 @@ public class Scheduler : ApiController
     {
         _logger?.LogInformation("Received request to check if the scheduler is started");
 
-        var result = CreateScheduler.Scheduler.IsStarted;
+        var result = _scheduler.IsStarted;
 
         _logger?.LogInformation($"Returning '{result}'");
         return result;
@@ -342,7 +361,7 @@ public class Scheduler : ApiController
     {
         _logger?.LogInformation("Received request to put the scheduler in standby mode");
 
-        var result = CreateScheduler.Scheduler.Standby();
+        var result = _scheduler.Standby();
 
         _logger?.LogInformation("The scheduler is in standby mode");
         return result;
@@ -364,7 +383,7 @@ public class Scheduler : ApiController
     {
         _logger?.LogInformation("Received request to shutdown the scheduler");
 
-        var result = CreateScheduler.Scheduler.Shutdown();
+        var result = _scheduler.Shutdown();
 
         _logger?.LogInformation("The scheduler is shutdown");
         return result;
@@ -390,7 +409,7 @@ public class Scheduler : ApiController
             ? "Received request to shutdown the scheduler but wait the the jobs to complete first"
             : "Received request to shutdown the scheduler and not to wait for the jobs to complete first");
 
-        var result = CreateScheduler.Scheduler.Shutdown(waitForJobsToComplete);
+        var result = _scheduler.Shutdown(waitForJobsToComplete);
 
         _logger?.LogInformation("The scheduler is shutdown");
         return result;
@@ -415,7 +434,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobDetailWithTrigger = JobDetailWithTrigger.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.ScheduleJob(
+        var result = _scheduler.ScheduleJob(
             jobDetailWithTrigger.JobDetail.ToJobDetail(),
             jobDetailWithTrigger.Trigger.ToTrigger());
 
@@ -439,7 +458,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var trigger = Trigger.FromJsonString(json).ToTrigger();
-        var result = CreateScheduler.Scheduler.ScheduleJob(trigger);
+        var result = _scheduler.ScheduleJob(trigger);
 
         _logger?.LogDebug($"Job scheduled, returning '{result}'");
         return result;
@@ -460,7 +479,7 @@ public class Scheduler : ApiController
     //{
     //    // IReadOnlyDictionary<IJobDetail, IReadOnlyCollection<ITrigger>> triggersAndJobs, bool replace
     //    var triggerAndJobs
-    //    return CreateScheduler.Scheduler.ScheduleJobs(trigger);
+    //    return _scheduler.ScheduleJobs(trigger);
     //}
 
     #region ScheduleJobWithTriggers
@@ -480,7 +499,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobDetailWithTriggers = JobDetailWithTriggers.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.ScheduleJob(
+        var result = _scheduler.ScheduleJob(
             jobDetailWithTriggers.JobDetail.ToJobDetail(),
             jobDetailWithTriggers.ToReadOnlyTriggerCollection(),
             jobDetailWithTriggers.Replace);
@@ -505,7 +524,7 @@ public class Scheduler : ApiController
         _logger?.LogInformation("Received request to unschedule a job that matches the trigger");
         _logger?.LogDebug($"Received JSON '{json}'");
 
-        var result = CreateScheduler.Scheduler.UnscheduleJob(TriggerKey.FromJsonString(json).ToTriggerKey());
+        var result = _scheduler.UnscheduleJob(TriggerKey.FromJsonString(json).ToTriggerKey());
 
         _logger?.LogInformation($"Job that matches the trigger unscheduled, returning '{result}'");
         return result;
@@ -533,7 +552,7 @@ public class Scheduler : ApiController
         _logger?.LogInformation("Received request to unschedule all the jobs that match the given triggers");
         _logger?.LogDebug($"Received JSON '{json}'");
 
-        var result = CreateScheduler.Scheduler.UnscheduleJobs(TriggerKeys.FromJsonString(json).ToTriggerKeys());
+        var result = _scheduler.UnscheduleJobs(TriggerKeys.FromJsonString(json).ToTriggerKeys());
 
         _logger?.LogInformation($"Jobs unscheduled that are matching the given triggers, returning '{result}'");
         return result;
@@ -561,7 +580,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var rescheduleJob = Wrappers.RescheduleJob.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.RescheduleJob(rescheduleJob.CurrentTriggerKey.ToTriggerKey(),
+        var result = _scheduler.RescheduleJob(rescheduleJob.CurrentTriggerKey.ToTriggerKey(),
             rescheduleJob.Trigger.ToTrigger());
 
         _logger?.LogInformation($"Job rescheduled that matches the given trigger key, returning '{result}'");
@@ -589,7 +608,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var addJob = JobDetail.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.AddJob(addJob.ToJobDetail(), addJob.Replace,
+        var result = _scheduler.AddJob(addJob.ToJobDetail(), addJob.Replace,
             addJob.StoreNonDurableWhileAwaitingScheduling);
 
         _logger?.LogInformation("Job added to the scheduler");
@@ -611,7 +630,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.DeleteJob(jobKey.ToJobKey());
+        var result = _scheduler.DeleteJob(jobKey.ToJobKey());
 
         _logger?.LogInformation($"Removed job from the scheduler, result '{result}'");
         return result;
@@ -644,7 +663,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKeys = JobKeys.FromJsonString(json).ToJobKeys();
-        var result = CreateScheduler.Scheduler.DeleteJobs(jobKeys);
+        var result = _scheduler.DeleteJobs(jobKeys);
 
         _logger?.LogInformation($"Removed jobs from the scheduler, result '{result}'");
         return result;
@@ -663,7 +682,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.TriggerJob(jobKey.ToJobKey());
+        var result = _scheduler.TriggerJob(jobKey.ToJobKey());
 
         _logger?.LogInformation("Job triggered");
         return result;
@@ -687,7 +706,7 @@ public class Scheduler : ApiController
 
         var jobKeyWithDataMap = JobKeyWithDataMap.FromJsonString(json);
         var result =
-            CreateScheduler.Scheduler.TriggerJob(jobKeyWithDataMap.JobKey.ToJobKey(), jobKeyWithDataMap.JobDataMap);
+            _scheduler.TriggerJob(jobKeyWithDataMap.JobKey.ToJobKey(), jobKeyWithDataMap.JobDataMap);
 
         _logger?.LogInformation("Job triggered");
         return result;
@@ -707,7 +726,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.PauseJob(jobKey.ToJobKey());
+        var result = _scheduler.PauseJob(jobKey.ToJobKey());
 
         _logger?.LogInformation("Job paused");
         return result;
@@ -748,7 +767,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var groupMatcher = GroupMatcher<Quartz.JobKey>.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.PauseJobs(groupMatcher.ToGroupMatcher());
+        var result = _scheduler.PauseJobs(groupMatcher.ToGroupMatcher());
 
         _logger?.LogInformation("Jobs paused");
         return result;
@@ -767,7 +786,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var triggerKey = TriggerKey.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.PauseTrigger(triggerKey.ToTriggerKey());
+        var result = _scheduler.PauseTrigger(triggerKey.ToTriggerKey());
 
         _logger?.LogInformation("Trigger paused");
         return result;
@@ -807,7 +826,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var groupMatcher = GroupMatcher<Quartz.TriggerKey>.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.PauseTriggers(groupMatcher.ToGroupMatcher());
+        var result = _scheduler.PauseTriggers(groupMatcher.ToGroupMatcher());
 
         _logger?.LogInformation("Triggers paused");
         return result;
@@ -832,7 +851,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.ResumeJob(jobKey.ToJobKey());
+        var result = _scheduler.ResumeJob(jobKey.ToJobKey());
 
         _logger?.LogInformation("Job resumed");
         return result;
@@ -858,7 +877,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var groupMatcher = GroupMatcher<Quartz.JobKey>.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.ResumeJobs(groupMatcher.ToGroupMatcher());
+        var result = _scheduler.ResumeJobs(groupMatcher.ToGroupMatcher());
 
         _logger?.LogInformation("Jobs resumed");
         return result;
@@ -882,7 +901,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var triggerKey = TriggerKey.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.ResumeTrigger(triggerKey.ToTriggerKey());
+        var result = _scheduler.ResumeTrigger(triggerKey.ToTriggerKey());
 
         _logger?.LogInformation("Trigger resumed");
         return result;
@@ -906,7 +925,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var groupMatcher = GroupMatcher<Quartz.TriggerKey>.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.ResumeTriggers(groupMatcher.ToGroupMatcher());
+        var result = _scheduler.ResumeTriggers(groupMatcher.ToGroupMatcher());
 
         _logger?.LogInformation("Triggers resumed");
         return result;
@@ -932,7 +951,7 @@ public class Scheduler : ApiController
     public void PauseAll()
     {
         _logger?.LogInformation("Received request to pause all trigger");
-        CreateScheduler.Scheduler.PauseAll();
+        _scheduler.PauseAll();
         _logger?.LogInformation("All triggers paused");
     }
     #endregion
@@ -952,7 +971,7 @@ public class Scheduler : ApiController
     public void ResumeAll()
     {
         _logger?.LogInformation("Received request to resume all trigger");
-        CreateScheduler.Scheduler.ResumeAll();
+        _scheduler.ResumeAll();
         _logger?.LogInformation("All triggers resumed");
     }
     #endregion
@@ -969,7 +988,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var groupMatcher = GroupMatcher<Quartz.JobKey>.FromJsonString(json);
-        var jobKeys = CreateScheduler.Scheduler.GetJobKeys(groupMatcher.ToGroupMatcher()).GetAwaiter().GetResult();
+        var jobKeys = _scheduler.GetJobKeys(groupMatcher.ToGroupMatcher()).GetAwaiter().GetResult();
         
         if (jobKeys == null)
         {
@@ -1003,7 +1022,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
-        var triggers = CreateScheduler.Scheduler.GetTriggersOfJob(jobKey.ToJobKey()).GetAwaiter().GetResult();
+        var triggers = _scheduler.GetTriggersOfJob(jobKey.ToJobKey()).GetAwaiter().GetResult();
         
         if (triggers == null)
         {
@@ -1032,7 +1051,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var groupMatcher = GroupMatcher<Quartz.TriggerKey>.FromJsonString(json);
-        var triggerKeys = CreateScheduler.Scheduler.GetTriggerKeys(groupMatcher.ToGroupMatcher()).GetAwaiter().GetResult();
+        var triggerKeys = _scheduler.GetTriggerKeys(groupMatcher.ToGroupMatcher()).GetAwaiter().GetResult();
 
         if (triggerKeys == null)
         {
@@ -1065,7 +1084,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
-        var jobDetail = CreateScheduler.Scheduler.GetJobDetail(jobKey.ToJobKey()).GetAwaiter().GetResult();
+        var jobDetail = _scheduler.GetJobDetail(jobKey.ToJobKey()).GetAwaiter().GetResult();
 
         if (jobDetail == null)
         {
@@ -1098,7 +1117,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var triggerKey = TriggerKey.FromJsonString(json);
-        var trigger = CreateScheduler.Scheduler.GetTrigger(triggerKey.ToTriggerKey()).GetAwaiter().GetResult();
+        var trigger = _scheduler.GetTrigger(triggerKey.ToTriggerKey()).GetAwaiter().GetResult();
         if (trigger == null)
         {
             _logger?.LogInformation("No trigger found");
@@ -1131,7 +1150,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var triggerKey = TriggerKey.FromJsonString(json);
-        var triggerState = CreateScheduler.Scheduler.GetTriggerState(triggerKey.ToTriggerKey()).GetAwaiter().GetResult();
+        var triggerState = _scheduler.GetTriggerState(triggerKey.ToTriggerKey()).GetAwaiter().GetResult();
         var result = triggerState.ToString();
 
         _logger?.LogInformation($"Returning '{result}'");
@@ -1151,9 +1170,13 @@ public class Scheduler : ApiController
         _logger?.LogInformation("Received request to add a calendar to the scheduler");
         _logger?.LogDebug($"Received JSON '{json}'");
 
-        var calendar = BaseCalendar.FromJsonString(json);
+        var baseCalendar = BaseCalendar.FromJsonString(json);
+        var calendar = baseCalendar.ToCalendar();
+        
+        if (!string.IsNullOrEmpty(baseCalendar.CalendarBase))
+            calendar.CalendarBase = _scheduler.GetCalendar(baseCalendar.CalendarBase).GetAwaiter().GetResult();
 
-        return CreateScheduler.Scheduler.AddCalendar(calendar.Name, calendar.ToCalendar(), calendar.Replace, calendar.UpdateTriggers);
+        return _scheduler.AddCalendar(baseCalendar.Name, calendar, baseCalendar.Replace, baseCalendar.UpdateTriggers);
     }
     #endregion
 
@@ -1174,7 +1197,7 @@ public class Scheduler : ApiController
     {
         _logger?.LogInformation($"Received request to delete the calendar '{calName}' from the scheduler");
 
-        var result = CreateScheduler.Scheduler.DeleteCalendar(calName).GetAwaiter().GetResult();
+        var result = _scheduler.DeleteCalendar(calName).GetAwaiter().GetResult();
 
         _logger?.LogInformation($"Returning '{result}'");
         return result;
@@ -1191,7 +1214,7 @@ public class Scheduler : ApiController
     {
         _logger?.LogInformation($"Received request to get the calendar with the name '{calName}' from the scheduler");
 
-        var calendar = CreateScheduler.Scheduler.GetCalendar(calName).GetAwaiter().GetResult();
+        var calendar = _scheduler.GetCalendar(calName).GetAwaiter().GetResult();
         if (calendar == null)
         {
             _logger?.LogInformation($"Calendar with the name '{calName}' not found");
@@ -1244,7 +1267,7 @@ public class Scheduler : ApiController
     [Route("Scheduler/GetCalendarNames")]
     public Task<IReadOnlyCollection<string>> GetCalendarNames()
     {
-        return CreateScheduler.Scheduler.GetCalendarNames();
+        return _scheduler.GetCalendarNames();
     }
     #endregion
 
@@ -1286,7 +1309,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.Interrupt(jobKey.ToJobKey()).GetAwaiter().GetResult();
+        var result = _scheduler.Interrupt(jobKey.ToJobKey()).GetAwaiter().GetResult();
 
         _logger?.LogInformation($"Returning '{result}'");
         return result;
@@ -1318,7 +1341,7 @@ public class Scheduler : ApiController
         _logger?.LogInformation(
             "Received request for cancellation, within this Scheduler instance, of the identified executing job instance");
 
-        var result = CreateScheduler.Scheduler.Interrupt(fireInstanceId).GetAwaiter().GetResult();
+        var result = _scheduler.Interrupt(fireInstanceId).GetAwaiter().GetResult();
 
         _logger?.LogInformation($"Returning '{result}'");
         return result;
@@ -1340,7 +1363,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.CheckExists(jobKey.ToJobKey()).GetAwaiter().GetResult();
+        var result = _scheduler.CheckExists(jobKey.ToJobKey()).GetAwaiter().GetResult();
 
         _logger?.LogInformation($"Returning '{result}'");
         return result;
@@ -1362,7 +1385,7 @@ public class Scheduler : ApiController
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var triggerKey = TriggerKey.FromJsonString(json);
-        var result = CreateScheduler.Scheduler.CheckExists(triggerKey.ToTriggerKey()).GetAwaiter().GetResult();
+        var result = _scheduler.CheckExists(triggerKey.ToTriggerKey()).GetAwaiter().GetResult();
 
         _logger?.LogInformation($"Returning '{result}'");
         return result;
@@ -1379,7 +1402,7 @@ public class Scheduler : ApiController
     public void Clear()
     {
         _logger?.LogInformation("Received request to clear the whole scheduler");
-        CreateScheduler.Scheduler.Clear();
+        _scheduler.Clear();
         _logger?.LogInformation("Scheduler cleared");
     }
     #endregion

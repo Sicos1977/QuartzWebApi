@@ -49,9 +49,6 @@ public class MonthlyCalendar : BaseCalendar
         for(var i = 0; i < DaysExcluded.Count; i++)
             result.SetDayExcluded(i + 1, DaysExcluded[i]);
 
-        if (!string.IsNullOrEmpty(CalendarBase))
-            result.CalendarBase = CreateScheduler.Scheduler.GetCalendar(CalendarBase).GetAwaiter().GetResult();
-
         return result;
     }
     #endregion

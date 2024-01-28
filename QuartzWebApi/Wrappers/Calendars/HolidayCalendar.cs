@@ -52,9 +52,6 @@ public class HolidayCalendar : BaseCalendar
         foreach (var day in ExcludedDates)
             result.AddExcludedDate(day);
 
-        if (!string.IsNullOrEmpty(CalendarBase))
-            result.CalendarBase = CreateScheduler.Scheduler.GetCalendar(CalendarBase).GetAwaiter().GetResult();
-
         return result;
     }
     #endregion

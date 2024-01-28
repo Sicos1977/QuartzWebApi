@@ -50,9 +50,6 @@ public class WeeklyCalendar : BaseCalendar
         for(var i = 0; i < DaysExcluded.Count; i++)
             result.SetDayExcluded((DayOfWeek) i + 1, DaysExcluded[i]);
 
-        if (!string.IsNullOrEmpty(CalendarBase))
-            result.CalendarBase = CreateScheduler.Scheduler.GetCalendar(CalendarBase).GetAwaiter().GetResult();
-
         return result;
     }
     #endregion
