@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Results;
 using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Spi;
@@ -15,7 +14,7 @@ using TriggerKey = QuartzWebApi.Wrappers.TriggerKey;
 namespace QuartzWebApi.Controllers;
 
 //[Authorize]
-public class Scheduler : ApiController
+public class SchedulerController : ApiController
 {
     #region Fields
     /// <summary>
@@ -29,18 +28,18 @@ public class Scheduler : ApiController
     private readonly ILogger _logger;
     #endregion
 
-    #region Constructor
-    /// <summary>
-    ///     Makes a new instance of the <see cref="Scheduler" /> class.
-    /// </summary>
-    /// <param name="scheduler"><see cref="IScheduler"/></param>
-    /// <param name="logger"><see cref="ILogger"/></param>
-    public Scheduler(IScheduler scheduler, ILogger logger)
-    {
-        _scheduler = scheduler;
-        _logger = logger;
-    }
-    #endregion
+    //#region Constructor
+    ///// <summary>
+    /////     Makes a new instance of the <see cref="Scheduler" /> class.
+    ///// </summary>
+    ///// <param name="scheduler"><see cref="IScheduler"/></param>
+    ///// <param name="logger"><see cref="ILogger"/></param>
+    //public Scheduler(IScheduler scheduler, ILogger logger)
+    //{
+    //    _scheduler = scheduler;
+    //    _logger = logger;
+    //}
+    //#endregion
 
     #region IsJobGroupPaused
     /// <summary>
