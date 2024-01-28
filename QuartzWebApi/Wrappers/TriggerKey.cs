@@ -12,6 +12,7 @@ public class TriggerKey : Key
     ///     Makes this object and sets it's needed properties
     /// </summary>
     /// <param name="name">The name of the trigger</param>
+    [JsonConstructor]
     public TriggerKey(string name) : base(name)
     {
     }

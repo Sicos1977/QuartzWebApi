@@ -12,6 +12,7 @@ public class JobKey : Key
     ///     Makes this object and sets it's needed properties
     /// </summary>
     /// <param name="name">The name of the job</param>
+    [JsonConstructor]
     public JobKey(string name) : base(name)
     {
     }

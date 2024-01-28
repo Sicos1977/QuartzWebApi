@@ -146,6 +146,8 @@
     <Compile Include="Controllers\SchedulerController.cs" />
     <Compile Include="CreateScheduler.cs" />
     <Compile Include="Wrappers\Calendars\BaseCalendar.cs" />
+    <Compile Include="Wrappers\Calendars\BaseConverter.cs" />
+    <Compile Include="Wrappers\Calendars\AbstractClassContractResolver.cs" />
     <Compile Include="Wrappers\Calendars\CalendarType.cs" />
     <Compile Include="Wrappers\Calendars\HolidayCalendar.cs" />
     <Compile Include="Wrappers\Calendars\MonthlyCalendar.cs" />

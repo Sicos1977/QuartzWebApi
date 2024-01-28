@@ -28,8 +28,8 @@ public class CronCalendar : BaseCalendar
     public CronCalendar(Quartz.Impl.Calendar.CronCalendar cronCalendar) : base(cronCalendar)
     {
         Type = CalendarType.Cron;
-        CronExpression = cronCalendar.CronExpression.CronExpressionString;
-        TimeZone = cronCalendar.TimeZone;
+        CronExpression = cronCalendar?.CronExpression.CronExpressionString;
+        TimeZone = cronCalendar?.TimeZone;
     }
     #endregion
 

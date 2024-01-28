@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Quartz;
 
 namespace QuartzWebApi.Wrappers.Calendars;
@@ -11,18 +13,20 @@ namespace QuartzWebApi.Wrappers.Calendars;
 ///     Takes a <see cref="ICalendar" /> and wraps it in a json object
 /// </remarks>
 /// <param name="calendar"><see cref="ICalendar"/></param>
+[JsonConverter(typeof(BaseConverter))]
 public abstract class BaseCalendar(ICalendar calendar)
 {
     #region Properties
     /// <summary>
     ///     The name of the calendar
     /// </summary>
-    [JsonProperty("Type")]
+    [JsonProperty("Name")]
     public string Name { get; internal set; }
 
     /// <summary>
     ///     The <see cref="CalendarType"/> of the calendar
     /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
     [JsonProperty("Type")]
     public CalendarType Type { get; internal set; }
 
@@ -30,7 +34,7 @@ public abstract class BaseCalendar(ICalendar calendar)
     ///     The description of the calendar
     /// </summary>
     [JsonProperty("Description", DefaultValueHandling = DefaultValueHandling.Ignore)]
-    public string Description { get; internal set; } = calendar.Description;
+    public string Description { get; internal set; } = calendar?.Description;
 
     /// <summary>
     ///     The time zone of the calendar

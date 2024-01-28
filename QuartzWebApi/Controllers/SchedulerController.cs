@@ -970,6 +970,13 @@ public class SchedulerController : ApiController
 
         var groupMatcher = GroupMatcher<Quartz.JobKey>.FromJsonString(json);
         var jobKeys = CreateScheduler.Scheduler.GetJobKeys(groupMatcher.ToGroupMatcher()).GetAwaiter().GetResult();
+        
+        if (jobKeys == null)
+        {
+            _logger?.LogInformation("No job keys found");
+            return string.Empty;
+        }
+        
         var result = new JobKeys(jobKeys).ToJsonString();
 
         _logger?.LogInformation("Returning all job keys that are matching the given group matcher");
@@ -989,7 +996,7 @@ public class SchedulerController : ApiController
     ///     trigger afterward (e.g. see <see cref="RescheduleJob(string)" />).
     /// </remarks>
     [HttpGet]
-    [Route("Scheduler/gettriggersofjob")]
+    [Route("Scheduler/GetTriggersOfJob")]
     public string GetTriggersOfJob([FromBody] string json)
     {
         _logger?.LogInformation("Received request to get all the triggers for the given job key");
@@ -997,6 +1004,13 @@ public class SchedulerController : ApiController
 
         var jobKey = JobKey.FromJsonString(json);
         var triggers = CreateScheduler.Scheduler.GetTriggersOfJob(jobKey.ToJobKey()).GetAwaiter().GetResult();
+        
+        if (triggers == null)
+        {
+            _logger?.LogInformation("No triggers found");
+            return string.Empty;
+        }
+
         var result = new Triggers(triggers).ToJsonString();
 
         _logger?.LogInformation("Returning triggers for the given job key");
@@ -1011,16 +1025,21 @@ public class SchedulerController : ApiController
     ///     groups.
     /// </summary>
     [HttpGet]
-    [Route("Scheduler/gettriggerkeys")]
+    [Route("Scheduler/GetTriggerKeys")]
     public string GetTriggerKeys([FromBody] string json)
     {
-        _logger?.LogInformation(
-            "Received request to get all the trigger keys that are matching the given group matcher");
+        _logger?.LogInformation("Received request to get all the trigger keys that are matching the given group matcher");
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var groupMatcher = GroupMatcher<Quartz.TriggerKey>.FromJsonString(json);
-        var triggerKeys = CreateScheduler.Scheduler.GetTriggerKeys(groupMatcher.ToGroupMatcher()).GetAwaiter()
-            .GetResult();
+        var triggerKeys = CreateScheduler.Scheduler.GetTriggerKeys(groupMatcher.ToGroupMatcher()).GetAwaiter().GetResult();
+
+        if (triggerKeys == null)
+        {
+            _logger?.LogInformation("No trigger keys found");
+            return string.Empty;
+        }
+
         var result = new TriggerKeys(triggerKeys).ToJsonString();
 
         _logger?.LogInformation("Returning all trigger keys that are matching the given group matcher");
@@ -1039,7 +1058,7 @@ public class SchedulerController : ApiController
     ///     JobDetail afterward (e.g. see <see cref="AddJob(string)" />).
     /// </remarks>
     [HttpGet]
-    [Route("Scheduler/getjobdetail")]
+    [Route("Scheduler/GetJobDetail")]
     public string GetJobDetail([FromBody] string json)
     {
         _logger?.LogInformation("Received request to get the job detail for the given job key");
@@ -1047,6 +1066,13 @@ public class SchedulerController : ApiController
 
         var jobKey = JobKey.FromJsonString(json);
         var jobDetail = CreateScheduler.Scheduler.GetJobDetail(jobKey.ToJobKey()).GetAwaiter().GetResult();
+
+        if (jobDetail == null)
+        {
+            _logger?.LogInformation("No job detail found");
+            return string.Empty;
+        }
+
         var result = new JobDetail(jobDetail).ToJsonString();
 
         _logger?.LogInformation("Returning job detail for the give job key");
@@ -1065,7 +1091,7 @@ public class SchedulerController : ApiController
     ///     trigger afterward (e.g. see <see cref="RescheduleJob(string)" />).
     /// </remarks>
     [HttpGet]
-    [Route("Scheduler/gettrigger")]
+    [Route("Scheduler/GetTrigger")]
     public string GetTrigger([FromBody] string json)
     {
         _logger?.LogInformation("Received request to get the trigger for the given trigger key");
@@ -1073,6 +1099,12 @@ public class SchedulerController : ApiController
 
         var triggerKey = TriggerKey.FromJsonString(json);
         var trigger = CreateScheduler.Scheduler.GetTrigger(triggerKey.ToTriggerKey()).GetAwaiter().GetResult();
+        if (trigger == null)
+        {
+            _logger?.LogInformation("No trigger found");
+            return string.Empty;
+        }
+
         var result = new Trigger(trigger).ToJsonString();
 
         _logger?.LogInformation("Returning trigger for the given trigger key");
@@ -1092,7 +1124,7 @@ public class SchedulerController : ApiController
     /// <seealso cref="TriggerState.Error" />
     /// <seealso cref="TriggerState.None" />
     [HttpGet]
-    [Route("Scheduler/gettriggerstate")]
+    [Route("Scheduler/GetTriggerState")]
     public string GetTriggerState([FromBody] string json)
     {
         _logger?.LogInformation("Received request to get the trigger state for the given trigger key");
@@ -1107,12 +1139,13 @@ public class SchedulerController : ApiController
     }
     #endregion
 
+    #region AddCalendar
     /// <summary>
     ///     Add (register) the given <see cref="ICalendar" /> to the Scheduler.
     /// </summary>
     /// <param name="json">The <see cref="ICalendar" /> information</param>
     [HttpPost]
-    [Route("Scheduler/addcalendar")]
+    [Route("Scheduler/AddCalendar")]
     public Task AddCalendar([FromBody] string json)
     {
         _logger?.LogInformation("Received request to add a calendar to the scheduler");
@@ -1120,39 +1153,9 @@ public class SchedulerController : ApiController
 
         var calendar = BaseCalendar.FromJsonString(json);
 
-        switch (calendar.Type)
-        {
-            case CalendarType.Cron:
-                calendar = CronCalendar.FromJsonString(json);
-                break;
-            
-            case CalendarType.Daily:
-                calendar = DailyCalendar.FromJsonString(json);
-                break;
-            
-            case CalendarType.Weekly:
-                calendar = WeeklyCalendar.FromJsonString(json);
-                break;
-            
-            case CalendarType.Monthly:
-                calendar = MonthlyCalendar.FromJsonString(json);
-                break;
-            
-            case CalendarType.Annual:
-                calendar = AnnualCalendar.FromJsonString(json);
-                break;
-            
-            case CalendarType.Holiday:
-                calendar = HolidayCalendar.FromJsonString(json);
-                break;
-            
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-
-        return CreateScheduler.Scheduler.AddCalendar(calendar.Name, calendar.ToCalendar(), calendar.Replace,
-            calendar.UpdateTriggers);
+        return CreateScheduler.Scheduler.AddCalendar(calendar.Name, calendar.ToCalendar(), calendar.Replace, calendar.UpdateTriggers);
     }
+    #endregion
 
     #region DeleteCalendar
     /// <summary>
@@ -1166,7 +1169,7 @@ public class SchedulerController : ApiController
     /// <param name="calName">Name of the calendar.</param>
     /// <returns>true if the Calendar was found and deleted.</returns>
     [HttpPost]
-    [Route("Scheduler/deletecalendar/{calName}")]
+    [Route("Scheduler/DeleteCalendar/{calName}")]
     public bool DeleteCalendar(string calName)
     {
         _logger?.LogInformation($"Received request to delete the calendar '{calName}' from the scheduler");
@@ -1178,11 +1181,12 @@ public class SchedulerController : ApiController
     }
     #endregion
 
+    #region GetCalendar
     /// <summary>
     ///     Get the <see cref="ICalendar" /> instance with the given name.
     /// </summary>
     [HttpGet]
-    [Route("Scheduler/getcalendar/{calName}")]
+    [Route("Scheduler/Getcalendar/{calName}")]
     public string GetCalendar(string calName)
     {
         _logger?.LogInformation($"Received request to get the calendar with the name '{calName}' from the scheduler");
@@ -1191,7 +1195,7 @@ public class SchedulerController : ApiController
         if (calendar == null)
         {
             _logger?.LogInformation($"Calendar with the name '{calName}' not found");
-            return null;
+            return string.Empty;
         }
 
         string result;
@@ -1230,16 +1234,19 @@ public class SchedulerController : ApiController
 
         return result;
     }
+    #endregion
 
+    #region GetCalendarNames
     /// <summary>
     ///     Get the names of all registered <see cref="ICalendar" />.
     /// </summary>
     [HttpGet]
-    [Route("Scheduler/getcalendarnames")]
+    [Route("Scheduler/GetCalendarNames")]
     public Task<IReadOnlyCollection<string>> GetCalendarNames()
     {
         return CreateScheduler.Scheduler.GetCalendarNames();
     }
+    #endregion
 
     #region InterruptJobKey
     /// <summary>
@@ -1272,11 +1279,10 @@ public class SchedulerController : ApiController
     /// </returns>
     /// <seealso cref="GetCurrentlyExecutingJobs" />
     [HttpGet]
-    [Route("Scheduler/interruptjobkey")]
+    [Route("Scheduler/InterruptJobKey")]
     public bool InterruptJobKey([FromBody] string json)
     {
-        _logger?.LogInformation(
-            "Received request for cancellation, within this Scheduler instance, of all currently executing instances of the identified job");
+        _logger?.LogInformation("Received request for cancellation, within this Scheduler instance, of all currently executing instances of the identified job");
         _logger?.LogDebug($"Received JSON '{json}'");
 
         var jobKey = JobKey.FromJsonString(json);
@@ -1369,7 +1375,7 @@ public class SchedulerController : ApiController
     ///     <see cref="ICalendar" />s.
     /// </summary>
     [HttpPost]
-    [Route("Scheduler/clear")]
+    [Route("Scheduler/Clear")]
     public void Clear()
     {
         _logger?.LogInformation("Received request to clear the whole scheduler");

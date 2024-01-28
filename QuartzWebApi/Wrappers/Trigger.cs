@@ -49,7 +49,7 @@ public class Trigger : JobKeyWithDataMap
     public string Description { get; private set; }
 
     /// <summary>
-    ///     The name of the calender to use or <c>null</c> when not
+    ///     The name of the calendar to use or <c>null</c> when not
     /// </summary>
     [JsonProperty("CalendarName")]
     public string CalendarName { get; private set; }
@@ -109,7 +109,7 @@ public class Trigger : JobKeyWithDataMap
     /// </summary>
     /// <param name="triggerKey">The <see cref="TriggerKey" /></param>
     /// <param name="description">A description for the <see cref="Trigger" /></param>
-    /// <param name="calendarName">The name of the calender to use or <c>null</c> when not</param>
+    /// <param name="calendarName">The name of the calendar to use or <c>null</c> when not</param>
     /// <param name="cronSchedule">The cron schedule</param>
     /// <param name="nextFireTimeUtc">The next fire time in UTC format</param>
     /// <param name="previousFireTimeUtc">The previous fire time in UTC format</param>
