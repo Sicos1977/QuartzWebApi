@@ -5,6 +5,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.Owin.Hosting;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Impl.Calendar;
@@ -22,6 +23,14 @@ public static class CreateScheduler
 
     static CreateScheduler()
     {
+        string baseAddress = "http://localhost:9000/";
+
+        using (WebApp.Start<Controllers.Scheduler>(url: baseAddress))
+        {
+            Console.WriteLine($"Server running at {baseAddress}");
+            Console.ReadLine();
+        }
+
         var properties = new NameValueCollection
         {
             ["quartz.scheduler.exporter.bindName"] = "Scheduler",

@@ -14,7 +14,7 @@ using TriggerKey = QuartzWebApi.Wrappers.TriggerKey;
 namespace QuartzWebApi.Controllers;
 
 //[Authorize]
-public class SchedulerController : ApiController
+public class Scheduler : ApiController
 {
     #region Fields
     /// <summary>
