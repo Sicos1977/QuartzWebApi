@@ -377,7 +377,7 @@ Do a `POST` request to `Scheduler/RescheduleJob` with in the body the reschedule
 }
 ```  
 
-Returns 'null' if a trigger with the given name and group was not found and removed from the store (and the new trigger is therefore not stored),  otherwise the first fire time of the newly scheduled trigger
+Returns 'null' if a trigger with the given name and group was not found and removed from the store (and the new trigger is therefore not stored), otherwise the first fire time of the newly scheduled trigger
     
 ### Add a job with no associated trigger
 
@@ -565,29 +565,115 @@ Do a `POST` request to `Scheduler/ResumeAllTriggers`
 
 ### Get job keys
     
-Do a `GET` request to `Scheduler/GetJobKeys` , this will return the all job keys that will look something like this
+Do a `GET` request to `Scheduler/GetJobKeys`
 
-// TODO: Continue from here
+The values for `Type` can be: `Contains`, `EndsWith`, `Equals` or `StartsWith`
+    
+```json    
+{
+  "Type": "Contains",
+  "Value": "<The job keys to match>"
+}   
+```     
+
+it will return something like this
 
 ```json
-{
-    "InStandbyMode": false,
-    "JobStoreType": "Quartz.Simpl.RAMJobStore, Quartz, Version=3.4.0.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4",
-    "JobStoreClustered": false,
-    "JobsStoreSupportsPersistence": false,
-    "NumbersOfJobsExecuted": 0,
-    "RunningSince": "2022-05-11T16:30:06.5957565+00:00",
-    "SchedulerInstanceId": "NON_CLUSTERED",
-    "SchedulerName": "The name of the scheduler",
-    "SchedulerRemote": false,
-    "SchedulerType": "Quartz.Impl.StdScheduler, Quartz, Version=3.4.0.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4",
-    "Shutdown": false,
-    "Started": true,
-    "ThreadPoolSize": 10,
-    "ThreadPoolType": "Quartz.Simpl.DefaultThreadPool, Quartz, Version=3.4.0.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4",
-    "Version": "3.4.0.0"
-}
+[
+  {
+    "Name": "JobKeyName",
+    "Group": "JobKeyGroup"
+  }
+]
 ```
+
+### Get triggers of job
+    
+Do a `GET` request to `Scheduler/GetTriggersOfJob` with in the body the key of the job
+   
+```json    
+{
+    "Name": "JobKeyName",
+    "Group": "JobKeyGroup"
+}
+```     
+
+It will return something like this
+
+```json   
+[
+  {
+    "TriggerKey": {
+      "Name": "triggerKey",
+      "Group": "DEFAULT"
+    },
+    "Description": "TestTrigger",
+    "CalendarName": null,
+    "CronSchedule": null,
+    "NextFireTimeUtc": null,
+    "PreviousFireTimeUtc": "2024-01-28T11:21:14.4966492+01:00",
+    "StartTimeUtc": "2024-01-28T11:21:14.4966492+01:00",
+    "EndTimeUtc": null,
+    "FinalFireTimeUtc": "2024-01-28T11:21:14.4966492+01:00",
+    "Priority": 5,
+    "HasMillisecondPrecision": true,
+    "JobKey": null,
+    "JobDataMap": null
+  }
+]
+```     
+
+### Get trigger keys
+    
+Do a `GET` request to `Scheduler/GetTriggerKeys`
+
+The values for `Type` can be: `Contains`, `EndsWith`, `Equals` or `StartsWith`
+    
+```json    
+{
+  "Type": "Contains",
+  "Value": "<The group keys to match>"
+}   
+```     
+
+it will return something like this
+
+```json
+[
+  {
+    "Name": "triggerKey",
+    "Group": "DEFAULT"
+  }
+]
+```
+
+### Get triggers keys kjkk
+    
+Do a `GET` request to `Scheduler/GetJobDetail` with in the body the key of the job
+   
+```json    
+{
+    "Name": "JobKeyName",
+    "Group": "JobKeyGroup"
+}
+```     
+
+It will return something like this
+
+```json   
+{
+  "JobKey": {
+    "Name": "JobKeyName",
+    "Group": "JobKeyGroup"
+  },
+  "Description": "Test",
+  "JobType": "QuartzWebApi.TestJob",
+  "JobDataMap": {},
+  "Durable": false,
+  "Replace": false,
+  "StoreNonDurableWhileAwaitingScheduling": false
+}
+```   
     
 Errors returned
 ===============
