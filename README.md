@@ -647,7 +647,7 @@ it will return something like this
 ]
 ```
 
-### Get triggers keys kjkk
+### Get the job detail
     
 Do a `GET` request to `Scheduler/GetJobDetail` with in the body the key of the job
    
@@ -673,6 +673,23 @@ It will return something like this
   "Replace": false,
   "StoreNonDurableWhileAwaitingScheduling": false
 }
+```   
+
+### Get trigger
+    
+Do a `GET` request to `Scheduler/GetTrigger` with in the body the key of the trigger .. kees
+   
+```json    
+{
+    "Name": "TriggerKeyName",
+    "Group": "TriggerKeyGroup"
+}
+```     
+
+It will return something like this
+
+```json   
+
 ```   
     
 Errors returned
