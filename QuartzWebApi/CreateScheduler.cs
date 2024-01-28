@@ -4,7 +4,6 @@ using System.Net;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using Quartz;
 using Quartz.Impl;
@@ -62,19 +61,6 @@ public static class CreateScheduler
         Scheduler.AddCalendar("monthlyCalendar", mc, true, true);
 
         Scheduler.ScheduleJob(schedulerJob, schedulerTrigger);
-    }
-
-    private static void SetPrincipal(IPrincipal principal)
-    {
-        Thread.CurrentPrincipal = principal;
-
-        if (HttpContext.Current != null)
-            HttpContext.Current.User = principal;
-    }
-
-    public static void Register(HttpConfiguration config)
-    {
-        config.Filters.Add(new AuthorizeAttribute());
     }
 }
 

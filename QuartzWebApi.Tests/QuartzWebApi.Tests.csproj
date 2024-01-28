@@ -63,12 +63,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\QuartzWebApi\QuartzWebApi.csproj">
-      <Project>{F4085781-B57D-4697-8D24-7322A072BE88}</Project>
-      <Name>QuartzWebApi</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
