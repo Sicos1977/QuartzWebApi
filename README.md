@@ -723,6 +723,81 @@ It will return something like this
 ```json   
 "Normal"
 ```   
+
+### Add calendar
+
+Do a `POST` request to `Scheduler/AddCalendar` with in the body the body the calendar you want to add, for example
+   
+```json    
+{
+  "Name" : "My new CRON calendar",
+  "Type": "Cron"
+  "CronExpression": "0 0-5 14 * * ?",
+  "Description": "my description"
+  "Replace": true
+  "UpdateTriggers": true
+}
+```     
+
+### Delete a calendar
+
+Do a `POST` request to `Scheduler/DeleteCalendar/{calName}` where `calName` is het name of the calendar to delete, this will return `true` or `false`
+
+### Get a calendar
+
+Do a `GET` request to `Scheduler/GetCalendar/{calName}` where `calName` is het name of the calendar to get, when the calendar exists it will return something like this
+
+```json    
+{
+  "CronExpression": "0 0-51 4 * * ?",
+  "Name": null,
+  "Type": "Cron",
+  "TimeZone": {
+    "Id": "W. Europe Standard Time",
+    "DisplayName": "(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna",
+    "StandardName": "W. Europe Standard Time",
+    "DaylightName": "W. Europe Daylight Time",
+    "BaseUtcOffset": "01:00:00",
+    "AdjustmentRules": [
+      {
+        "DateStart": "0001-01-01T00:00:00",
+        "DateEnd": "9999-12-31T00:00:00",
+        "DaylightDelta": "01:00:00",
+        "DaylightTransitionStart": {
+          "TimeOfDay": "0001-01-01T02:00:00",
+          "Month": 3,
+          "Week": 5,
+          "Day": 1,
+          "DayOfWeek": 0,
+          "IsFixedDateRule": false
+        },
+        "DaylightTransitionEnd": {
+          "TimeOfDay": "0001-01-01T03:00:00",
+          "Month": 10,
+          "Week": 5,
+          "Day": 1,
+          "DayOfWeek": 0,
+          "IsFixedDateRule": false
+        },
+        "BaseUtcOffsetDelta": "00:00:00"
+      }
+    ],
+    "SupportsDaylightSavingTime": true
+  }
+}
+``` 
+
+### Get calendar names
+
+Do a `GET` request to `Scheduler/GetCalendarNames`, it will return something like this
+
+```json
+[
+    "monthlyCalendar",
+    "MynewCRONcalendar"
+]
+```
+
     
 Errors returned
 ===============
