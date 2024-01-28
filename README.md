@@ -677,7 +677,7 @@ It will return something like this
 
 ### Get trigger
     
-Do a `GET` request to `Scheduler/GetTrigger` with in the body the key of the trigger .. kees
+Do a `GET` request to `Scheduler/GetTrigger` with in the body the key of the trigger
    
 ```json    
 {
@@ -689,7 +689,39 @@ Do a `GET` request to `Scheduler/GetTrigger` with in the body the key of the tri
 It will return something like this
 
 ```json   
+{
+  "TriggerKey": {
+    "Name": "triggerKey",
+    "Group": "DEFAULT"
+  },
+  "Description": "TestTrigger",
+  "CalendarName": null,
+  "CronSchedule": null,
+  "NextFireTimeUtc": null,
+  "PreviousFireTimeUtc": "2024-01-28T14:09:21.9475007+01:00",
+  "StartTimeUtc": "2024-01-28T14:09:21.9475007+01:00",
+  "EndTimeUtc": null,
+  "FinalFireTimeUtc": "2024-01-28T14:09:21.9475007+01:00",
+  "Priority": 5,
+  "HasMillisecondPrecision": true,
+  "JobKey": null,
+  "JobDataMap": null
+}
+```   
 
+Do a `GET` request to `Scheduler/GetTriggerState` with in the body the key of the trigger
+   
+```json    
+{
+    "Name": "TriggerKeyName",
+    "Group": "TriggerKeyGroup"
+}
+```     
+
+It will return something like this
+
+```json   
+"Normal"
 ```   
     
 Errors returned
