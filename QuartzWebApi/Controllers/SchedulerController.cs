@@ -13,7 +13,7 @@ using TriggerKey = QuartzWebApi.Wrappers.TriggerKey;
 
 namespace QuartzWebApi.Controllers;
 
-//[Authorize]
+[Authorize]
 public class SchedulerController : ApiController
 {
     #region Fields
@@ -28,18 +28,18 @@ public class SchedulerController : ApiController
     private readonly ILogger _logger;
     #endregion
 
-    //#region Constructor
-    ///// <summary>
-    /////     Makes a new instance of the <see cref="Scheduler" /> class.
-    ///// </summary>
-    ///// <param name="scheduler"><see cref="IScheduler"/></param>
-    ///// <param name="logger"><see cref="ILogger"/></param>
-    //public Scheduler(IScheduler scheduler, ILogger logger)
-    //{
-    //    _scheduler = scheduler;
-    //    _logger = logger;
-    //}
-    //#endregion
+    #region Constructor
+    /// <summary>
+    ///     Makes a new instance of the <see cref="Scheduler" /> class.
+    /// </summary>
+    /// <param name="scheduler"><see cref="IScheduler"/></param>
+    /// <param name="logger"><see cref="ILogger"/></param>
+    public SchedulerController(IScheduler scheduler, ILogger logger)
+    {
+        _scheduler = scheduler;
+        _logger = logger;
+    }
+    #endregion
 
     #region IsJobGroupPaused
     /// <summary>

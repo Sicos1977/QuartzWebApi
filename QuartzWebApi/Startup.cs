@@ -14,11 +14,6 @@ public class Startup
 {
     IScheduler _scheduler;
 
-    public Startup(IScheduler scheduler)
-    {
-        
-    }
-
     public void Configuration(IAppBuilder appBuilder)
     {
         var httpConfiguration = new HttpConfiguration();
@@ -33,10 +28,9 @@ public class Startup
             routeTemplate: "scheduler/{controller}/{id}",
             defaults: new { id = RouteParameter.Optional }
         );
-        
+
         appBuilder.UseWebApi(httpConfiguration);
-        //httpConfiguration.MapHttpAttributeRoutes();
-        //appBuilder.UseStageMarker(PipelineStage.MapHandler);
+        appBuilder.UseStageMarker(PipelineStage.MapHandler);
     }
 }
 
