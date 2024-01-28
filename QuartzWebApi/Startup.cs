@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.Extensions.Logging;
+using Microsoft.Owin;
 using Microsoft.Owin.Extensions;
 using Owin;
 using Quartz;
@@ -41,4 +44,4 @@ public class JsonContentNegotiator(MediaTypeFormatter formatter) : IContentNegot
         var result = new ContentNegotiationResult(formatter, new MediaTypeHeaderValue("application/json"));  
         return result;  
     }  
-}  
+}
