@@ -1,7 +1,6 @@
 ﻿using System.Collections.Specialized;
 using System.Net;
 using ConsoleApp;
-using Microsoft.Owin.Hosting;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Impl.Calendar;
@@ -49,6 +48,6 @@ using QuartzWebApi;
 
 var baseAddress = "http://localhost:44344/";
 
-using var app = WebApp.Start<Startup>(baseAddress);
+//using var app = WebApp.Start<Startup>(baseAddress);
 Console.WriteLine($"Server running at {baseAddress}");
 Console.ReadLine();

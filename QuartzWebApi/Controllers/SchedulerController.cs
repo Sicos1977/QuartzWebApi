@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+#if NET48
 using System.Web.Http;
+#endif
+#if NET6_0
+using Microsoft.AspNetCore.Mvc;
+#endif
 using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Spi;
@@ -13,8 +18,13 @@ using TriggerKey = QuartzWebApi.Wrappers.TriggerKey;
 
 namespace QuartzWebApi.Controllers;
 
-[Authorize]
+//[Authorize]
+#if NET48
 public class SchedulerController : ApiController
+#endif
+#if NET6_0
+public class SchedulerController : ControllerBase
+#endif
 {
     #region Fields
     /// <summary>
