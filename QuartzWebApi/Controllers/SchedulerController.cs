@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #if NET48
 using System.Web.Http;
+using System.Web.Http.Controllers;
 #endif
 #if NET6_0
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ using QuartzWebApi.Wrappers.Calendars;
 using JobKey = QuartzWebApi.Wrappers.JobKey;
 using SchedulerMetaData = QuartzWebApi.Wrappers.SchedulerMetaData;
 using TriggerKey = QuartzWebApi.Wrappers.TriggerKey;
+// ReSharper disable RouteTemplates.ActionRoutePrefixCanBeExtractedToControllerRoute
 
 namespace QuartzWebApi.Controllers;
 
@@ -23,6 +25,7 @@ namespace QuartzWebApi.Controllers;
 public class SchedulerController : ApiController
 #endif
 #if NET6_0
+[ApiController]
 public class SchedulerController : ControllerBase
 #endif
 {
@@ -30,21 +33,23 @@ public class SchedulerController : ControllerBase
     /// <summary>
     ///     <see cref="IScheduler" />
     /// </summary>
+    // ReSharper disable InconsistentNaming
     private readonly IScheduler _scheduler;
 
     /// <summary>
     ///     When set then logging is written to this ILogger instance
     /// </summary>
     private readonly ILogger _logger;
+    // ReSharper restore InconsistentNaming
     #endregion
 
     #region Constructor
     /// <summary>
-    ///     Makes a new instance of the <see cref="Scheduler" /> class.
+    ///     Makes a new instance of the <see cref="SchedulerController" /> class.
     /// </summary>
     /// <param name="scheduler"><see cref="IScheduler"/></param>
     /// <param name="logger"><see cref="ILogger"/></param>
-    public SchedulerController(IScheduler scheduler, ILogger logger)
+    public SchedulerController(IScheduler scheduler, ILogger logger = null)
     {
         _scheduler = scheduler;
         _logger = logger;

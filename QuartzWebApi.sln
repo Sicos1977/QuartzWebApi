@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuartzWebApi", "QuartzWebAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{F2403D6D-C13D-45C7-A03F-3215F61FEA14}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppNET", "ConsoleAppNET\ConsoleAppNET.csproj", "{5C27C0B4-2E28-46A5-BD4C-54F51D5041F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{F2403D6D-C13D-45C7-A03F-3215F61FEA14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2403D6D-C13D-45C7-A03F-3215F61FEA14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2403D6D-C13D-45C7-A03F-3215F61FEA14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C27C0B4-2E28-46A5-BD4C-54F51D5041F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C27C0B4-2E28-46A5-BD4C-54F51D5041F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C27C0B4-2E28-46A5-BD4C-54F51D5041F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C27C0B4-2E28-46A5-BD4C-54F51D5041F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
