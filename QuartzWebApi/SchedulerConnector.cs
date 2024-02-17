@@ -75,7 +75,7 @@ public class SchedulerConnector
     ///     Note that the data returned is an 'instantaneous' snapshot, and that as
     ///     soon as it's returned, the meta-data values may be different.
     /// </remarks>
-    public async Task<Wrappers.SchedulerMetaData> GetMetaData()
+    public async Task<SchedulerMetaData> GetMetaData()
     {
         var response = await _httpClient.GetAsync("Scheduler/GetMetaData");
         var json = await response.Content.ReadAsStringAsync();
