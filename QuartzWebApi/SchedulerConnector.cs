@@ -8,7 +8,7 @@ namespace QuartzWebApi;
 /// <summary>
 ///     Connects to the <see cref="SchedulerHost"/>
 /// </summary>
-internal class SchedulerConnector
+public class SchedulerConnector
 {
     #region Fields
     private HttpClient _httpClient;
@@ -24,6 +24,7 @@ internal class SchedulerConnector
         _httpClient.BaseAddress = new Uri(schedulerHostAddress);
     }
 
+    #region IsJobGroupPaused
     /// <summary>
     ///     Returns <c>true</c> if the given JobGroup is paused
     /// </summary>
@@ -34,7 +35,9 @@ internal class SchedulerConnector
         var response = await _httpClient.GetAsync($"Scheduler/IsJobGroupPaused/{groupName}");
         return await response.Content.ReadAsAsync<bool>();
     }
+    #endregion
 
+    #region IsTriggerGroupPaused
     /// <summary>
     ///     Returns <c>true</c> if the given TriggerGroup is paused
     /// </summary>
@@ -45,7 +48,9 @@ internal class SchedulerConnector
         var response = await _httpClient.GetAsync($"Scheduler/IsTriggerGroupPaused/{groupName}");
         return await response.Content.ReadAsAsync<bool>();
     }
+    #endregion
 
+    #region SchedulerName
     /// <summary>
     ///     Returns the name of the scheduler
     /// </summary>
@@ -54,6 +59,23 @@ internal class SchedulerConnector
         var response = await _httpClient.GetAsync("Scheduler/SchedulerName");
         return await response.Content.ReadAsStringAsync();
     }
+    #endregion
+
+    #region GetMetaData
+    /// <summary>
+    ///     Get a <see cref="Quartz.SchedulerMetaData" /> object describing the settings
+    ///     and capabilities of the scheduler instance.
+    /// </summary>
+    /// <remarks>
+    ///     Note that the data returned is an 'instantaneous' snapshot, and that as
+    ///     soon as it's returned, the meta-data values may be different.
+    /// </remarks>
+    public async Task<string> GetMetaData()
+    {
+        var response = await _httpClient.GetAsync($"SScheduler/GetMetaData");
+        return await response.Content.ReadAsAsync<string>();
+    }
+    #endregion
 
     // ... Continue this pattern for all other HttpGet methods in SchedulerController ...
 
