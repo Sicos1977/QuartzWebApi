@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Impl.Calendar;
+using QuartzWebApi;
 
 namespace ConsoleAppNET;
 
@@ -52,7 +53,8 @@ internal class Program
         scheduler.AddCalendar("monthlyCalendar", mc, true, true);
         scheduler.ScheduleJob(schedulerJob, schedulerTrigger);
 
-        QuartzWebApi.Startup.Start("http://localhost:44344", scheduler, null);
+        var host = new SchedulerHost("http://localhost:44344", scheduler, null);
+        host.Start();
 
         Console.ReadKey();
     }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #if NET48
 using System.Web.Http;
-using System.Web.Http.Controllers;
 #endif
 #if NET6_0
 using Microsoft.AspNetCore.Mvc;
@@ -636,7 +635,7 @@ public class SchedulerController : ControllerBase
     ///     associated <see cref="ITrigger" />s.
     /// </summary>
     /// <returns> true if the Job was found and deleted.</returns>
-    [HttpPost]
+    [HttpDelete]
     [Route("Scheduler/DeleteJob")]
     public Task<bool> DeleteJob([FromBody] string json)
     {
@@ -669,7 +668,7 @@ public class SchedulerController : ControllerBase
     ///     true if all the Jobs were found and deleted, false if
     ///     one or more were not deleted.
     /// </returns>
-    [HttpPost]
+    [HttpDelete]
     [Route("Scheduler/DeleteJobs")]
     public Task<bool> DeleteJobs([FromBody] string json)
     {
@@ -1205,7 +1204,7 @@ public class SchedulerController : ControllerBase
     /// </remarks>
     /// <param name="calName">Name of the calendar.</param>
     /// <returns>true if the Calendar was found and deleted.</returns>
-    [HttpPost]
+    [HttpDelete]
     [Route("Scheduler/DeleteCalendar/{calName}")]
     public bool DeleteCalendar(string calName)
     {

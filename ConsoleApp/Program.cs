@@ -45,4 +45,6 @@ mc.SetDayExcluded(12, true);
 scheduler.AddCalendar("monthlyCalendar", mc, true, true);
 scheduler.ScheduleJob(schedulerJob, schedulerTrigger);
 
-Startup.Start("http://localhost:44344", scheduler, null);
+var host = new SchedulerHost("http://localhost:44344", scheduler, null);
+host.Start();
+Console.ReadKey();
