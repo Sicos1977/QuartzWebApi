@@ -39,97 +39,101 @@ public class SchedulerMetaData
     ///     Returns <c>true</c> when in standby mode
     /// </summary>
     [JsonProperty("InStandbyMode")]
-    public bool InStandbyMode { get; }
+    public bool InStandbyMode { get; private set; }
 
     /// <summary>
     ///     Returns the job store type
     /// </summary>
     [JsonProperty("JobStoreType")]
-    public Type JobStoreType { get; }
+    public Type JobStoreType { get; private set; }
 
     /// <summary>
     ///     Returns <c>true</c> when the job store is clustered
     /// </summary>
     [JsonProperty("JobStoreClustered")]
-    public bool JobStoreClustered { get; }
+    public bool JobStoreClustered { get; private set; }
 
     /// <summary>
     ///     Returns <c>true</c> when the job store supports persistence
     /// </summary>
     [JsonProperty("JobsStoreSupportsPersistence")]
-    public bool JobStoreSupportsPersistence { get; }
+    public bool JobStoreSupportsPersistence { get; private set; }
 
     /// <summary>
     ///     Returns the numbers of jobs executed
     /// </summary>
     [JsonProperty("NumbersOfJobsExecuted")]
-    public int NumbersOfJobsExecuted { get; }
+    public int NumbersOfJobsExecuted { get; private set; }
 
     /// <summary>
     ///     Returns the date time since the scheduler is running
     /// </summary>
     [JsonProperty("RunningSince")]
-    public DateTimeOffset? RunningSince { get; }
+    public DateTimeOffset? RunningSince { get; private set; }
 
     /// <summary>
     ///     Returns the scheduler instance id
     /// </summary>
     [JsonProperty("SchedulerInstanceId")]
-    public string SchedulerInstanceId { get; }
+    public string SchedulerInstanceId { get; private set; }
 
     /// <summary>
     ///     Returns the scheduler name
     /// </summary>
     [JsonProperty("SchedulerName")]
-    public string SchedulerName { get; }
+    public string SchedulerName { get; private set; }
 
     /// <summary>
     ///     Returns <c>true</c> when the scheduler is remote
     /// </summary>
     [JsonProperty("SchedulerRemote")]
-    public bool SchedulerRemote { get; }
+    public bool SchedulerRemote { get; private set; }
 
     /// <summary>
     ///     Returns the scheduler type
     /// </summary>
     [JsonProperty("SchedulerType")]
-    public Type SchedulerType { get; }
+    public Type SchedulerType { get; private set; }
 
     /// <summary>
     ///     Returns <c>true</c> when the scheduler is shutdown
     /// </summary>
     [JsonProperty("Shutdown")]
-    public bool Shutdown { get; }
+    public bool Shutdown { get; private set; }
 
     /// <summary>
     ///     Returns <c>true</c> when the scheduler is started
     /// </summary>
     [JsonProperty("Started")]
-    public bool Started { get; }
+    public bool Started { get; private set; }
 
     /// <summary>
     ///     Returns the thread pool size
     /// </summary>
     [JsonProperty("ThreadPoolSize")]
-    public int ThreadPoolSize { get; }
+    public int ThreadPoolSize { get; private set; }
 
     /// <summary>
     ///     Returns the thread pool type
     /// </summary>
     [JsonProperty("ThreadPoolType")]
-    public Type ThreadPoolType { get; }
+    public Type ThreadPoolType { get; private set; }
 
     /// <summary>
     ///     Returns the scheduler version
     /// </summary>
     [JsonProperty("Version")]
-    public string Version { get; }
+    public string Version { get; private set; }
 
-    //[JsonProperty("summary")]
-    //public string Summary { get; }
+    [JsonProperty("Summary")]
+    public string Summary { get; private set; }
     #endregion
 
     #region Constructor
+    public SchedulerMetaData()
+    {
+    }
+
     /// <summary>
     ///     Creates this object and sets all it's needed properties
     /// </summary>
@@ -151,7 +155,7 @@ public class SchedulerMetaData
         ThreadPoolSize = metaData.ThreadPoolSize;
         ThreadPoolType = metaData.ThreadPoolType;
         Version = metaData.Version;
-        //Summary = metaData.GetSummary();
+        Summary = metaData.GetSummary();
     }
     #endregion
 

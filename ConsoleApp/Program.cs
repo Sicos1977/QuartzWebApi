@@ -49,5 +49,6 @@ var host = new SchedulerHost("http://localhost:44344", scheduler, null);
 host.Start();
 
 var connector = new SchedulerConnector("http://localhost:44344");
+var test = connector.GetMetaData().Result;
 
 Console.ReadKey();

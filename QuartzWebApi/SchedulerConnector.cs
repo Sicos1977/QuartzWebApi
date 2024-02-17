@@ -2,6 +2,9 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Quartz;
+using SchedulerMetaData = QuartzWebApi.Wrappers.SchedulerMetaData;
 
 namespace QuartzWebApi;
 
@@ -33,7 +36,8 @@ public class SchedulerConnector
     public async Task<bool> IsJobGroupPaused(string groupName)
     {
         var response = await _httpClient.GetAsync($"Scheduler/IsJobGroupPaused/{groupName}");
-        return await response.Content.ReadAsAsync<bool>();
+        //return await response.Content.ReadAsAsync<bool>();
+        return true;
     }
     #endregion
 
@@ -46,7 +50,8 @@ public class SchedulerConnector
     public async Task<bool> IsTriggerGroupPaused(string groupName)
     {
         var response = await _httpClient.GetAsync($"Scheduler/IsTriggerGroupPaused/{groupName}");
-        return await response.Content.ReadAsAsync<bool>();
+        //return await response.Content.ReadAsAsync<bool>();
+        return true;
     }
     #endregion
 
@@ -70,10 +75,11 @@ public class SchedulerConnector
     ///     Note that the data returned is an 'instantaneous' snapshot, and that as
     ///     soon as it's returned, the meta-data values may be different.
     /// </remarks>
-    public async Task<string> GetMetaData()
+    public async Task<Wrappers.SchedulerMetaData> GetMetaData()
     {
-        var response = await _httpClient.GetAsync($"SScheduler/GetMetaData");
-        return await response.Content.ReadAsAsync<string>();
+        var response = await _httpClient.GetAsync("Scheduler/GetMetaData");
+        var json = await response.Content.ReadAsStringAsync();
+        return SchedulerMetaData.FromJsonString(json);
     }
     #endregion
 
