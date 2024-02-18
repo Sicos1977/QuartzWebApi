@@ -1,6 +1,23 @@
 # QuartzWebApi
 A self hosted Web API for Quartz.Net. Hosting on .net 4.8 is done with OWIN and on .net6 and higher with Kestrel
 
+## Installing via NuGet
+
+[![NuGet](https://img.shields.io/nuget/v/QuartzWebApi.svg?style=flat-square)](https://www.nuget.org/packages/QuartzWebApi)
+
+# How to host Quartz.Net
+
+```c#
+var host = new SchedulerHost("http://localhost:44344", <IScheduler>, <ILoggeR>);
+host.Start();
+```
+
+# How to connect to the host
+
+```c#
+var connector = new SchedulerConnector("http://localhost:44344");
+```
+
 ## License Information
 
 QuartzWebApi is Copyright (C) 2022 - 2024 Magic-Sessions and is licensed under the MIT license:
