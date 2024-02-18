@@ -61,7 +61,7 @@ var logger = !string.IsNullOrWhiteSpace(<some logfile>)
 
 Most of the log informartion is logged at the `information` level, small answers like `booleans`, `DateTimeOffsets` and small `strings` (like the schedulers name) are also logged at this level. All the json that is received and sent back is logged at the `debug` level.
 
-How to use the API
+How to use the API directly
 ==========
 
 ### Check if a job group is paused
