@@ -8,7 +8,7 @@ namespace QuartzWebApi.Wrappers;
 ///     Json wrapper for the Quartz <see cref="Quartz.IJobExecutionContext" />
 /// </summary>
 [JsonObject("JobExecutionContext")]
-public class JobExecutionContext
+public class JobExecutionContext(IJobExecutionContext jobExecutionContext)
 {
     #region Properties
     /// <summary>
@@ -16,28 +16,28 @@ public class JobExecutionContext
     ///     <see cref="IJob" />.
     /// </summary>
     [JsonProperty("Scheduler")]
-    public IScheduler Scheduler { get; private set; }
+    public IScheduler Scheduler { get; private set; } = jobExecutionContext.Scheduler;
 
     /// <summary>
     ///     Get a handle to the <see cref="ITrigger" /> instance that fired the
     ///     <see cref="IJob" />.
     /// </summary>
     [JsonProperty("Trigger")]
-    public Trigger Trigger { get; private set; }
+    public Trigger Trigger { get; private set; } = new(jobExecutionContext.Trigger);
 
     /// <summary>
     ///     Get a handle to the <see cref="ICalendar" /> referenced by the <see cref="ITrigger" />
     ///     instance that fired the <see cref="IJob" />.
     /// </summary>
     [JsonProperty("Calender")]
-    public ICalendar Calendar { get; private set; }
+    public ICalendar Calendar { get; private set; } = jobExecutionContext.Calendar;
 
     /// <summary>
     ///     If the <see cref="IJob" /> is being re-executed because of a 'recovery'
     ///     situation, this method will return <see langword="true" />.
     /// </summary>
     [JsonProperty("Recovering")]
-    public bool Recovering { get; private set; }
+    public bool Recovering { get; private set; } = jobExecutionContext.Recovering;
 
     /// <summary>
     ///     Returns the <see cref="TriggerKeys" /> of the originally scheduled and now recovering job.
@@ -51,14 +51,14 @@ public class JobExecutionContext
     ///     element of this job's <see cref="JobDataMap" />.
     /// </remarks>
     [JsonProperty("RecoveringTriggerKey")]
-    public Quartz.TriggerKey RecoveringTriggerKey { get; private set; }
+    public Quartz.TriggerKey RecoveringTriggerKey { get; private set; } = jobExecutionContext.RecoveringTriggerKey;
 
     /// <summary>
     ///     Gets the refire count.
     /// </summary>
     /// <value>The refire count.</value>
     [JsonProperty("RefireCount")]
-    public int RefireCount { get; private set; }
+    public int RefireCount { get; private set; } = jobExecutionContext.RefireCount;
 
     /// <summary>
     ///     Get the convenience <see cref="JobDataMap" /> of this execution context.
@@ -84,13 +84,13 @@ public class JobExecutionContext
     ///     </para>
     /// </remarks>
     [JsonProperty("MergedJobDataMap")]
-    public JobDataMap MergedJobDataMap { get; private set; }
+    public JobDataMap MergedJobDataMap { get; private set; } = jobExecutionContext.MergedJobDataMap;
 
     /// <summary>
     ///     Get the <see cref="JobDetail" /> associated with the <see cref="IJob" />.
     /// </summary>
     [JsonProperty("JobDetail")]
-    public JobDetail JobDetail { get; private set; }
+    public JobDetail JobDetail { get; private set; } = new(jobExecutionContext.JobDetail);
 
     /// <summary>
     ///     Get the instance of the <see cref="IJob" /> that was created for this
@@ -101,7 +101,7 @@ public class JobExecutionContext
     ///     </para>
     /// </summary>
     [JsonProperty("JobInstance")]
-    public string JobInstance { get; private set; }
+    public string JobInstance { get; private set; } = jobExecutionContext.JobInstance.ToString();
 
     /// <summary>
     ///     The actual time the trigger fired. For instance the scheduled time may
@@ -111,7 +111,7 @@ public class JobExecutionContext
     /// <returns> Returns the fireTimeUtc.</returns>
     /// <seealso cref="ScheduledFireTimeUtc" />
     [JsonProperty("FireTimeUtc")]
-    public DateTimeOffset FireTimeUtc { get; private set; }
+    public DateTimeOffset FireTimeUtc { get; private set; } = jobExecutionContext.FireTimeUtc;
 
     /// <summary>
     ///     The scheduled time the trigger fired for. For instance the scheduled
@@ -121,31 +121,31 @@ public class JobExecutionContext
     /// <returns> Returns the scheduledFireTimeUtc.</returns>
     /// <seealso cref="FireTimeUtc" />
     [JsonProperty("ScheduledFireTimeUtc")]
-    public DateTimeOffset? ScheduledFireTimeUtc { get; private set; }
+    public DateTimeOffset? ScheduledFireTimeUtc { get; private set; } = jobExecutionContext.ScheduledFireTimeUtc;
 
     /// <summary>
     ///     Gets the previous fire time.
     /// </summary>
     /// <value>The previous fire time.</value>
     [JsonProperty("PreviousFireTimeUtc")]
-    public DateTimeOffset? PreviousFireTimeUtc { get; private set; }
+    public DateTimeOffset? PreviousFireTimeUtc { get; private set; } = jobExecutionContext.PreviousFireTimeUtc;
 
     /// <summary>
     ///     Gets the next fire time.
     /// </summary>
     /// <value>The next fire time.</value>
     [JsonProperty("NextFireTimeUtc")]
-    public DateTimeOffset? NextFireTimeUtc { get; private set; }
+    public DateTimeOffset? NextFireTimeUtc { get; private set; } = jobExecutionContext.NextFireTimeUtc;
 
     /// <summary>
-    ///     Get the unique Id that identifies this particular firing instance of the
+    ///     Get the unique id that identifies this particular firing instance of the
     ///     trigger that triggered this job execution.  It is unique to this
     ///     JobExecutionContext instance as well.
     /// </summary>
     /// <returns>the unique fire instance id</returns>
     /// <seealso cref="IScheduler.Interrupt(System.String, System.Threading.CancellationToken)" />
     [JsonProperty("FireInstanceId")]
-    public string FireInstanceId { get; private set; }
+    public string FireInstanceId { get; private set; } = jobExecutionContext.FireInstanceId;
 
     ///// <summary>
     /////     Returns the result (if any) that the <see cref="IJob" /> set before its
@@ -178,28 +178,10 @@ public class JobExecutionContext
     ///     <see cref="IJobListener" />s and <see cref="ITriggerListener" />s.
     /// </summary>
     [JsonProperty("JobRunTime")]
-    public TimeSpan JobRunTime { get; private set; }
+    public TimeSpan JobRunTime { get; private set; } = jobExecutionContext.JobRunTime;
     #endregion
 
     #region Constructor
-    public JobExecutionContext(IJobExecutionContext jobExecutionContext)
-    {
-        Scheduler = jobExecutionContext.Scheduler;
-        Trigger = new Trigger(jobExecutionContext.Trigger);
-        Calendar = jobExecutionContext.Calendar;
-        Recovering = jobExecutionContext.Recovering;
-        RecoveringTriggerKey = jobExecutionContext.RecoveringTriggerKey;
-        RefireCount = jobExecutionContext.RefireCount;
-        MergedJobDataMap = jobExecutionContext.MergedJobDataMap;
-        JobDetail = new JobDetail(jobExecutionContext.JobDetail);
-        JobInstance = jobExecutionContext.JobInstance.ToString();
-        FireTimeUtc = jobExecutionContext.FireTimeUtc;
-        ScheduledFireTimeUtc = jobExecutionContext.ScheduledFireTimeUtc;
-        PreviousFireTimeUtc = jobExecutionContext.PreviousFireTimeUtc;
-        NextFireTimeUtc = jobExecutionContext.NextFireTimeUtc;
-        FireInstanceId = jobExecutionContext.FireInstanceId;
-        //Result = jobExecutionContext.Result;
-        JobRunTime = jobExecutionContext.JobRunTime;
-    }
+    //Result = jobExecutionContext.Result;
     #endregion
 }

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Quartz;
-using SchedulerMetaData = QuartzWebApi.Wrappers.SchedulerMetaData;
+using QuartzWebApi.Wrappers;
 
 namespace QuartzWebApi;
 
@@ -81,13 +78,13 @@ public class SchedulerConnector
 
     #region Context
     /// <summary>
-    ///     Returns the <see cref="SchedulerContext" /> of the <see cref="IScheduler" />.
+    ///     Returns the <see cref="SchedulerContext" /> of the <see cref="Quartz.IScheduler" />.
     /// </summary>
     public async Task<SchedulerContext> Context()
     {
         var response = await _httpClient.GetAsync("Scheduler/SchedulerContext");
         var result =  await response.Content.ReadAsStringAsync();
-        return null;
+        return SchedulerContext.FromJsonString(result);
     }
     #endregion
 

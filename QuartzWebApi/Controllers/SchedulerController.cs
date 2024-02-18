@@ -121,14 +121,14 @@ public class SchedulerController : ControllerBase
 
     #region Context
     /// <summary>
-    ///     Returns the <see cref="SchedulerContext" /> of the <see cref="IScheduler" />.
+    ///     Returns the <see cref="Quartz.SchedulerContext" /> of the <see cref="IScheduler" />.
     /// </summary>
     [HttpGet]
     [Route("Scheduler/SchedulerContext")]
-    public SchedulerContext Context()
+    public string Context()
     {
         _logger?.LogInformation("Received request to return the scheduler context");
-        var result = _scheduler.Context;
+        var result = new Wrappers.SchedulerContext(_scheduler.Context).ToJsonString();
         _logger?.LogDebug($"Returning '{result}'");
         return result;
     }

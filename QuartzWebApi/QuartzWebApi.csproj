@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net48;net6</TargetFrameworks>
     <LangVersion>latest</LangVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
