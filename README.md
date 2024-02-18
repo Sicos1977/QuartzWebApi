@@ -416,7 +416,7 @@ this will return `true` when the job is deleted or `false` when not
     
 ### Delete multiple jobs
 
-Do a `POST` request to `Scheduler/DeleteJobs` with in the body the keys of the jobs
+Do a `DELETE` request to `Scheduler/DeleteJobs` with in the body the keys of the jobs
    
 ```json    
 [
@@ -741,7 +741,7 @@ Do a `POST` request to `Scheduler/AddCalendar` with in the body the body the cal
 
 ### Delete a calendar
 
-Do a `POST` request to `Scheduler/DeleteCalendar/{calName}` where `calName` is het name of the calendar to delete, this will return `true` or `false`
+Do a `DELETE` request to `Scheduler/DeleteCalendar/{calName}` where `calName` is het name of the calendar to delete, this will return `true` or `false`
 
 ### Get a calendar
 
