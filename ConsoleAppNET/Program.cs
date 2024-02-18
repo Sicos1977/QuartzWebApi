@@ -56,6 +56,10 @@ internal class Program
         var host = new SchedulerHost("http://localhost:44344", scheduler, null);
         host.Start();
 
+        var connector = new SchedulerConnector("http://localhost:44344");
+        var paused = connector.IsJobGroupPaused("JobKeyGroup").Result;
+
+
         Console.ReadKey();
     }
 }

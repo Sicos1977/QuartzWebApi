@@ -17,8 +17,9 @@ public class SchedulerConnector
     private HttpClient _httpClient;
     #endregion
 
+    #region Constructor
     /// <summary>
-    /// 
+    ///     Create a new instance of the <see cref="SchedulerConnector"/>
     /// </summary>
     /// <param name="schedulerHostAddress">The host address of the scheduler</param>
     public SchedulerConnector(string schedulerHostAddress)
@@ -26,6 +27,7 @@ public class SchedulerConnector
         _httpClient = new HttpClient();
         _httpClient.BaseAddress = new Uri(schedulerHostAddress);
     }
+    #endregion
 
     #region IsJobGroupPaused
     /// <summary>
@@ -36,8 +38,7 @@ public class SchedulerConnector
     public async Task<bool> IsJobGroupPaused(string groupName)
     {
         var response = await _httpClient.GetAsync($"Scheduler/IsJobGroupPaused/{groupName}");
-        //return await response.Content.ReadAsAsync<bool>();
-        return true;
+        return bool.Parse(await response.Content.ReadAsStringAsync());
     }
     #endregion
 
@@ -50,8 +51,7 @@ public class SchedulerConnector
     public async Task<bool> IsTriggerGroupPaused(string groupName)
     {
         var response = await _httpClient.GetAsync($"Scheduler/IsTriggerGroupPaused/{groupName}");
-        //return await response.Content.ReadAsAsync<bool>();
-        return true;
+        return bool.Parse(await response.Content.ReadAsStringAsync());
     }
     #endregion
 
@@ -62,7 +62,32 @@ public class SchedulerConnector
     public async Task<string> SchedulerName()
     {
         var response = await _httpClient.GetAsync("Scheduler/SchedulerName");
-        return await response.Content.ReadAsStringAsync();
+        var result =  await response.Content.ReadAsStringAsync();
+        return result.Trim('\"');
+    }
+    #endregion
+
+    #region SchedulerInstanceId
+    /// <summary>
+    ///     Returns the instance id of the scheduler
+    /// </summary>
+    public async Task<string> SchedulerInstanceId()
+    {
+        var response = await _httpClient.GetAsync("Scheduler/SchedulerInstanceId");
+        var result =  await response.Content.ReadAsStringAsync();
+        return result.Trim('\"');
+    }
+    #endregion
+
+    #region Context
+    /// <summary>
+    ///     Returns the <see cref="SchedulerContext" /> of the <see cref="IScheduler" />.
+    /// </summary>
+    public async Task<SchedulerContext> Context()
+    {
+        var response = await _httpClient.GetAsync("Scheduler/SchedulerContext");
+        var result =  await response.Content.ReadAsStringAsync();
+        return null;
     }
     #endregion
 
