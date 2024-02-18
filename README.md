@@ -1,7 +1,7 @@
 # QuartzWebApi
 A self hosted Web API for Quartz.Net. Hosting on .net 4.8 is done with OWIN and on .net6 and higher with Kestrel
 
-## Installing via NuGet
+## Installing via NuGet (not yet done)
 
 [![NuGet](https://img.shields.io/nuget/v/QuartzWebApi.svg?style=flat-square)](https://www.nuget.org/packages/QuartzWebApi)
 
