@@ -1,9 +1,6 @@
 # QuartzWebApi
 A self hosted Web API for Quartz.Net. Hosting on .net 4.8 is done with OWIN and on .net6 and higher with Kestrel
 
-OWIN: https://learn.microsoft.com/en-us/aspnet/web-api/overview/hosting-aspnet-web-api/use-owin-to-self-host-web-api
-KESTREL: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?view=aspnetcore-8.0
-
 ## License Information
 
 QuartzWebApi is Copyright (C) 2022 - 2024 Magic-Sessions and is licensed under the MIT license:
