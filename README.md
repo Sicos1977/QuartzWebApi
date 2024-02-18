@@ -8,9 +8,11 @@ A self hosted Web API for Quartz.Net, hosting on .net 4.8 is done with OWIN and 
 # How to host Quartz.Net
 
 ```c#
-var host = new SchedulerHost("http://localhost:44344", <IScheduler>, <ILoggeR>);
+var host = new SchedulerHost("http://localhost:44344", <IScheduler>, <ILogger>);
 host.Start();
 ```
+
+Where `IScheduler` is your Quartz.Net scheduler and `ILogger` any logger that implements the Microsoft ILogger interface (or null if you don't want any logging) 
 
 # How to connect to the host
 
