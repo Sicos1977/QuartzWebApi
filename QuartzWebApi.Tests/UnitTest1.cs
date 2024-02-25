@@ -107,14 +107,12 @@ public class UnitTest1
     [TestMethod]
     public void Context()
     {
-        var context = _connector.Context().Result;
-        //Assert.AreEqual("value1", context["key1"]);
+        _ = _connector.Context().Result;
     }
 
     [TestMethod]
     public void GetMetaData()
     {
-        var metaData = _connector.GetMetaData().Result;
-        //Assert.AreEqual("value1", context["key1"]);
+        _ =  _connector.GetMetaData().Result;
     }
 }

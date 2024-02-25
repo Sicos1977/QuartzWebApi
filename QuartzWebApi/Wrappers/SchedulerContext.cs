@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Web;
 using Newtonsoft.Json;
 
 namespace QuartzWebApi.Wrappers;
@@ -6,13 +6,16 @@ namespace QuartzWebApi.Wrappers;
 /// <summary>
 ///     A json wrapper for the <see cref="Quartz.SchedulerContext" />
 /// </summary>
-public class SchedulerContext : Quartz.SchedulerContext
+public sealed class SchedulerContext : Quartz.SchedulerContext
 {
     #region Constructor
-    internal SchedulerContext(Dictionary<string, string> items)
+    /// <summary>
+    ///     Needed for json de-serialization
+    /// </summary>
+    [JsonConstructor]
+    internal SchedulerContext()
     {
-        foreach (var item in items)
-            Add(item.Key, item.Value);
+
     }
 
     internal SchedulerContext(Quartz.SchedulerContext schedulerContext)
@@ -43,8 +46,8 @@ public class SchedulerContext : Quartz.SchedulerContext
     /// </returns>
     public static SchedulerContext FromJsonString(string json)
     {
-        var result2 = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-        var result = JsonConvert.DeserializeObject<SchedulerContext>(json);
+        var str = JsonConvert.DeserializeObject<string>(json);
+        var result = JsonConvert.DeserializeObject<SchedulerContext>(str);
         return new SchedulerContext(result);
     }
     #endregion

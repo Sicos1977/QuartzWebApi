@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using QuartzWebApi.Wrappers;
+// ReSharper disable UnusedMember.Global
 
 namespace QuartzWebApi;
 
@@ -11,7 +12,7 @@ namespace QuartzWebApi;
 public class SchedulerConnector
 {
     #region Fields
-    private HttpClient _httpClient;
+    private readonly HttpClient _httpClient;
     #endregion
 
     #region Constructor

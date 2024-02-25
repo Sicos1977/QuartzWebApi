@@ -27,6 +27,7 @@
 using System;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace QuartzWebApi.Wrappers;
 
@@ -131,7 +132,11 @@ public class SchedulerMetaData
     #endregion
 
     #region Constructor
-    public SchedulerMetaData()
+    /// <summary>
+    ///     Needed for json de-serialization
+    /// </summary>
+    [JsonConstructor]
+    internal SchedulerMetaData()
     {
     }
 
@@ -171,24 +176,6 @@ public class SchedulerMetaData
     }
     #endregion
 
-    static string UnescapeJsonString(string jsonString)
-    {
-        // Regular expression to match escaped characters
-        var regex = new Regex(@"\\[rnt""\\]");
-        return regex.Replace(jsonString, match =>
-        {
-            switch (match.Value)
-            {
-                case @"\r": return "\r";
-                case @"\n": return "\n";
-                case @"\t": return "\t";
-                case @"\""": return "\"";
-                case @"\\": return "\\";
-                default: return match.Value;
-            }
-        });
-    }
-
     #region FromJsonString
     /// <summary>
     ///     Returns the <see cref="SchedulerMetaData" /> object from the given <paramref name="json" /> string
@@ -199,8 +186,8 @@ public class SchedulerMetaData
     /// </returns>
     public static SchedulerMetaData FromJsonString(string json)
     {
-        json = UnescapeJsonString(json);
-        return JsonConvert.DeserializeObject<SchedulerMetaData>(json);
+        var str = JsonConvert.DeserializeObject<string>(json);
+        return JsonConvert.DeserializeObject<SchedulerMetaData>(str);
     }
     #endregion
 }
