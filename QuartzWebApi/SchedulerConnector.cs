@@ -35,7 +35,7 @@ public class SchedulerConnector
     /// <returns></returns>
     public async Task<bool> IsJobGroupPaused(string groupName)
     {
-        var response = await _httpClient.GetAsync($"Scheduler/IsJobGroupPaused/{groupName}");
+        var response = await _httpClient.GetAsync($"Scheduler/IsJobGroupPaused/{groupName}").ConfigureAwait(false);
         return bool.Parse(await response.Content.ReadAsStringAsync());
     }
     #endregion
@@ -48,7 +48,7 @@ public class SchedulerConnector
     /// <returns></returns>
     public async Task<bool> IsTriggerGroupPaused(string groupName)
     {
-        var response = await _httpClient.GetAsync($"Scheduler/IsTriggerGroupPaused/{groupName}");
+        var response = await _httpClient.GetAsync($"Scheduler/IsTriggerGroupPaused/{groupName}").ConfigureAwait(false);
         return bool.Parse(await response.Content.ReadAsStringAsync());
     }
     #endregion
@@ -59,7 +59,7 @@ public class SchedulerConnector
     /// </summary>
     public async Task<string> SchedulerName()
     {
-        var response = await _httpClient.GetAsync("Scheduler/SchedulerName");
+        var response = await _httpClient.GetAsync("Scheduler/SchedulerName").ConfigureAwait(false);
         var result =  await response.Content.ReadAsStringAsync();
         return result.Trim('\"');
     }
@@ -71,7 +71,7 @@ public class SchedulerConnector
     /// </summary>
     public async Task<string> SchedulerInstanceId()
     {
-        var response = await _httpClient.GetAsync("Scheduler/SchedulerInstanceId");
+        var response = await _httpClient.GetAsync("Scheduler/SchedulerInstanceId").ConfigureAwait(false);
         var result =  await response.Content.ReadAsStringAsync();
         return result.Trim('\"');
     }
@@ -83,7 +83,7 @@ public class SchedulerConnector
     /// </summary>
     public async Task<SchedulerContext> Context()
     {
-        var response = await _httpClient.GetAsync("Scheduler/SchedulerContext");
+        var response = await _httpClient.GetAsync("Scheduler/SchedulerContext").ConfigureAwait(false);
         var result =  await response.Content.ReadAsStringAsync();
         return SchedulerContext.FromJsonString(result);
     }
@@ -100,18 +100,15 @@ public class SchedulerConnector
     /// </remarks>
     public async Task<SchedulerMetaData> GetMetaData()
     {
-        var response = await _httpClient.GetAsync("Scheduler/GetMetaData");
+        var response = await _httpClient.GetAsync("Scheduler/GetMetaData").ConfigureAwait(false);
         var json = await response.Content.ReadAsStringAsync();
         return SchedulerMetaData.FromJsonString(json);
     }
     #endregion
 
-    // ... Continue this pattern for all other HttpGet methods in SchedulerController ...
-
     public async Task Start()
     {
-        var response = await _httpClient.PostAsync("Scheduler/Start", null);
-        // Handle response if necessary
+        await _httpClient.PostAsync("Scheduler/Start", null).ConfigureAwait(false);
     }
 
     public async Task StartDelayed(int delay)

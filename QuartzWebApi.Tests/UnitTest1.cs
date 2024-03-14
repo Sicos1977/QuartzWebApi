@@ -107,12 +107,22 @@ public class UnitTest1
     [TestMethod]
     public void Context()
     {
-        _ = _connector.Context().Result;
+        var result = _connector.Context().Result;
+        Assert.AreEqual("value1", result["key1"]);
+        Assert.AreEqual("value2", result["key2"]);
+        Assert.AreEqual("value3", result["key3"]);
     }
 
     [TestMethod]
     public void GetMetaData()
     {
-        _ =  _connector.GetMetaData().Result;
+        var result = _connector.GetMetaData().Result;
+        Assert.IsTrue(result.Summary.Contains("Quartz"));
+    }
+    
+    [TestMethod]
+    public void Start()
+    {
+        _connector.Start().GetAwaiter().GetResult();
     }
 }
